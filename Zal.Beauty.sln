@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.WebApp", "Beauty\Zal.Beauty.WebApp.csproj", "{A29C7A5B-B1F3-4030-8026-7FE34FAAD619}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.WebApp", "Zal.Beauty.WebApp\Zal.Beauty.WebApp.csproj", "{A29C7A5B-B1F3-4030-8026-7FE34FAAD619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.Base", "Zal.Beauty.Common\Zal.Beauty.Base.csproj", "{273E9485-C93C-4A18-831E-E541E50B5C06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.Base", "Zal.Beauty.Base\Zal.Beauty.Base.csproj", "{273E9485-C93C-4A18-831E-E541E50B5C06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.Interface", "Zal.Beauty.Api\Zal.Beauty.Interface.csproj", "{06ABB6FB-831A-44ED-940F-82B4CD99E9DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.Interface", "Zal.Beauty.Interface\Zal.Beauty.Interface.csproj", "{06ABB6FB-831A-44ED-940F-82B4CD99E9DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zal.Beauty.Core", "Zal.Beauty.Core\Zal.Beauty.Core.csproj", "{F95BE573-F3F0-49C6-8E58-209E006D8296}"
 EndProject

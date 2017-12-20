@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Beauty.Controllers
+namespace Zal.Beauty.WebApp.Controllers
 {
     public class HomeController : Controller
     {

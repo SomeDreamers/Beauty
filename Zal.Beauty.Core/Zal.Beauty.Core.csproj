@@ -9,4 +9,13 @@
     <Folder Include="ORM\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="6.10.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Zal.Beauty.Base\Zal.Beauty.Base.csproj" />
+    <ProjectReference Include="..\Zal.Beauty.Interface\Zal.Beauty.Interface.csproj" />
+  </ItemGroup>
+
 </Project>
