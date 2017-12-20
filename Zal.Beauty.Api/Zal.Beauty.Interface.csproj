@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="IManager\" />
+    <Folder Include="Models\Results\" />
+    <Folder Include="Models\Parameters\" />
+  </ItemGroup>
+
+</Project>
