@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Zal.Beauty.Core;
+using MySQL.Data.EntityFrameworkCore.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Beauty
 {
@@ -27,6 +30,8 @@ namespace Beauty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //注入数据库上下文
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             // Add framework services.
             services.AddMvc();
         }
@@ -46,6 +51,16 @@ namespace Beauty
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            //设置权限
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "IdeaCoreUser",
+                LoginPath = new PathString("/Account/Login/"),
+                AccessDeniedPath = new PathString("/Account/Forbidden/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
+            });
 
             app.UseStaticFiles();
 
