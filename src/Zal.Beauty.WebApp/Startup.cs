@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Zal.Beauty.Core;
 using MySQL.Data.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Zal.Beauty.WebApp;
 
 namespace Beauty
 {
@@ -34,6 +36,15 @@ namespace Beauty
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             // Add framework services.
             services.AddMvc();
+            //权限注入
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+            });
+            //注入manager
+            ManagerRegistrar.RegistManager(services);
+            //初始化映射配置
+            MapperInitializer.Initialize();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,10 +73,13 @@ namespace Beauty
                 AutomaticChallenge = true
             });
 
+
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("areaRoute", "{area:exists}/{controller}/{action=Index}");
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
