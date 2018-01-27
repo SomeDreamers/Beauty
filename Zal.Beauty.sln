@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zal.Beauty.Interface", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zal.Beauty.Core", "src\Zal.Beauty.Core\Zal.Beauty.Core.csproj", "{F95BE573-F3F0-49C6-8E58-209E006D8296}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zaolazi.EntityFramework.Core", "Zaolazi.EntityFramework.Core\Zaolazi.EntityFramework.Core.csproj", "{78A8B3C2-ADD1-4A7B-B714-DE8008DC06E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,14 +35,12 @@ Global
 		{F95BE573-F3F0-49C6-8E58-209E006D8296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F95BE573-F3F0-49C6-8E58-209E006D8296}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F95BE573-F3F0-49C6-8E58-209E006D8296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78A8B3C2-ADD1-4A7B-B714-DE8008DC06E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A8B3C2-ADD1-4A7B-B714-DE8008DC06E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A8B3C2-ADD1-4A7B-B714-DE8008DC06E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A8B3C2-ADD1-4A7B-B714-DE8008DC06E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{A29C7A5B-B1F3-4030-8026-7FE34FAAD619} = {0B651704-9F55-4728-9CAB-87D90FF0D1C4}
-		{273E9485-C93C-4A18-831E-E541E50B5C06} = {0B651704-9F55-4728-9CAB-87D90FF0D1C4}
-		{06ABB6FB-831A-44ED-940F-82B4CD99E9DB} = {0B651704-9F55-4728-9CAB-87D90FF0D1C4}
-		{F95BE573-F3F0-49C6-8E58-209E006D8296} = {0B651704-9F55-4728-9CAB-87D90FF0D1C4}
 	EndGlobalSection
 EndGlobal
