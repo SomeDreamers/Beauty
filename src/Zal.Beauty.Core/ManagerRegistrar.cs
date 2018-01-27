@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Zal.Beauty.Core.Managers.Identitys;
+using Zal.Beauty.Interface.IManager.Identitys;
 
 namespace Zal.Beauty.Core
 {
@@ -12,7 +14,7 @@ namespace Zal.Beauty.Core
     {
         public static void RegistManager(this IServiceCollection services)
         {
-            //services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IUserManager, UserManager>();
         }
     }
 }

@@ -28,30 +28,8 @@
     @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("Styles", required: false)
 </head>
-<body class="page-body">
-    <div class="page-container">
-        @Html.Partial("~/Views/Shared/_SideBar.cshtml")
-        <div class="main-content">
-            @Html.Partial("~/Views/Shared/_Navbar.cshtml")
-            @RenderBody()
-            <footer class="main-footer sticky footer-type-1">
-                <div class="footer-inner">
-                    <!-- Add your copyright text here -->
-                    <div class="footer-text">
-                        &copy; 2018
-                        <strong>Beauty</strong>
-                    </div>
-
-                    <!-- Go to Top Link, just add rel="go-top" to any link to add this functionality -->
-                    <div class="go-up">
-                        <a href="#" rel="go-top">
-                            <i class="fa-angle-up"></i>
-                        </a>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
+<body class="page-body login-page">
+    @RenderBody()
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

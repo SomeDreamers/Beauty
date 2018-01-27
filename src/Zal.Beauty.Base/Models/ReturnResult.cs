@@ -7,7 +7,7 @@ namespace Zal.Beauty.Base.Models
     /// <summary>
     /// 公共结果对象
     /// </summary>
-    public class CommonResult
+    public class ReturnResult
     {
         /// <summary>
         /// 是否成功
@@ -24,13 +24,13 @@ namespace Zal.Beauty.Base.Models
         /// </summary>
         public string ErrCode { get; set; }
 
-        public CommonResult()
+        public ReturnResult()
         {
             IsSuccess = true;
         }
     }
 
-    public class CommonResult<T>
+    public class ReturnResult<T>
     {
         public T Data { get; set; }
     }

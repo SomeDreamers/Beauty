@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Zal.Beauty.Core.ORM.Identitys;
 
 namespace Zal.Beauty.Core
 {
@@ -10,11 +11,13 @@ namespace Zal.Beauty.Core
         /// <summary>
         /// 用户表
         /// </summary>
-        //public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
+
+        
     }
 }

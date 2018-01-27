@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="IManager\" />
-    <Folder Include="Models\Results\" />
-    <Folder Include="Models\Parameters\" />
+    <Compile Remove="Enums\EUserStatus.cs" />
+    <Compile Remove="IManager\IUserManager.cs" />
+    <Compile Remove="Models\Parameters\UserParameter.cs" />
+    <Compile Remove="Models\Results\UserResult.cs" />
+    <Compile Remove="Models\Templates\UserTemplate.cs" />
   </ItemGroup>
 
 </Project>

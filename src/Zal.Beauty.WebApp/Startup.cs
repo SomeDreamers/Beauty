@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Zal.Beauty.Core;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Zal.Beauty.WebApp;
+using Microsoft.EntityFrameworkCore;
 
 namespace Beauty
 {
@@ -33,7 +28,7 @@ namespace Beauty
         public void ConfigureServices(IServiceCollection services)
         {
             //注入数据库上下文
-            services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Zal.Beauty.WebApp")));
             // Add framework services.
             services.AddMvc();
             //权限注入
@@ -67,8 +62,8 @@ namespace Beauty
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationScheme = "IdeaCoreUser",
-                LoginPath = new PathString("/Account/Login/"),
-                AccessDeniedPath = new PathString("/Account/Forbidden/"),
+                LoginPath = new PathString("/Identity/Account/Login/"),
+                AccessDeniedPath = new PathString("/Identity/Account/Forbidden/"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
