@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 using Zal.Beauty.Interface.Models.Results.Identitys;
 
@@ -13,13 +14,6 @@ namespace Zal.Beauty.Interface.IManager.Identitys
     public interface IUserManager
     {
         /// <summary>
-        /// 创建用户
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        Task CreateAsync(UserParameter user);
-
-        /// <summary>
         /// 查
         /// </summary>
         /// <returns></returns>
@@ -30,13 +24,13 @@ namespace Zal.Beauty.Interface.IManager.Identitys
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<UserResult> GetUserByNameAsync(string name);
+        Task<UserResult> GetUserByExactNameAsync(string name);
 
         /// <summary>
         /// 注册用户
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task RegisterAsync(UserParameter user);
+        Task<ReturnResult> RegisterAsync(UserParameter user);
     }
 }

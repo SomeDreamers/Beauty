@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Zal.Beauty.Core.ORM.Identitys;
+using Zal.Beauty.Interface.Models.Parameters.Identitys;
+using Zal.Beauty.Interface.Models.Results.Identitys;
 
 namespace Zal.Beauty.Core.MapProfiles
 {
@@ -12,9 +15,8 @@ namespace Zal.Beauty.Core.MapProfiles
     {
         public AccountProfile()
         {
-            //CreateMap<WareBrand, WareBrandResult>();
-            //CreateMap<EntitySet<WareBrand>, EntitySet<WareBrandResult>>();
-            //CreateMap<WareBrandParameter, WareBrand>();
+            CreateMap<UserParameter, User>();
+            CreateMap<User, UserResult>();
         }
     }
 }

@@ -11,21 +11,21 @@
             // Validation and Ajax action
             $("form#login").validate({
                 rules: {
-                    name: {
+                    Name: {
                         required: true
                     },
 
-                    password: {
+                    Password: {
                         required: true
                     }
                 },
 
                 messages: {
-                    name: {
+                    Name: {
                         required: 'Please enter your username.'
                     },
 
-                    password: {
+                    Password: {
                         required: 'Please enter your password.'
                     }
                 },
@@ -50,13 +50,12 @@
                     };
 
                     $.ajax({
-                        url: "data/login-check.php",
+                        url: "/Identity/Account/Authenticate",
                         method: 'POST',
                         dataType: 'json',
                         data: {
-                            do_login: true,
-                            username: $(form).find('#username').val(),
-                            passwd: $(form).find('#passwd').val(),
+                            Name: $(form).find('#Name').val(),
+                            Password: $(form).find('#Password').val()
                         },
                         success: function (resp) {
                             show_loading_bar({
@@ -65,12 +64,11 @@
                                 finish: function () {
 
                                     // Redirect after successful login page (when progress bar reaches 100%)
-                                    if (resp.accessGranted) {
-                                        window.location.href = 'dashboard-1.html';
+                                    if (resp.isSuccess) {
+                                        window.location.href = '/Home/Index';
                                     }
                                     else {
-                                        toastr.error("You have entered wrong password, please try again. User and password is <strong>demo/demo</strong> :)", "Invalid Login!", opts);
-                                        $passwd.select();
+                                        toastr.error(resp.message, "Invalid LogIn!");
                                     }
                                 }
                             });
@@ -112,13 +110,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="name">Username</label>
-                    <input type="text" class="form-control" name="name" id="name" autocomplete="off" />
+                    <label class="control-label" for="Name">Username</label>
+                    <input type="text" class="form-control" name="Name" id="Name" autocomplete="off" />
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="password">Password</label>
-                    <input type="password" class="form-control" name="password" id="password" autocomplete="off" />
+                    <label class="control-label" for="Password">Password</label>
+                    <input type="password" class="form-control" name="Password" id="Password" autocomplete="off" />
                 </div>
 
                 <div class="form-group">

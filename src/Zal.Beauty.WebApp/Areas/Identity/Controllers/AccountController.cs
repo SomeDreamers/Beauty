@@ -43,7 +43,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
             var isLogined = HttpContext.User.Identity.IsAuthenticated;
             if (isLogined)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             return View();
         }
@@ -64,7 +64,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
             var isLogined = HttpContext.User.Identity.IsAuthenticated;
             if (isLogined)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             return View();
         }
@@ -76,8 +76,11 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Register(UserParameter user)
         {
-            await userManager.RegisterAsync(user);
-            return await Authenticate(user);
+            user.Type = EUserType.Customer;
+            user.Status = EUserStatus.Enabled;
+            var result = await userManager.RegisterAsync(user);
+            await AddClaim(result.Id, user.Name, user.Type);
+            return Json(result);
         }
 
         /// <summary>
@@ -88,7 +91,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         public async Task<IActionResult> Authenticate(UserParameter user)
         {
             ReturnResult result = new ReturnResult();
-            UserResult customer = await userManager.GetUserByNameAsync(user.Name);
+            UserResult customer = await userManager.GetUserByExactNameAsync(user.Name);
             if (customer == null || customer.Password != CommonUtil.MD5(user.Password))
             {
                 result.IsSuccess = false;
@@ -96,23 +99,15 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
                 return Json(result);
             }
 
-            //客户或者禁用管理员无法登录
-            if(user.Type != EUserType.Admin || user.Status == EUserStatus.Disabled)
+            //禁用管理员无法登录
+            if(user.Status == EUserStatus.Disabled)
             {
-                return RedirectToAction("Forbidden");
+                result.IsSuccess = false;
+                result.Message = "您管理员身份已被禁用！";
+                return Json(result);
             }
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, customer.Name, ClaimValueTypes.String), new Claim(ClaimTypes.Role, customer.Type.GetDescription(), ClaimValueTypes.String), new Claim(ClaimTypes.Sid, customer.Id.ToString(), ClaimValueTypes.String) };
-            var userIdentity = new ClaimsIdentity(claims, "IdeaCoreUser");
-            var userPrincipal = new ClaimsPrincipal(userIdentity);
-            await HttpContext.Authentication.SignInAsync("IdeaCoreUser", userPrincipal,
-                new AuthenticationProperties
-                {
-                    ExpiresUtc = DateTime.UtcNow.AddSeconds(10*60),
-                    IsPersistent = true,
-                    AllowRefresh = false
-                });
-            return RedirectToAction("Index", "Home");
+            await AddClaim(customer.Id, customer.Name, customer.Type);
+            return Json(result);
         }
 
         /// <summary>
@@ -122,8 +117,22 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         /// <returns></returns>
         public async Task<bool> VerifyName(string Name)
         {
-            var user = await userManager.GetUserByNameAsync(Name);
+            var user = await userManager.GetUserByExactNameAsync(Name);
             return user == null;
+        }
+
+        public async Task AddClaim(long id, string name, EUserType type)
+        {
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, name, ClaimValueTypes.String), new Claim(ClaimTypes.Role, type.GetDescription(), ClaimValueTypes.String), new Claim(ClaimTypes.Sid, id.ToString(), ClaimValueTypes.String) };
+            var userIdentity = new ClaimsIdentity(claims, "IdeaCoreUser");
+            var userPrincipal = new ClaimsPrincipal(userIdentity);
+            await HttpContext.Authentication.SignInAsync("IdeaCoreUser", userPrincipal,
+                new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTime.UtcNow.AddSeconds(10 * 60),
+                    IsPersistent = true,
+                    AllowRefresh = false
+                });
         }
     }
 }

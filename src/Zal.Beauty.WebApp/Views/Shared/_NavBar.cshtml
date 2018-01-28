@@ -275,7 +275,7 @@
             <a href="#" data-toggle="dropdown">
                 <img src="~/lib/xenon/assets/images/user-4.png" alt="user-image" class="img-circle img-inline userpic-32" width="28" />
                 <span>
-                    Arlind Nushi
+                    @Html.ViewContext.HttpContext.User.Identity.FullName()
                     <i class="fa-angle-down"></i>
                 </span>
             </a>
@@ -306,7 +306,7 @@
                     </a>
                 </li>
                 <li class="last">
-                    <a href="extra-lockscreen.html">
+                    <a href="/Identity/Account/Logout">
                         <i class="fa-lock"></i>
                         Logout
                     </a>

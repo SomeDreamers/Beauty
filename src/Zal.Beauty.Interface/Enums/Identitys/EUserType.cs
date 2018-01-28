@@ -26,9 +26,9 @@ namespace Zal.Beauty.Interface.Enums.Identitys
             switch (type)
             {
                 case EUserType.Customer:
-                    return "customer";
+                    return "Customer";
                 case EUserType.Admin:
-                    return "admin";
+                    return "Admin";
                 default:
                     return "";
             }

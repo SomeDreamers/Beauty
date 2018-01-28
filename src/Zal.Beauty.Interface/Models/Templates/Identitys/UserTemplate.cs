@@ -13,13 +13,11 @@ namespace Zal.Beauty.Interface.Models.Templates.Identitys
         /// <summary>
         /// 主键
         /// </summary>
-        [Column("id")]
         public long Id { get; set; }
 
         /// <summary>
         /// 用户名
         /// </summary>
-        [Column("name")]
         public string Name { get; set; }
 
         /// <summary>

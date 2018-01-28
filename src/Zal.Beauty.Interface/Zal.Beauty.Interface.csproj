@@ -15,4 +15,8 @@
     <Compile Remove="Models\Templates\UserTemplate.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Zal.Beauty.Base\Zal.Beauty.Base.csproj" />
+  </ItemGroup>
+
 </Project>

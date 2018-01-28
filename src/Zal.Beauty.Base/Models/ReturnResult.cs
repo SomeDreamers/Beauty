@@ -20,6 +20,11 @@ namespace Zal.Beauty.Base.Models
         public string Message { get; set; }
 
         /// <summary>
+        /// 主键ID
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
         /// 错误码
         /// </summary>
         public string ErrCode { get; set; }

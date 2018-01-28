@@ -22,7 +22,7 @@
                         minlength:6
                     },
                     confirm_password: {
-                        equalTo: "#password"
+                        equalTo: "#Password"
                     }
                 },
 
@@ -33,7 +33,7 @@
                         remote: "name repetition."
                     },
 
-                    password: {
+                    Password: {
                         required: 'Please enter your password.',
                         minlength: 'min lenth 6.'
                     },
@@ -46,43 +46,28 @@
                 submitHandler: function (form) {
                     show_loading_bar(70); // Fill progress bar to 70% (just a given value)
 
-                    var opts = {
-                        "closeButton": true,
-                        "debug": false,
-                        "positionClass": "toast-top-full-width",
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    };
-
                     $.ajax({
                         url: "/Identity/Account/Register",
                         method: 'POST',
                         dataType: 'json',
                         data: {
-                            do_login: true,
-                            username: $(form).find('#username').val(),
-                            passwd: $(form).find('#passwd').val(),
+                            Name: $(form).find('#Name').val(),
+                            Password: $(form).find('#Password').val(),
+                            TrueName: $(form).find('#TrueName').val(),
+                            Phone: $(form).find('#Phone').val(),
+                            Mail: $(form).find('#Mail').val()
                         },
                         success: function (resp) {
                             show_loading_bar({
                                 delay: .5,
                                 pct: 100,
                                 finish: function () {
-
                                     // Redirect after successful login page (when progress bar reaches 100%)
-                                    if (resp.accessGranted) {
-                                        window.location.href = 'dashboard-1.html';
+                                    if (resp.isSuccess) {
+                                        window.location.href = '/Identity/Account/Forbidden';
                                     }
                                     else {
-                                        toastr.error("You have entered wrong password, please try again. User and password is <strong>demo/demo</strong> :)", "Invalid Login!", opts);
-                                        $passwd.select();
+                                        toastr.error(resp.message, "Invalid SignIn!");
                                     }
                                 }
                             });
