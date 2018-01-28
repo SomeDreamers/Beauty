@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Zal.Beauty.Core.ORM.Identitys;
+using Zal.Beauty.Core.ORM.Wechats;
 
 namespace Zal.Beauty.Core
 {
@@ -12,6 +13,11 @@ namespace Zal.Beauty.Core
         /// 用户表
         /// </summary>
         public DbSet<User> Users { get; set; }
+
+        /// <summary>
+        /// 客户表
+        /// </summary>
+        public DbSet<Customer> Customers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

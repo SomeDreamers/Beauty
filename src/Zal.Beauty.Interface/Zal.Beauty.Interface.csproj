@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Remove="Enums\EUserStatus.cs" />
     <Compile Remove="IManager\IUserManager.cs" />
+    <Compile Remove="IManager\Wechats\CustomerManager.cs" />
     <Compile Remove="Models\Parameters\UserParameter.cs" />
     <Compile Remove="Models\Results\UserResult.cs" />
     <Compile Remove="Models\Templates\UserTemplate.cs" />
@@ -17,6 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Base\Zal.Beauty.Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\Wechats\" />
   </ItemGroup>
 
 </Project>
