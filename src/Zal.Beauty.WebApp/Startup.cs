@@ -67,9 +67,6 @@ namespace Beauty
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
-
-
-
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

@@ -34,7 +34,7 @@ namespace Zal.Beauty.WebApp.Filters
         /// <param name="context"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            //首先读取用户登录的Session信息进行判断
+            //首先读取用户登录的cookie信息进行判断
             string userCookie = "";
             if (context.HttpContext.Request.Cookies.TryGetValue(ConstKeys.WechatSessionKey, out userCookie))
             {
