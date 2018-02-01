@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.WebApp.Configs;
 using Zal.Beauty.WebApp.WechatHandlers;
 
@@ -15,8 +16,12 @@ namespace Zal.Beauty.WebApp.Controllers
     /// </summary>
     public class WechatController : Controller
     {
-        public WechatController()
+        private readonly ICustomerManager customerManager;
+        private readonly IMessageManager messageManager;
+        public WechatController(ICustomerManager customerManager, IMessageManager messageManager)
         {
+            this.customerManager = customerManager;
+            this.messageManager = messageManager;
         }
 
         /// <summary>
@@ -54,7 +59,7 @@ namespace Zal.Beauty.WebApp.Controllers
             postModel.AppId = WeixinConfig.AppId;//根据自己后台的设置保持一致
 
             //自定义MessageHandler，对微信请求的详细判断操作都在这里面。
-            var messageHandler = new CustomMessageHandler(Request.Body, postModel);//接收消息
+            var messageHandler = new CustomMessageHandler(Request.Body, postModel, customerManager, messageManager);//接收消息
 
             messageHandler.OmitRepeatedMessage = true;//启用消息去重功能
 

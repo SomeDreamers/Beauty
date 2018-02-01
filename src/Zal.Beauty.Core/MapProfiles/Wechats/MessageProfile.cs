@@ -9,14 +9,14 @@ using Zal.Beauty.Interface.Models.Results.Wechats;
 namespace Zal.Beauty.Core.MapProfiles.Wechats
 {
     /// <summary>
-    /// 客户对象映射
+    /// 微信消息映射
     /// </summary>
-    public class CustomerProfile : Profile
+    public class MessageProfile : Profile
     {
-        public CustomerProfile()
+        public MessageProfile()
         {
-            CreateMap<CustomerParamater, Customer>();
-            CreateMap<Customer, CustomerResult>();
+            CreateMap<MessageParameter, Message>();
+            CreateMap<Message, MessageResult>();
         }
     }
 }

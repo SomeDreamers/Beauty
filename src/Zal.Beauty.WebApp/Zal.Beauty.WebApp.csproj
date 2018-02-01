@@ -1309,7 +1309,6 @@
   <ItemGroup>
     <Folder Include="Areas\Mall\Controllers\" />
     <Folder Include="Areas\Mall\Views\" />
-    <Folder Include="Areas\Wechat\Controllers\" />
     <Folder Include="Areas\Wechat\Views\" />
   </ItemGroup>
   <ItemGroup>

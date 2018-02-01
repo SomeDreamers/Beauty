@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace Zal.Beauty.Core.Managers.Identitys
         /// <returns></returns>
         public async Task<UserResult> GetUserByExactNameAsync(string name)
         {
-            var user = context.Users.Where(c => c.Name == name).FirstOrDefault();
+            var user = await context.Users.Where(c => c.Name == name).FirstOrDefaultAsync();
             if (user == null) return null;
             return Mapper.Map<UserResult>(user);
         }

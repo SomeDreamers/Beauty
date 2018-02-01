@@ -22,6 +22,7 @@ namespace Zal.Beauty.Core
 
             #region Wechat
             cfg.AddProfile<CustomerProfile>();
+            cfg.AddProfile<MessageProfile>();
             #endregion
         }
     }

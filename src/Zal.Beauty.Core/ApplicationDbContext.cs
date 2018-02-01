@@ -19,6 +19,11 @@ namespace Zal.Beauty.Core
         /// </summary>
         public DbSet<Customer> Customers { get; set; }
 
+        /// <summary>
+        /// 微信消息表
+        /// </summary>
+        public DbSet<Message> Messages { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

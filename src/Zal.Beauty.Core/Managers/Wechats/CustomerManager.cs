@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using Zal.Beauty.Base.Models;
 using Zal.Beauty.Core.ORM.Wechats;
 using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;
+using Zal.Beauty.Interface.Models.Results.Wechats;
 
 namespace Zal.Beauty.Core.Managers.Wechats
 {
@@ -31,8 +33,8 @@ namespace Zal.Beauty.Core.Managers.Wechats
             ReturnResult result = new ReturnResult();
             var customer = Mapper.Map<Customer>(parameter);
             //根据openId验证客户是否存在
-            var oldCustomer = context.Customers.Where(c => c.Openid == customer.Openid).FirstOrDefault();
-            if(oldCustomer != null)
+            var oldCustomer = await GetCustomerEntityByOpenIdAsync(customer.Openid);
+            if (oldCustomer != null)
             {
                 customer.Id = oldCustomer.Id;
                 context.Customers.Update(oldCustomer);
@@ -45,5 +47,42 @@ namespace Zal.Beauty.Core.Managers.Wechats
             result.Id = customer.Id;
             return result;
         }
+
+        /// <summary>
+        /// 根据OpenID获取用户信息
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public async Task<CustomerResult> GetCustomerByOpenIdAsync(string openId)
+        {
+            var customer = await GetCustomerEntityByOpenIdAsync(openId);
+            if (customer == null) return null;
+            return Mapper.Map<CustomerResult>(customer);
+        }
+
+        /// <summary>
+        /// 根据OpenID获取用户信息
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public CustomerResult GetCustomerByOpenId(string openId)
+        {
+            var customer = context.Customers.Where(c => c.Openid == openId).FirstOrDefault();
+            if (customer == null) return null;
+            return Mapper.Map<CustomerResult>(customer);
+        }
+
+        #region 内部方法
+        /// <summary>
+        /// 根据OpenID获取用户信息
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public async Task<Customer> GetCustomerEntityByOpenIdAsync(string openId)
+        {
+            var oldCustomer = await context.Customers.Where(c => c.Openid == openId).FirstOrDefaultAsync();
+            return oldCustomer;
+        }
+        #endregion
     }
 }
