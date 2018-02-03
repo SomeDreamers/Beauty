@@ -7,6 +7,10 @@ using Zal.Beauty.Core;
 using Microsoft.AspNetCore.Http;
 using Zal.Beauty.WebApp;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Zal.Beauty.WebApp.Configs;
+using System;
+using System.Reflection;
 
 namespace Beauty
 {
@@ -34,7 +38,13 @@ namespace Beauty
             //权限注入
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+                Type type = typeof(PermissionKeys);
+                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                foreach (FieldInfo fi in fieldInfos)
+                {
+                    var permissionKey = fi.GetValue(null).ToString();
+                    options.AddPolicy(permissionKey, policy => policy.RequireClaim(ClaimTypes.AuthorizationDecision, permissionKey));
+                }
             });
             //注入manager
             ManagerRegistrar.RegistManager(services);
@@ -67,6 +77,7 @@ namespace Beauty
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

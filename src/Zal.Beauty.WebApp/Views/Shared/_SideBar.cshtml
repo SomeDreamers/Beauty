@@ -1,4 +1,5 @@
-﻿<div class="sidebar-menu toggle-others fixed">
+﻿@using Zal.Beauty.WebApp.Configs
+<div class="sidebar-menu toggle-others fixed">
     <div class="sidebar-menu-inner ps-container ps-active-y">
         <header class="logo-env">
 
@@ -23,103 +24,75 @@
         </header>
 
         <ul id="main-menu" class="main-menu">
-            <li>
-                <a href="dashboard-1.html">
-                    <i class="linecons-cog"></i>
-                    <span class="title">系统管理</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">用户管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">角色管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">权限管理</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="dashboard-1.html">
-                    <i class="linecons-camera"></i>
-                    <span class="title">商城管理</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">分类管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-2.html">
-                            <span class="title">商品管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-3.html">
-                            <span class="title">货架管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-3.html">
-                            <span class="title">促销管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-3.html">
-                            <span class="title">订单管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-4.html">
-                            <span class="title">评论管理</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="dashboard-1.html">
-                    <i class="linecons-comment"></i>
-                    <span class="title">微信管理</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">客户信息</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">接收消息</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">发送消息</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="dashboard-1.html">
-                    <i class="linecons-cloud"></i>
-                    <span class="title">素材管理</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="dashboard-1.html">
-                            <span class="title">图片管理</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            @{
+                var userPermissionKeys = @Html.ViewContext.HttpContext.User.Identity.PermissionKeys();
+                foreach (var Node1st in PermissionKeysMvcSetting.Nodes)
+                {
+                    //判断用户是否含有该节点下的权限
+                    var hasPermission = false;
+                    foreach (var Node2nd in Node1st.ChildNodes)
+                    {
+                        foreach (var permissionKey in Node2nd.PerMissionKeys)
+                        {
+                            if (userPermissionKeys.Contains(permissionKey))
+                            {
+                                hasPermission = true;
+                                break;
+                            }
+                        }
+                        if (hasPermission)
+                        {
+                            break;
+                        }
+                    }
+                    //有权限则展现菜单
+                    if (hasPermission)
+                    {
+
+                        var route = @Html.ViewContext.HttpContext.Request.Path.ToString();
+                        var hasSelected = false;
+                        foreach(var Node2nd in Node1st.ChildNodes)
+                        {
+                            if(Node2nd.ChildNodes.Find(c=>c.Route == route) != null)
+                            {
+                                hasSelected = true;
+                                break;
+                            }
+                        }
+
+                        <li class="@(hasSelected ? "active expanded" : "")">
+                            <a href="#">
+                                <i class="@Node1st.IconClass"></i>
+                                <span class="title">@Node1st.Title</span>
+                            </a>
+                            <ul style="display: @(hasSelected ? "block" : "none");">
+                                @foreach (var Node2nd in Node1st.ChildNodes)
+                                {
+                                    var hasChildPermission = false;
+                                    foreach (var permissionKey in Node2nd.PerMissionKeys)
+                                    {
+                                        if (userPermissionKeys.Contains(permissionKey))
+                                        {
+                                            hasChildPermission = true;
+                                            break;
+                                        }
+                                    }
+                                    if (hasChildPermission)
+                                    {
+                                        var hasChildSeleted = Node2nd.ChildNodes.Find(c => c.Route == route) != null;
+                                        <li class="@(hasChildSeleted ? "active" : "")">
+                                            <a href="@Node2nd.ChildNodes[0].Route">
+                                                <span class="title">@Node2nd.Title</span>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+            }
         </ul>
     </div>
 </div>
+

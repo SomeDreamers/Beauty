@@ -14,6 +14,7 @@ using Zal.Beauty.Interface.Models.Parameters;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 using Zal.Beauty.Interface.Models.Results;
 using Zal.Beauty.Interface.Models.Results.Identitys;
+using Zal.Beauty.WebApp.Configs;
 
 namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
 {
@@ -123,7 +124,14 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
 
         public async Task AddClaim(long id, string name, EUserType type)
         {
+            //增加身份
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, name, ClaimValueTypes.String), new Claim(ClaimTypes.Role, type.GetDescription(), ClaimValueTypes.String), new Claim(ClaimTypes.Sid, id.ToString(), ClaimValueTypes.String) };
+            //增加权限
+            var permissionKeys = await userManager.GetPermissionKeysByUserIdAsync(id);
+            foreach (var permissionKey in permissionKeys)
+            {
+                claims.Add(new Claim(ClaimTypes.AuthorizationDecision, permissionKey, ClaimValueTypes.String));
+            }
             var userIdentity = new ClaimsIdentity(claims, "IdeaCoreUser");
             var userPrincipal = new ClaimsPrincipal(userIdentity);
             await HttpContext.Authentication.SignInAsync("IdeaCoreUser", userPrincipal,

@@ -28,5 +28,19 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Helpers
             var claim = ((ClaimsIdentity)identity).FindFirst(ClaimTypes.Sid);
             return (claim != null) ? Convert.ToInt64(claim.Value) : 0;
         }
+
+        public static List<string> PermissionKeys(this IIdentity identity)
+        {
+            List<string> permissionKeys = new List<string>();
+            var claims = ((ClaimsIdentity)identity).FindAll(ClaimTypes.AuthorizationDecision).ToList();
+            foreach (var claim in claims)
+            {
+                if(claim != null)
+                {
+                    permissionKeys.Add(claim.Value);
+                }
+            }
+            return permissionKeys;
+        }
     }
 }

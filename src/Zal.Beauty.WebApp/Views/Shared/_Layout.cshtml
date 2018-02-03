@@ -31,6 +31,7 @@
 <body class="page-body">
     <div class="page-container">
         @Html.Partial("~/Views/Shared/_SideBar.cshtml")
+        @*@await Component.InvokeAsync("PriorityList")*@
         <div class="main-content">
             @Html.Partial("~/Views/Shared/_Navbar.cshtml")
             @RenderBody()
