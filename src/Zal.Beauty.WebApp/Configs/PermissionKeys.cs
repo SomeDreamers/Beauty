@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,16 +15,19 @@ namespace Zal.Beauty.WebApp.Configs
         /// <summary>
         /// 用户管理权限key值
         /// </summary>
+        [Description("用户管理")]
         public const string IdentityUserKeys = "identity.user.manager";
 
         /// <summary>
         /// 角色管理权限key值
         /// </summary>
+        [Description("角色管理")]
         public const string IdentityRoleKeys = "identity.role.manager";
 
         /// <summary>
         /// 权限管理权限key值
         /// </summary>
+        [Description("权限管理")]
         public const string IdentityPermissionKeys = "identity.permission.manager";
         #endregion
 
