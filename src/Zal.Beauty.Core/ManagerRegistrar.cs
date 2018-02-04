@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using Zal.Beauty.Core.Managers.Commons;
 using Zal.Beauty.Core.Managers.Identitys;
+using Zal.Beauty.Core.Managers.Wechats;
 using Zal.Beauty.Interface.IManager.Commons;
 using Zal.Beauty.Interface.IManager.Identitys;
+using Zal.Beauty.Interface.IManager.Wechats;
 
 namespace Zal.Beauty.Core
 {
@@ -17,6 +19,8 @@ namespace Zal.Beauty.Core
         public static void RegistManager(this IServiceCollection services)
         {
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<ICustomerManager, CustomerManager>();
+            services.AddTransient<IMessageManager, MessageManager>();
             services.AddTransient<IFileManager,FileManager>();
         }
     }

@@ -1302,6 +1302,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="14.8.12" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
@@ -1310,7 +1311,7 @@
     <Folder Include="Areas\Common\Helpers\" />
     <Folder Include="Areas\Mall\Controllers\" />
     <Folder Include="Areas\Mall\Views\" />
-    <Folder Include="Migrations\" />
+    <Folder Include="Areas\Wechat\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />

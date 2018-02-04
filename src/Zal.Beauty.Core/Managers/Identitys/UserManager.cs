@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace Zal.Beauty.Core.Managers.Identitys
         /// <returns></returns>
         public async Task<UserResult> GetUserByExactNameAsync(string name)
         {
-            var user = context.Users.Where(c => c.Name == name).FirstOrDefault();
+            var user = await context.Users.Where(c => c.Name == name).FirstOrDefaultAsync();
             if (user == null) return null;
             return Mapper.Map<UserResult>(user);
         }
@@ -83,6 +84,31 @@ namespace Zal.Beauty.Core.Managers.Identitys
             await context.SaveChangesAsync();
             result.Id = userEntity.Id;
             return result;
+        }
+
+        /// <summary>
+        /// 根据用户ID获取用户权限keys
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<string>> GetPermissionKeysByUserIdAsync(long userId)
+        {
+            List<string> permissionKeys = new List<string>();
+            var roleUsers = await context.RoleUsers.Where(c => c.UserId == userId).ToListAsync();
+            foreach (var item in roleUsers)
+            {
+                //已删除角色舍弃
+                var role = await context.Roles.Where(c => c.Id == item.RoleId).FirstOrDefaultAsync();
+                if (role == null || role.IsDel) continue;
+                //获取角色权限
+                var rolePermissions = await context.RolePermissions.Where(c => c.RoleId == role.Id).ToListAsync();
+                foreach (var rolePermission in rolePermissions)
+                {
+                    if (!permissionKeys.Contains(rolePermission.PermissionKey))
+                        permissionKeys.Add(rolePermission.PermissionKey);
+                }
+            }
+            return permissionKeys;
         }
     }
 }

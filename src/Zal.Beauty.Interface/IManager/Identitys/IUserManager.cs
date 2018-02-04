@@ -32,5 +32,12 @@ namespace Zal.Beauty.Interface.IManager.Identitys
         /// <param name="user"></param>
         /// <returns></returns>
         Task<ReturnResult> RegisterAsync(UserParameter user);
+
+        /// <summary>
+        /// 根据用户ID获取用户权限keys
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<string>> GetPermissionKeysByUserIdAsync(long userId);
     }
 }
