@@ -34,6 +34,13 @@ namespace Zal.Beauty.Interface.IManager.Identitys
         Task<ReturnResult> RegisterAsync(UserParameter user);
 
         /// <summary>
+        /// 获取用户集合
+        /// </summary>
+        /// <param name="queryParameter"></param>
+        /// <returns></returns>
+        Task<EntitySet<UserResult>> GetUserSetAsync(UserQuery queryParameter);
+
+        /// <summary>
         /// 根据用户ID获取用户权限keys
         /// </summary>
         /// <param name="userId"></param>

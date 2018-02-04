@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Interface.IManager.Identitys;
+using Zal.Beauty.Interface.Models.Parameters.Identitys;
 
 namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
 {
@@ -13,9 +15,21 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
     [Area("Identity"), Authorize]
     public class UserController : Controller
     {
-        public async Task<IActionResult> List()
+        private readonly IUserManager userManager;
+        public UserController(IUserManager userManager)
         {
-            return View();
+            this.userManager = userManager;
+        }
+
+        /// <summary>
+        /// 用户信息界面
+        /// </summary> 
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> List(UserQuery query)
+        {
+            var userSet = await userManager.GetUserSetAsync(query);
+            return View(userSet);
         }
     }
 }

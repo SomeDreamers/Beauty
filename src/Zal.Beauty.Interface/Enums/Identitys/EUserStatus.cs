@@ -18,4 +18,20 @@ namespace Zal.Beauty.Interface.Enums.Identitys
         /// </summary>
         Disabled = 2
     }
+
+    public static class EUserStatusExtension
+    {
+        public static string GetDescription(this EUserStatus type)
+        {
+            switch (type)
+            {
+                case EUserStatus.Enabled:
+                    return "启用";
+                case EUserStatus.Disabled:
+                    return "禁用";
+                default:
+                    return "";
+            }
+        }
+    }
 }
