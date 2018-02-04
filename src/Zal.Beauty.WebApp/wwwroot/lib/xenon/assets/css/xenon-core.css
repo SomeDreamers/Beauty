@@ -702,7 +702,7 @@ body {
 .page-container .main-content {
   display: table-cell;
   position: relative;
-  z-index: 1;
+  /*z-index: 1;*/
   padding: 30px;
   padding-bottom: 0;
   vertical-align: top;
@@ -712,7 +712,7 @@ body {
   background-color: #eeeeee;
 }
 .page-container .main-content:hover {
-  z-index: 15;
+  /*z-index: 15;*/
 }
 .page-container .main-content .page-title {
   background: #f8f8f8;

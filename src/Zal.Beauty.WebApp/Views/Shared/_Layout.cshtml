@@ -7,6 +7,7 @@
     <title>@Html.PageTitle()</title>
 
     <environment names="Development">
+        <link rel="stylesheet" href="~/lib/xenon/assets/js/dropzone/css/dropzone.css">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -82,6 +83,8 @@
     <script src="~/lib/xenon/assets/js/xenon-api.js"></script>
     <script src="~/lib/xenon/assets/js/xenon-toggles.js"></script>
     <script src="~/lib/xenon/assets/js/xenon-custom.js"></script>
+    <script src="~/lib/xenon/assets/js/jquery-ui/jquery-ui.min.js"></script>
     @RenderSection("Scripts", required: false)
+    @*@Html.Partial("~/Views/Shared/_Modal.cshtml")*@
 </body>
 </html>

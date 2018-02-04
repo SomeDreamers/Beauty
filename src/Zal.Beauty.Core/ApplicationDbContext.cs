@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Zal.Beauty.Core.ORM.Commons;
 using Zal.Beauty.Core.ORM.Identitys;
 using Zal.Beauty.Core.ORM.Wechats;
 
@@ -42,6 +43,12 @@ namespace Zal.Beauty.Core
         /// </summary>
         public DbSet<Message> Messages { get; set; }
         #endregion
+
+        /// <summary>
+        /// 素材分类表
+        /// </summary>
+        /// <param name="options"></param>
+        public DbSet<Tag> Tags { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

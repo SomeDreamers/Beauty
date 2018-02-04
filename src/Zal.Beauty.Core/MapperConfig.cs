@@ -24,6 +24,7 @@ namespace Zal.Beauty.Core
             cfg.AddProfile<CustomerProfile>();
             cfg.AddProfile<MessageProfile>();
             #endregion
+            cfg.AddProfile<TagProfile>();
         }
     }
 }
