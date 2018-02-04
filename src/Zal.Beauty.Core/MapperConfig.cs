@@ -15,6 +15,7 @@ namespace Zal.Beauty.Core
         {
             //cfg.CreateMap<Pagination, PageSort>();
             cfg.AddProfile<AccountProfile>();
+            cfg.AddProfile<TagProfile>();
         }
     }
 }

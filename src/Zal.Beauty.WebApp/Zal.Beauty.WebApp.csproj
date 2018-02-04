@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\images\back.jpg" />
     <Content Include="wwwroot\lib\xenon\assets\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\bootstrap.css" />
@@ -1306,6 +1307,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Common\Helpers\" />
     <Folder Include="Areas\Mall\Controllers\" />
     <Folder Include="Areas\Mall\Views\" />
     <Folder Include="Migrations\" />
@@ -1313,5 +1315,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="by" /></VisualStudio></ProjectExtensions>
 
 </Project>
