@@ -26,10 +26,20 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         /// </summary> 
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<IActionResult> List(UserQuery query)
+        public IActionResult List()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 用户集合ajax
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UserSetAjax(UserQuery query)
         {
             var userSet = await userManager.GetUserSetAsync(query);
-            return View(userSet);
+            return Json(userSet);
         }
     }
 }

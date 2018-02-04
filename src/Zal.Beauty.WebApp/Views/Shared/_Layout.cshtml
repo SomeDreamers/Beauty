@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-components.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-skins.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/custom.css" />
+    <link rel="stylesheet" href="~/lib/xenon/assets/js/datatables/dataTables.bootstrap.css">
     @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("Styles", required: false)
 </head>
@@ -88,8 +89,8 @@
     <!-- table -->
     <script src="~/lib/xenon/assets/js/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/xenon/assets/js/datatables/dataTables.bootstrap.js"></script>
-    <script src="~/lib/xenon/assets/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
-    <script src="~/lib/xenon/assets/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
+    @*<script src="~/lib/xenon/assets/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
+    <script src="~/lib/xenon/assets/js/datatables/tabletools/dataTables.tableTools.min.js"></script>*@
     @RenderSection("Scripts", required: false)
     @*@Html.Partial("~/Views/Shared/_Modal.cshtml")*@
 </body>
