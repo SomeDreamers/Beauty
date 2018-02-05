@@ -97,23 +97,23 @@ namespace Zal.Beauty.Core.Managers.Identitys
         {
             var query = context.Users.AsQueryable();
             if (!string.IsNullOrEmpty(queryParameter.Address))
-                query.Where(c => c.Address.Contains(queryParameter.Address));
+                query = query.Where(c => c.Address.Contains(queryParameter.Address));
             if (queryParameter.CreateBegin != DateTime.MinValue)
-                query.Where(c => c.CreateTime >= queryParameter.CreateBegin);
+                query = query.Where(c => c.CreateTime >= queryParameter.CreateBegin);
             if (queryParameter.CreateEnd != DateTime.MinValue)
-                query.Where(c => c.CreateTime <= queryParameter.CreateEnd);
+                query = query.Where(c => c.CreateTime <= queryParameter.CreateEnd);
             if (!string.IsNullOrEmpty(queryParameter.Mail))
-                query.Where(c => c.Mail.Contains(queryParameter.Mail));
+                query = query.Where(c => c.Mail.Contains(queryParameter.Mail));
             if (!string.IsNullOrEmpty(queryParameter.Name))
-                query.Where(c => c.Name.Contains(queryParameter.Name));
+                query = query.Where(c => c.Name.Contains(queryParameter.Name));
             if (!string.IsNullOrEmpty(queryParameter.Phone))
-                query.Where(c => c.Phone.Contains(queryParameter.Phone));
+                query = query.Where(c => c.Phone.Contains(queryParameter.Phone));
             if (Enum.IsDefined(typeof(EUserStatus), queryParameter.Status))
-                query.Where(c => c.Status == queryParameter.Status);
+                query = query.Where(c => c.Status == queryParameter.Status);
             if (!string.IsNullOrEmpty(queryParameter.TrueName))
-                query.Where(c => c.TrueName.Contains(queryParameter.TrueName));
+                query = query.Where(c => c.TrueName.Contains(queryParameter.TrueName));
             if (Enum.IsDefined(typeof(EUserType), queryParameter.Type))
-                query.Where(c => c.Type == queryParameter.Type);
+                query = query.Where(c => c.Type == queryParameter.Type);
             var userSet = await query.ToEntitySetAsync(queryParameter);
             return Mapper.Map<EntitySet<UserResult>>(userSet);
         }
