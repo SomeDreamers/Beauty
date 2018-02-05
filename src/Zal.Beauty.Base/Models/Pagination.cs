@@ -11,9 +11,9 @@ namespace Zal.Beauty.Base.Models
     public class Pagination
     {
         /// <summary>
-        /// 页码
+        /// 起始下标
         /// </summary>
-        public int Page { get; set; }
+        public int Start { get; set; }
 
         /// <summary>
         /// 大小

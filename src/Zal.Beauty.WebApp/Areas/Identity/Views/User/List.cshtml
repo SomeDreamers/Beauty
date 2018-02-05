@@ -5,24 +5,45 @@
             $('#example-3').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "order": [],
+                "lengthMenu": [2, 30, 40, 50, 100],
                 //"ajax": "/Identity/User/UserSetAjax"
                 "ajax": {
                     "url": "/Identity/User/UserSetAjax",
                     "data": function (d) {
-                        d.myKey = "myValue";
-                        // d.custom = $('#myInput').val();
-                        // etc
+                        d.Start = d.start;
+                        d.Size = d.length;
+                        if (d.order.length > 0) {
+                            d.Column = d.columns[d.order[0].column].data;
+                            d.Sort = d.order[0].dir === "asc" ? 1 : 2;
+                        }
+                    },
+                    "dataFilter": function (result) {
+                        var resultJson = jQuery.parseJSON(result);
+                        var obj = {};
+                        obj.recordsTotal = resultJson.totalCount;
+                        obj.recordsFiltered = resultJson.totalCount;
+                        obj.data = resultJson.entities;
+                        return JSON.stringify(obj);
                     }
+                    //"dataSrc": function (result) {
+                    //    var obj = {};
+                    //    result.draw = 1;
+                    //    result.recordsTotal = result.totalCount;
+                    //    result.recordsFiltered = result.totalCount;
+                    //    return result.entities;
+                    //}
                 },
+                
                 "columns": [
-                    { "data": "Name" },
-                    { "data": "TrueName" },
-                    { "data": "Phone" },
-                    { "data": "Mail" },
-                    { "data": "Address" },
-                    { "data": "CreateTime" },
-                    { "data": "Type" },
-                    { "data": "Status" }
+                    { data: "name" },
+                    { data: "trueName" },
+                    { data: "phone" },
+                    { data: "mail" },
+                    { data: "address" },
+                    { data: "createTime" },
+                    { data: "type" },
+                    { data: "status" }
                 ]
             });
          })
