@@ -17,7 +17,7 @@ namespace Zal.Beauty.Base.Models
         /// <summary>
         /// 总数量
         /// </summary>
-        public int TotalCount { get; set; }
+        public int Total { get; set; }
 
         /// <summary>
         /// 总页数

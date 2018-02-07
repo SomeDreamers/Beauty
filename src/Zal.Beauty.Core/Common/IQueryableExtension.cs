@@ -19,8 +19,8 @@ namespace Zal.Beauty.Core.Common
         {
             if (pagination.Size <= 0) pagination.Size = 50;
             EntitySet<TSource> entitySet = new EntitySet<TSource>();
-            entitySet.TotalCount = await query.CountAsync();
-            entitySet.TotalPages = (entitySet.TotalCount + pagination.Size - 1) / pagination.Size;
+            entitySet.Total = await query.CountAsync();
+            entitySet.TotalPages = (entitySet.Total + pagination.Size - 1) / pagination.Size;
             entitySet.Start = pagination.Start;
             entitySet.Size = pagination.Size;
             entitySet.Sort = pagination.Sort;

@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-components.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-skins.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/custom.css" />
-    <link rel="stylesheet" href="~/lib/xenon/assets/js/datatables/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="~/lib/bootstrap-table/dist/css/bootstrap-table.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datetimepicker.css" />
     @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("Styles", required: false)
 </head>
@@ -87,10 +88,13 @@
     <script src="~/lib/xenon/assets/js/jquery-ui/jquery-ui.min.js"></script>
 
     <!-- table -->
-    <script src="~/lib/xenon/assets/js/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="~/lib/xenon/assets/js/datatables/dataTables.bootstrap.js"></script>
-    @*<script src="~/lib/xenon/assets/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
-    <script src="~/lib/xenon/assets/js/datatables/tabletools/dataTables.tableTools.min.js"></script>*@
+    <script src="~/lib/bootstrap-table/dist/js/bootstrap-table.js"></script>
+    <script src="~/lib/bootstrap-table/dist/locales/bootstrap-table-zh-CN.js"></script>
+
+    <!-- datepicker -->
+    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
     @RenderSection("Scripts", required: false)
     @*@Html.Partial("~/Views/Shared/_Modal.cshtml")*@
 </body>
