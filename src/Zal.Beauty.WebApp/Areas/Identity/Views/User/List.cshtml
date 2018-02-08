@@ -1,13 +1,49 @@
 ﻿
 @section Scripts{
     <script type="text/javascript">
+        //更新用户类型
+        var UpdateUserType = function (id, type) {
+            show_loading_bar(70);
+            $.post("/Identity/User/UpdateUserType", { id: id, type: type }, function (resp) {
+                show_loading_bar({
+                    pct: 100,
+                    finish: function () {
+                        if (resp.isSuccess) {
+                            $('#table').bootstrapTable('refresh');
+                        }
+                        else {
+                            toastr.error(resp.message, "操作错误!");
+                        }
+                    }
+                });
+            });
+        }
+
+        //更新用户状态
+        var UpdateUserStatus = function (id, status) {
+            show_loading_bar(70);
+            $.post("/Identity/User/UpdateUserStatus", { id: id, status: status }, function (resp) {
+                show_loading_bar({
+                    pct: 100,
+                    finish: function () {
+                        if (resp.isSuccess) {
+                            $('#table').bootstrapTable('refresh');
+                        }
+                        else {
+                            toastr.error(resp.message, "操作错误!");
+                        }
+                    }
+                });
+            });
+        }
+
         $(function () {
             $('#table').bootstrapTable({
-                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）     
-                cache: false,   
+                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cache: false,
                 url: "/Identity/User/UserSetAjax",
                 sidePagination: 'server',
-                pagination: true, 
+                pagination: true,
                 pageList: [2, 10, 20, 50, 100],
                 showColumns: true,
                 showRefresh: true,
@@ -15,17 +51,17 @@
                 searchOnEnterKey: true,
                 trimOnSearch: true,
                 //showPaginationSwitch: true,
-                toolbar: "#toolbar",                   //工具按钮用哪个容器  
+                toolbar: "#toolbar",                   //工具按钮用哪个容器
                 //得到查询的参数
                 queryParams: function (params) {
                     //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     var temp = {
                         Size: params.limit,                         //页面大小
                         Start: params.offset,   //页码
-                        Column: params.sort,      //排序列名  
-                        Sort: params.order //排位命令（desc，asc） 
+                        Column: params.sort,      //排序列名
+                        Sort: params.order //排位命令（desc，asc）
                     };
-                    $(".search-control").each(function () { 
+                    $(".search-control").each(function () {
                         var $this = $(this);
                         var name = $this.attr("name");
                         var value = $this.val();
@@ -38,7 +74,7 @@
                     { checkbox: true, visible: true },
                     { field: 'name', title: '用户名' },
                     { field: 'trueName', title: '真实姓名' },
-                    { field: 'phone', title: '电话'},
+                    { field: 'phone', title: '电话' },
                     { field: 'mail', title: '邮箱' },
                     { field: 'address', title: '地址' },
                     { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
@@ -63,7 +99,7 @@
             }
 
             //表格用户类型转换
-            function typeFormmatter(value, row, index) { 
+            function typeFormmatter(value, row, index) {
                 if (value == 1)
                     return "客户";
                 else
@@ -73,10 +109,12 @@
             //表格操作列
             function actionFormmatter(value, row, index) {
                 var id = value;
+                var typeAdmin = row.type === 2;
+                var statusDisabled = row.status === 2;
                 var result = "";
-                result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
-                result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"EditViewById('" + id + "')\" title='编辑'><span class='glyphicon glyphicon-pencil'></span></a>";
-                result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+                result += "<button class='btn btn-primary btn-sm btn-icon edit-user-btn' data='" + id +"'>编辑</button>";
+                result += "<button class='btn btn-warning btn-sm btn-icon' onclick=\"UpdateUserType(" + id + ", " + (typeAdmin ? 1 : 2) + ")\">" + (typeAdmin ? "设为客户" : "设为管理员") + "</button>";
+                result += "<button class='btn btn-danger btn-sm btn-icon' onclick=\"UpdateUserStatus(" + id + ", " + (statusDisabled ? 1 : 2) + ")\">" + (statusDisabled ? "启用" : "禁用") + "</button>";
 
                 return result;
             }
@@ -98,7 +136,21 @@
                 $(".search-control").val("");
                 $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
             });
-         })
+
+            //编辑用户按钮点击事件
+            $(document).on("click", ".edit-user-btn", function () {
+                var id = $(this).attr("data");
+                jQuery('#edit-user-modal').modal('show', { backdrop: 'static' });
+                jQuery.ajax({
+                    url: "/Identity/User/Edit",
+                    data: {id: id},
+                    success: function (response) {
+                        jQuery('#edit-user-modal .modal-body').html(response);
+                    }
+                });
+            });
+            
+        })
     </script>
 }
 
@@ -145,7 +197,7 @@
                     <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
                 </button>
             </div>
-         </div>
+        </div>
 
         <div id="toolbar" class="btn-group">
             <button id="btn_add" type="button" class="btn btn-default">
@@ -157,11 +209,32 @@
             <button id="btn_delete" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
             </button>
-        </div> 
+        </div>
 
-        <table id="table">
-            
-        </table>
+        <table id="table"></table>
     </div>
 </div>
 
+@* 编辑用户模态框 *@
+<div class="modal fade" id="edit-user-modal" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Dynamic Content</h4>
+            </div>
+
+            <div class="modal-body">
+
+                Content is loading...
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-info">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

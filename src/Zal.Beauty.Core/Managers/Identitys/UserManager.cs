@@ -67,14 +67,14 @@ namespace Zal.Beauty.Core.Managers.Identitys
                 return result;
             }
             var tmpUser = await GetUserByExactNameAsync(user.Name);
-            if(tmpUser != null)
+            if (tmpUser != null)
             {
                 result.IsSuccess = false;
                 result.Message = "用户名不能重复";
                 return result;
             }
             //验证密码
-            if(userEntity.Password.Length < 6)
+            if (userEntity.Password.Length < 6)
             {
                 result.IsSuccess = false;
                 result.Message = "密码不能小于6位";
@@ -86,6 +86,17 @@ namespace Zal.Beauty.Core.Managers.Identitys
             await context.SaveChangesAsync();
             result.Id = userEntity.Id;
             return result;
+        }
+
+        /// <summary>
+        /// 根据ID获取用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<UserResult> GetUserByIdAsync(long id)
+        {
+            var user = await context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return Mapper.Map<UserResult>(user);
         }
 
         /// <summary>
@@ -117,6 +128,87 @@ namespace Zal.Beauty.Core.Managers.Identitys
             var userSet = await query.ToEntitySetAsync(queryParameter);
             return Mapper.Map<EntitySet<UserResult>>(userSet);
         }
+
+        /// <summary>
+        /// 更新用户状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> UpdateUserStatusAsync(long id, EUserStatus status)
+        {
+            ReturnResult result = new ReturnResult();
+            //验证状态
+            if(!Enum.IsDefined(typeof(EUserStatus), status))
+            {
+                result.IsSuccess = false;
+                result.Message = "状态无效";
+                return result;
+            }
+            //验证用户
+            var user = await context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if(user == null)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户已删除";
+                return result;
+            }
+            switch (status)
+            {
+                case EUserStatus.Enabled:
+                    user.Status = EUserStatus.Enabled;
+                    break;
+                case EUserStatus.Disabled:
+                    user.Status = EUserStatus.Disabled;
+                    break;
+                default:
+                    break;
+            }
+            //更新
+            await context.SaveChangesAsync();
+            return result;
+        }
+
+        /// <summary>
+        /// 更新用户类型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> UpdateUserTypeAsync(long id, EUserType type)
+        {
+            ReturnResult result = new ReturnResult();
+            //验证类型
+            if (!Enum.IsDefined(typeof(EUserType), type))
+            {
+                result.IsSuccess = false;
+                result.Message = "类型无效";
+                return result;
+            }
+            //验证用户
+            var user = await context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户已删除";
+                return result;
+            }
+            switch (type)
+            {
+                case EUserType.Customer:
+                    user.Type = EUserType.Customer;
+                    break;
+                case EUserType.Admin:
+                    user.Type = EUserType.Admin;
+                    break;
+                default:
+                    break;
+            }
+            //更新
+            await context.SaveChangesAsync();
+            return result;
+        }
+
 
         /// <summary>
         /// 根据用户ID获取用户权限keys

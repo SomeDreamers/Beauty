@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Interface.Enums.Identitys;
 using Zal.Beauty.Interface.IManager.Identitys;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 
@@ -40,6 +41,41 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         {
             var userSet = await userManager.GetUserSetAsync(query);
             return Json(userSet);
+        }
+
+        /// <summary>
+        /// 更新用户状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UpdateUserStatus(long id, EUserStatus status)
+        {
+            var result = await userManager.UpdateUserStatusAsync(id, status);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 更新用户类型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UpdateUserType(long id, EUserType type)
+        {
+            var result = await userManager.UpdateUserTypeAsync(id, type);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 编辑用户界面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Edit(long id)
+        {
+            var user = await userManager.GetUserByIdAsync(id);
+            return PartialView("_Edit", user);
         }
     }
 }
