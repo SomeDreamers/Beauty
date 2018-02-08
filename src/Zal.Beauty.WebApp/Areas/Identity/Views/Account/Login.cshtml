@@ -67,7 +67,8 @@
 
                                     // Redirect after successful login page (when progress bar reaches 100%)
                                     if (resp.isSuccess) {
-                                        window.location.href = '/Home/Index';
+                                        var ReturnUrl = $("#ReturnUrl").val();
+                                        window.location.href = ReturnUrl ? ReturnUrl : '/Home/Index';
                                     }
                                     else {
                                         toastr.error(resp.message, "Invalid LogIn!");
@@ -86,6 +87,8 @@
         })
     </script>
 }
+
+@Html.Hidden("ReturnUrl", Context.Request.Query["ReturnUrl"])
 
 <div class="login-container">
 
