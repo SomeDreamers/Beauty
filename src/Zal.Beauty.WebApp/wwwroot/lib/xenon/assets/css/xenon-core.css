@@ -788,7 +788,7 @@ body {
 .sidebar-menu {
   display: table-cell;
   position: relative;
-  width: 250px;
+  width: 340px;
   background: #2c2e2f;
   z-index: 1;
 }

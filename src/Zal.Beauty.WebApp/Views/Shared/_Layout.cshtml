@@ -7,7 +7,6 @@
     <title>@Html.PageTitle()</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/xenon/assets/js/dropzone/css/dropzone.css">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -17,7 +16,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
     <link rel="stylesheet" href="~/lib/xenon/assets/css/fonts/linecons/css/linecons.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/fonts/fontawesome/css/font-awesome.min.css" />
@@ -28,6 +27,7 @@
     <link rel="stylesheet" href="~/lib/xenon/assets/css/custom.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-table/dist/css/bootstrap-table.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/lib/xenon/assets/js/dropzone/css/dropzone.css">
     @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("Styles", required: false)
 </head>
