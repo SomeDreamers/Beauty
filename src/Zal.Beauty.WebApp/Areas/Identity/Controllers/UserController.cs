@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
 using Zal.Beauty.Interface.Enums.Identitys;
 using Zal.Beauty.Interface.IManager.Identitys;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
@@ -52,6 +53,24 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         public async Task<IActionResult> UpdateUserStatus(long id, EUserStatus status)
         {
             var result = await userManager.UpdateUserStatusAsync(id, status);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 批量更新用户状态
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> BatchUpdateUserStatus(List<long> ids, EUserStatus status)
+        {
+            ReturnResult result = new ReturnResult();
+            foreach (var id in ids)
+            {
+                result = await userManager.UpdateUserStatusAsync(id, status);
+                if (!result.IsSuccess)
+                    return Json(result);
+            }
             return Json(result);
         }
 
