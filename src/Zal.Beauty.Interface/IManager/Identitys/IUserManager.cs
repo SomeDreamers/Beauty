@@ -35,6 +35,13 @@ namespace Zal.Beauty.Interface.IManager.Identitys
         Task<ReturnResult> RegisterAsync(UserParameter user);
 
         /// <summary>
+        /// 更新用户
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<ReturnResult> UpdateAsync(UserParameter user);
+
+        /// <summary>
         /// 根据ID获取用户
         /// </summary>
         /// <param name="id"></param>

@@ -89,6 +89,48 @@ namespace Zal.Beauty.Core.Managers.Identitys
         }
 
         /// <summary>
+        /// 更新用户
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> UpdateAsync(UserParameter user)
+        {
+            ReturnResult result = new ReturnResult();
+            var userEntity = Mapper.Map<User>(user);
+            //验证用户ID
+            var oldUser = await context.Users.Where(c => c.Id == user.Id).FirstOrDefaultAsync();
+            if(oldUser == null)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户名不存在";
+                return result;
+            }
+            //验证用户名
+            user.Name = user.Name?.Trim();
+            if (string.IsNullOrEmpty(user.Name))
+            {
+                result.IsSuccess = false;
+                result.Message = "用户名不能为空";
+                return result;
+            }
+            var tmpUser = await GetUserByExactNameAsync(user.Name);
+            if (tmpUser != null && tmpUser.Id != user.Id)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户名不能重复";
+                return result;
+            }
+            //更新用户
+            oldUser.Name = user.Name;
+            oldUser.TrueName = user.TrueName;
+            oldUser.Phone = user.Phone;
+            oldUser.Mail = user.Mail;
+            oldUser.Address = user.Address;
+            await context.SaveChangesAsync();
+            return result;
+        }
+
+        /// <summary>
         /// 根据ID获取用户
         /// </summary>
         /// <param name="id"></param>

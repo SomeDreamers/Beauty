@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Zal.Beauty.Core.MapProfiles;
+using Zal.Beauty.Core.MapProfiles.Identitys;
 using Zal.Beauty.Core.MapProfiles.Wechats;
 
 namespace Zal.Beauty.Core
@@ -17,7 +18,8 @@ namespace Zal.Beauty.Core
             //cfg.CreateMap<Pagination, PageSort>();
 
             #region Identity
-            cfg.AddProfile<AccountProfile>();
+            cfg.AddProfile<UserProfile>();
+            cfg.AddProfile<RoleProfile>();
             #endregion
 
             #region Wechat

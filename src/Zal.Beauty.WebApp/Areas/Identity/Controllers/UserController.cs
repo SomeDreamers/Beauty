@@ -96,5 +96,16 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
             var user = await userManager.GetUserByIdAsync(id);
             return PartialView("_Edit", user);
         }
+        
+        /// <summary>
+        /// 更新用户
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Update(UserParameter user)
+        {
+            var result = await userManager.UpdateAsync(user);
+            return Json(result);
+        }
     }
 }

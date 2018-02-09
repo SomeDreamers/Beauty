@@ -1,5 +1,6 @@
 ﻿@model UserResult
 <div class="row">
+    @Html.HiddenFor(c => c.Id)
     <div class="col-md-6">
         <div class="form-group">
             @Html.LabelFor(c=>c.Name, "用户名", new { @class= "control-label" })
@@ -9,29 +10,29 @@
 
     <div class="col-md-6">
         <div class="form-group">
-            @Html.LabelFor(c => c.Name, "用户名", new { @class = "control-label" })
-            @Html.TextBoxFor(c => c.Name, "", new { @class = "form-control" })
+            @Html.LabelFor(c => c.TrueName, "真实姓名", new { @class = "control-label" })
+            @Html.TextBoxFor(c => c.TrueName, "", new { @class = "form-control" })
         </div>
     </div>
 
     <div class="col-md-6">
         <div class="form-group">
-            @Html.LabelFor(c => c.Name, "用户名", new { @class = "control-label" })
-            @Html.TextBoxFor(c => c.Name, "", new { @class = "form-control" })
+            @Html.LabelFor(c => c.Phone, "电话", new { @class = "control-label" })
+            @Html.TextBoxFor(c => c.Phone, "", new { @class = "form-control" })
         </div>
     </div>
 
     <div class="col-md-6">
         <div class="form-group">
-            @Html.LabelFor(c => c.Name, "用户名", new { @class = "control-label" })
-            @Html.TextBoxFor(c => c.Name, "", new { @class = "form-control" })
+            @Html.LabelFor(c => c.Mail, "邮箱", new { @class = "control-label" })
+            @Html.TextBoxFor(c => c.Mail, "", new { @class = "form-control" })
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group">
-            @Html.LabelFor(c => c.Name, "用户名", new { @class = "control-label" })
-            @Html.TextBoxFor(c => c.Name, "", new { @class = "form-control" })
+            @Html.LabelFor(c => c.Address, "地址", new { @class = "control-label" })
+            @Html.TextBoxFor(c => c.Address, "", new { @class = "form-control" })
         </div>
     </div>
 </div>

@@ -8,14 +8,14 @@ using Zal.Beauty.Core.ORM.Identitys;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 using Zal.Beauty.Interface.Models.Results.Identitys;
 
-namespace Zal.Beauty.Core.MapProfiles
+namespace Zal.Beauty.Core.MapProfiles.Identitys
 {
     /// <summary>
-    /// 认证授权profile
+    /// 用户profile
     /// </summary>
-    public class AccountProfile : Profile
+    public class UserProfile : Profile
     {
-        public AccountProfile()
+        public UserProfile()
         {
             CreateMap<UserParameter, User>();
             CreateMap<User, UserResult>();

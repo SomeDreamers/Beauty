@@ -152,6 +152,32 @@
                 });
             });
 
+            //编辑用户保存
+            $("#edit-user-modal .save-btn").click(function () { 
+                var user = {};
+                user.Id = $("#edit-user-modal #Id").val();
+                user.Name = $("#edit-user-modal #Name").val();
+                user.TrueName = $("#edit-user-modal #TrueName").val();
+                user.Phone = $("#edit-user-modal #Phone").val();
+                user.Mail = $("#edit-user-modal #Mail").val();
+                user.Address = $("#edit-user-modal #Address").val();
+                show_loading_bar(70);
+                $.post("/Identity/User/Update", { user: user }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-user-modal').modal("hide");
+                                $('#table').bootstrapTable('refresh');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
             //批量更新用户状态
             $(".batch-update-status-btn").click(function () {
                 show_loading_bar(70);
@@ -246,7 +272,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Dynamic Content</h4>
+                <h4 class="modal-title">编辑用户</h4>
             </div>
 
             <div class="modal-body">
@@ -256,8 +282,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-info">保存</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
             </div>
         </div>
     </div>
