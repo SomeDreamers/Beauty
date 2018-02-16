@@ -17,6 +17,7 @@ namespace Zal.Beauty.Core.MapProfiles.Identitys
         {
             CreateMap<RoleParameter, Role>();
             CreateMap<Role, RoleResult>();
+            CreateMap<Role, RoleInfoResult>();
         }
     }
 }

@@ -1,0 +1,110 @@
+﻿@model List<RoleInfoResult>
+
+@section Styles{
+    <link rel="stylesheet" href="~/lib/xenon/assets/js/uikit/uikit.css">
+    <style type="text/css">
+        .uk-nestable-item {
+            padding: 5px 8px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script src="~/lib/xenon/assets/js/uikit/js/uikit.min.js"></script>
+	<script src="~/lib/xenon/assets/js/uikit/js/addons/nestable.min.js"></script>
+    <script type="text/javascript">
+        $(function ($) {
+            $("#nestable-list-1").on('nestable-stop', function (ev) {
+                var serialized = $(this).data('nestable').serialize(),
+                    str = '';
+
+                //console.log( $(this).data('nestable').list() );
+                str = iterateList(serialized, 0);
+                //iterateList(serialized);
+
+                $("#nestable-list-1-ev").val(str);
+            });
+        });
+
+        function iterateList(items, depth) {
+            var str = '';
+
+            if (!depth)
+                depth = 0;
+
+            console.log(items);
+
+            jQuery.each(items, function (i, obj) {
+                str += '[ID: ' + obj.itemId + ']\t' + repeat('—', depth + 1) + ' ' + obj.item;
+                str += '\n';
+
+                if (obj.children) {
+                    str += iterateList(obj.children, depth + 1);
+                }
+            });
+
+            return str;
+        }
+
+        function repeat(s, n) {
+            var a = [];
+            while (a.length < n) {
+                a.push(s);
+            }
+            return a.join('');
+        }
+
+    </script>
+}
+
+@Html.BlockQuote()
+<div class="panel panel-default">
+    @*<div class="panel-heading">角色管理</div>*@
+    <div class="btn-group">
+        <button data="1" type="button" class="btn btn-success batch-update-status-btn">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>新增角色
+        </button>
+    </div>
+    <div class="panel-body">
+        
+        <div class="row">
+            <div class="col-sm-12">
+
+                @foreach (var item in Model)
+                {
+                    <ul id="nestable-list-1" class="uk-nestable" data-uk-nestable>
+                        <li data-item="@item.Name" data-item-id="@item.Id" class="uk-nestable-list-item uk-parent uk-collapsed">
+                            <div class="uk-nestable-item">
+                                <div data-nestable-action="toggle"></div>
+                                <div class="list-label">@item.Name <span>(@item.Users.Count)</span></div>
+                                <div style="float:right;">
+                                    @if(item.Users.Count == 0)
+                                    {
+                                        <a href="javascript:void(0)" title="删除角色" class="role-del" data-id="@item.Id"><i class="linecons-trash"></i></a>
+                                    }
+                                    <a href="javascript:void(0)" title="添加用户" class="user-add" data-id="@item.Id"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                                    <a href="javascript:void(0)" title="编辑角色" class="rold-edit" data-id="@item.Id"><i class="linecons-pencil"></i></a>
+                                   
+                                </div>
+                            </div>
+
+                            <ul id="role-user-@item.Id">
+                                @foreach (var user in item.Users)
+                                {
+                                    <li data-item="@user.Name" data-item-id="@user.Id">
+                                        <div class="uk-nestable-item">
+                                            <div class="list-label">@user.Name</div>
+                                            <div style="float:right;">
+                                                <a href="javascript:void(0)" title="移除用户" class="user-remove" data-id="@item.Id" data-user-id="@user.Id"><i class="glyphicon glyphicon-remove-sign"></i></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
