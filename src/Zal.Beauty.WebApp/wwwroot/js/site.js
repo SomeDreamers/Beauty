@@ -49,3 +49,39 @@ var dateFormmatter = function (value) {
     return Datetime.Format(new Date(value), "yyyy-MM-dd HH:mm:ss");
 }
 
+
+//自定义插件
+var $Zaolazi = {
+    //confirm提示框jquery插件
+    confirmModal: function (content, callBack) {
+        //移除绑定事件
+        $('#zlz-confirm-modal .confirm-btn').unbind();  
+        //移除模态框
+        $("#zlz-confirm-modal").remove();
+        //增加模态框
+        var modalHtml = '<div class="modal fade in" id="zlz-confirm-modal" data-backdrop="static" aria-hidden="false" style="display: none;">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+            '<h4 class="modal-title">系统提示</h4>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '<h4>' + content + '</h4>' + 
+            '</div>' +
+            '<div class="modal-footer">' +
+            '<button type="button" class="btn btn-white" data-dismiss="modal">取消</button>' +
+            '<button type="button" class="btn btn-primary confirm-btn">确定</button>' +
+        '</div></div></div></div>';
+        $("body").append(modalHtml);
+        //添加监听事件
+        $(document).unbind().on("click", "#zlz-confirm-modal .confirm-btn", function () {
+            //点击确定按钮回掉
+            callBack();
+            //隐藏模态框
+            $("#zlz-confirm-modal").modal('hide');
+        });
+        //展示模态框
+        $('#zlz-confirm-modal').modal('show', { backdrop: 'static' });
+    }
+}

@@ -13,47 +13,97 @@
     <script src="~/lib/xenon/assets/js/uikit/js/uikit.min.js"></script>
 	<script src="~/lib/xenon/assets/js/uikit/js/addons/nestable.min.js"></script>
     <script type="text/javascript">
-        $(function ($) {
-            $("#nestable-list-1").on('nestable-stop', function (ev) {
-                var serialized = $(this).data('nestable').serialize(),
-                    str = '';
+        $(function () {
+            var id = 0;
 
-                //console.log( $(this).data('nestable').list() );
-                str = iterateList(serialized, 0);
-                //iterateList(serialized);
-
-                $("#nestable-list-1-ev").val(str);
+            //编辑角色按钮点击事件
+            $(".role-edit").click(function () {
+                id = $(this).attr("data-id");
+                $('#edit-role-modal').modal('show', { backdrop: 'static' });
+                $.ajax({
+                    url: "/Identity/Role/Edit",
+                    data: { id: id },
+                    success: function (response) {
+                        $('#edit-role-modal .modal-body').html(response);
+                    }
+                });
             });
+
+            //编辑角色保存
+            $("#edit-role-modal .save-btn").click(function () {
+                var role = {};
+                role.Id = id;
+                role.Name = $("#edit-role-modal #Name").val();
+                role.Memo = $("#edit-role-modal #Memo").val();
+                show_loading_bar(70);
+                $.post("/Identity/Role/Save", { role: role }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-role-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+
+            //新增角色按钮点击事件
+            $(".create-role-btn").click(function () {
+                $("#create-role-modal #Name").val("");
+                $("#create-role-modal #Memo").val("");
+                $('#create-role-modal').modal('show', { backdrop: 'static' });
+            });
+
+            //新建角色保存
+            $("#create-role-modal .save-btn").click(function () {
+                var role = {};
+                role.Name = $("#create-role-modal #Name").val();
+                role.Memo = $("#create-role-modal #Memo").val();
+                show_loading_bar(70);
+                $.post("/Identity/Role/Save", { role: role }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-role-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
+            //删除角色点击事件
+            $(".role-del").click(function () {
+                id = $(this).attr("data-id");
+                $Zaolazi.confirmModal("确定删除角色？", function () {
+                    show_loading_bar(70);
+                    $.post("/Identity/Role/Delete", { id: id }, function (resp) {
+                        show_loading_bar({
+                            pct: 100,
+                            finish: function () {
+                                if (resp.isSuccess) {
+                                    window.location.reload();
+                                }
+                                else {
+                                    toastr.error(resp.message, "操作错误!");
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+            
+
         });
-
-        function iterateList(items, depth) {
-            var str = '';
-
-            if (!depth)
-                depth = 0;
-
-            console.log(items);
-
-            jQuery.each(items, function (i, obj) {
-                str += '[ID: ' + obj.itemId + ']\t' + repeat('—', depth + 1) + ' ' + obj.item;
-                str += '\n';
-
-                if (obj.children) {
-                    str += iterateList(obj.children, depth + 1);
-                }
-            });
-
-            return str;
-        }
-
-        function repeat(s, n) {
-            var a = [];
-            while (a.length < n) {
-                a.push(s);
-            }
-            return a.join('');
-        }
-
     </script>
 }
 
@@ -61,7 +111,7 @@
 <div class="panel panel-default">
     @*<div class="panel-heading">角色管理</div>*@
     <div class="btn-group">
-        <button data="1" type="button" class="btn btn-success batch-update-status-btn">
+        <button type="button" class="btn btn-success create-role-btn">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>新增角色
         </button>
     </div>
@@ -83,7 +133,7 @@
                                         <a href="javascript:void(0)" title="删除角色" class="role-del" data-id="@item.Id"><i class="linecons-trash"></i></a>
                                     }
                                     <a href="javascript:void(0)" title="添加用户" class="user-add" data-id="@item.Id"><i class="glyphicon glyphicon-plus-sign"></i></a>
-                                    <a href="javascript:void(0)" title="编辑角色" class="rold-edit" data-id="@item.Id"><i class="linecons-pencil"></i></a>
+                                    <a href="javascript:void(0)" title="编辑角色" class="role-edit" data-id="@item.Id"><i class="linecons-pencil"></i></a>
                                    
                                 </div>
                             </div>
@@ -108,3 +158,64 @@
         </div>
     </div>
 </div>
+
+@* 编辑角色模态框 *@
+<div class="modal fade" id="edit-role-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">编辑角色</h4>
+            </div>
+
+            <div class="modal-body">
+
+                加载中...
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 新建角色模态框 *@
+<div class="modal fade in" id="create-role-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新建角色</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="Name">角色名</label>
+                            <input class="form-control" id="Name" name="Name" type="text" value="">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="Memo">备注</label>
+                            <input class="form-control" id="Memo" name="Memo" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+

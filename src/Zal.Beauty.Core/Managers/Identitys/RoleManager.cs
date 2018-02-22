@@ -32,7 +32,7 @@ namespace Zal.Beauty.Core.Managers.Identitys
         /// <returns></returns>
         public async Task<List<RoleResult>> GetRolesAsync()
         {
-            var roles = await context.Roles.OrderBy(c => c.Id).ToListAsync();
+            var roles = await context.Roles.Where(c=>c.IsDel == false).OrderBy(c => c.Id).ToListAsync();
             return Mapper.Map<List<RoleResult>>(roles);
         }
 
@@ -42,7 +42,7 @@ namespace Zal.Beauty.Core.Managers.Identitys
         /// <returns></returns>
         public async Task<List<RoleInfoResult>> GetRoleInfosAsync()
         {
-            var roles = await context.Roles.OrderBy(c => c.Id).ToListAsync();
+            var roles = await context.Roles.Where(c => c.IsDel == false).OrderBy(c => c.Id).ToListAsync();
             var infos = Mapper.Map<List<RoleInfoResult>>(roles);
             foreach (var item in infos)
             {
@@ -85,6 +85,13 @@ namespace Zal.Beauty.Core.Managers.Identitys
                 {
                     result.IsSuccess = false;
                     result.Message = "角色名不能为空";
+                    return result;
+                }
+                var tmpRole = await context.Roles.Where(c => c.Name == role.Name && c.IsDel == false).FirstOrDefaultAsync();
+                if (tmpRole != null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = "角色名重复";
                     return result;
                 }
                 //创建

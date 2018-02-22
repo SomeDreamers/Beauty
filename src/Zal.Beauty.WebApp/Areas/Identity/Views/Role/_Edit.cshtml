@@ -1,0 +1,16 @@
+﻿@model RoleResult
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(c=>c.Name, "角色名", new { @class= "control-label" })
+            @Html.TextBoxFor(c => c.Name, "", new { @class= "form-control" })
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(c => c.Memo, "备注", new { @class = "control-label" })
+            @Html.TextBoxFor(c => c.Memo, "", new { @class = "form-control" })
+        </div>
+    </div>
+</div>

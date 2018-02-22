@@ -50,7 +50,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         public async Task<IActionResult> Edit(long id)
         {
             var role = await roleManager.GetRoleByIdAsync(id);
-            return View("_Edit", role);
+            return PartialView("_Edit", role);
         }
 
         /// <summary>
