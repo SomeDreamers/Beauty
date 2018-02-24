@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Zal.Beauty.Core.MapProfiles;
+using Zal.Beauty.Core.MapProfiles.Commons;
 using Zal.Beauty.Core.MapProfiles.Wechats;
 
 namespace Zal.Beauty.Core
@@ -25,6 +26,8 @@ namespace Zal.Beauty.Core
             cfg.AddProfile<MessageProfile>();
             #endregion
             cfg.AddProfile<TagProfile>();
+            cfg.AddProfile<FileProfile>();
+
         }
     }
 }

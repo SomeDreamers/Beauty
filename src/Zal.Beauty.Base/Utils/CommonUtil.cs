@@ -56,5 +56,15 @@ namespace Zal.Beauty.Base.Utils
                 throw new Exception(ex.Message);
             }
         }
+
+
+        /// <summary>
+        /// 读取当前时间的时间字符串
+        /// </summary>
+        /// <returns></returns>
+        public static string ReadDateTime()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        }
     }
 }

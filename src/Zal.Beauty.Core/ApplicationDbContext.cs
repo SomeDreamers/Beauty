@@ -49,12 +49,16 @@ namespace Zal.Beauty.Core
         /// </summary>
         /// <param name="options"></param>
         public DbSet<Tag> Tags { get; set; }
+        /// <summary>
+        /// 素材表
+        /// </summary>
+        public DbSet<File> Files { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
 
-        
+
     }
 }

@@ -3,18 +3,16 @@
 @section Scripts{
 <script src="~/lib/xenon/assets/js/dropzone/dropzone.min.js"></script>
 <script type="text/javascript">
-        jQuery(document).ready(function ($) {
+    jQuery(document).ready(function ($) {
                 var i = 1,
                 $example_dropzone_filetable = $("#example-dropzone-filetable"),
                 example_dropzone = $("#advancedDropzone").dropzone({
-                    url: '/Common/File/UploadOSS?file',
-                    paramName: "file",
+                    url: '/Common/File/UploadOSS?tagId=' + jQuery('#TagId').attr("data"),
+                    paramName: "files",
                     method: 'post',
                     addRemoveLinks: true,
-
                     // Events
                     addedfile: function (file) {
-                        alert();
                         if (i == 1) {
                             $example_dropzone_filetable.find('tbody').html('');
                         }
@@ -33,18 +31,29 @@
                         file.fileEntryTd = $el;
                         file.progressBar = $el.find('.progress-bar');
                     },
-
                     uploadprogress: function (file, progress, bytesSent) {
                         file.progressBar.width(progress + '%');
                     },
+                    //sending: function (file, xhr, formData) {
+                    //    //formData.append('tag', jQuery('#tag').text());
+                    //    //alert(jQuery('#TagId').text());
+                    //    xhr.open('post', '/Common/File/UploadOSS', true);
+                    //    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    //    xhr.send(jQuery('#TagId').text());
 
-                    success: function (file) {
-                        file.fileEntryTd.find('td:last').html('<span class="text-success">Uploaded</span>');
-                        file.progressBar.removeClass('progress-bar-warning').addClass('progress-bar-success');
+                    //},
+                    success: function (file, result) {
+                        if (result.isSuccess) {                
+                            file.fileEntryTd.find('td:last').html('<span class="text-success">'+result.message+'</span>');
+                            file.progressBar.removeClass('progress-bar-warning').addClass('progress-bar-success');
+                        } else {
+                            file.fileEntryTd.find('td:last').html('<span class="text-danger">'+result.message+'</span>');
+                            file.progressBar.removeClass('progress-bar-warning').addClass('progress-bar-red');
+                        }
+                        
                     },
-
                     error: function (file) {
-                        file.fileEntryTd.find('td:last').html('<span class="text-danger">Failed</span>');
+                        file.fileEntryTd.find('td:last').html('<span class="text-danger">上传失败</span>');
                         file.progressBar.removeClass('progress-bar-warning').addClass('progress-bar-red');
                     }
                 });
@@ -78,7 +87,7 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3 class="panel-title">
+            <h3 class="panel-title" id="TagId" data="2">
                <small>素材分类：</small>@Model
             </h3>
         </div>
