@@ -20,6 +20,7 @@ namespace Zal.Beauty.Core
         {
             services.AddTransient<IUserManager, UserManager>();
             services.AddTransient<IRoleManager, RoleManager>();
+            services.AddTransient<IPermissionManager, PermissionManager>();
             services.AddTransient<ICustomerManager, CustomerManager>();
             services.AddTransient<IMessageManager, MessageManager>();
             services.AddTransient<IFileManager,FileManager>();

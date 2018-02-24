@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Zal.Beauty.WebApp.Configs
@@ -15,19 +16,16 @@ namespace Zal.Beauty.WebApp.Configs
         /// <summary>
         /// 用户管理权限key值
         /// </summary>
-        [Description("用户管理")]
         public const string IdentityUserKeys = "identity.user.manager";
 
         /// <summary>
         /// 角色管理权限key值
         /// </summary>
-        [Description("角色管理")]
         public const string IdentityRoleKeys = "identity.role.manager";
 
         /// <summary>
         /// 权限管理权限key值
         /// </summary>
-        [Description("权限管理")]
         public const string IdentityPermissionKeys = "identity.permission.manager";
         #endregion
 
@@ -62,5 +60,23 @@ namespace Zal.Beauty.WebApp.Configs
         /// </summary>
         public const string MallCommontKeys = "mall.commont.manager";
         #endregion
+
+        public static string GetKeyDescription(string key)
+        {
+            switch (key)
+            {
+                case IdentityUserKeys: return "用户管理";
+                case IdentityRoleKeys: return "角色管理";
+                case IdentityPermissionKeys: return "权限管理";
+                case MallCategoryKeys: return "分类管理";
+                case MallProductKeys: return "商品管理";
+                case MallShelfKeys: return "货架管理";
+                case MallPromotionKeys: return "促销管理";
+                case MallOrderKeys: return "订单管理";
+                case MallCommontKeys: return "评论管理";
+                default:
+                    return "";
+            }
+        }
     }
 }

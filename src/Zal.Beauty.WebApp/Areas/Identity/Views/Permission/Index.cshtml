@@ -1,0 +1,99 @@
+﻿@model List<RoleResult>
+@using Zal.Beauty.WebApp.Configs
+@section Styles{
+    <style type="text/css">
+        .permission-grandparent {
+            margin-top: 10px;
+        }
+
+        .permission-parent {
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+
+        .permission-child  {
+            margin-top: 3px;
+            margin-left: 15px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            //选中祖父节点则选中所有节点，反之则取消所有节点
+            $(".permission-grandparent-box").change(function () {
+                var isChecked = $(this).prop('checked');
+                if (isChecked) {
+                    $(this).parent(".permission-grandparent").find(".permission-parent-box").attr("checked", true);
+                    $(this).parent(".permission-grandparent").find(".permission-child-box").attr("checked", true);
+                }
+                else {
+                    $(this).parent(".permission-grandparent").find(".permission-parent-box").attr("checked", false);
+                    $(this).parent(".permission-grandparent").find(".permission-child-box").attr("checked", false);
+                }
+            }); 
+        })
+    </script>
+}
+
+@Html.BlockQuote()
+<div class="panel panel-default">
+    <div class="panel-body">
+        <button type="button" class="btn btn-warning save-btn" disabled>
+            保存
+        </button>
+        <section class="gallery-env">
+            <div class="row">
+                <div class="col-sm-2 gallery-left">
+                    <div class="gallery-sidebar">
+                        <ul class="list-unstyled">
+                            @foreach (var item in Model)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <i class="fa-users"></i>
+                                        <span>@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-sm-10 gallery-right">
+                    @{
+                        var lines = PermissionKeysMvcSetting.Nodes.Count / 5;
+                        var trueLines = PermissionKeysMvcSetting.Nodes.Count % 5 == 0 ? lines : lines + 1;
+                        for (int i = 0; i < trueLines; i++)
+                        {
+                            <div class="row" style="margin-top:20px;">
+                                @foreach (var item in PermissionKeysMvcSetting.Nodes.GetRange(i * 5, (i + 1) * 5 > PermissionKeysMvcSetting.Nodes.Count ? PermissionKeysMvcSetting.Nodes.Count - i * 5 : 5))
+                                {
+                                    <div class="col-sm-2">
+                                        <div class="permission-grandparent">
+                                            <input class="permission-grandparent-box" type="checkbox"/>@item.Title
+                                            @foreach (var node in item.ChildNodes)
+                                            {
+                                                <div class="permission-parent">
+                                                    <input class="permission-parent-box" type="checkbox" />@node.Title
+                                                    @foreach (var key in node.PerMissionKeys)
+                                                    {
+                                                        
+                                                        <div class="permission-child">
+                                                            <input class="permission-child-box" type="checkbox" value="@key"/>@PermissionKeys.GetKeyDescription(key)
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
