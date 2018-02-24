@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
 using Zal.Beauty.Interface.IManager.Identitys;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 
@@ -84,7 +85,33 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AddUser(long roleId, long userId)
         {
-            var result = await roleManager.RemoveUserOfRoleAsync(roleId, userId);
+            var result = await roleManager.AddUserOfRoleAsync(roleId, userId);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 角色添加用户
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> AddUsers(long roleId, List<long> userIds)
+        {
+            var result = new ReturnResult();
+            var errMsg = "";
+            foreach (var userId in userIds)
+            {
+                result = await roleManager.AddUserOfRoleAsync(roleId, userId);
+                if (!result.IsSuccess)
+                {
+                    errMsg += userId + ": " + result.Message + ";";
+                }
+            }
+            if (!string.IsNullOrEmpty(errMsg))
+            {
+                result.IsSuccess = false;
+                result.Message = errMsg;
+            }
             return Json(result);
         }
     }

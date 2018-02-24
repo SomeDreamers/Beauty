@@ -219,12 +219,10 @@ namespace Zal.Beauty.Core.Managers.Identitys
                 result.Message = "用户不存在";
                 return result;
             }
-            //验证角色是否包含该用户
+            //用户已属于该角色
             var roleUser = await context.RoleUsers.Where(c => c.RoleId == roleId && c.UserId == userId).FirstOrDefaultAsync();
             if (roleUser != null)
             {
-                result.IsSuccess = false;
-                result.Message = "用户已属于该角色";
                 return result;
             }
             //添加记录
