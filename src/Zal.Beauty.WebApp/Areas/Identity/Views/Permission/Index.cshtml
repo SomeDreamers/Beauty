@@ -21,18 +21,52 @@
 @section Scripts{
     <script type="text/javascript">
         $(function () {
-            //选中祖父节点则选中所有节点，反之则取消所有节点
-            $(".permission-grandparent-box").change(function () {
-                var isChecked = $(this).prop('checked');
-                if (isChecked) {
-                    $(this).parent(".permission-grandparent").find(".permission-parent-box").attr("checked", true);
-                    $(this).parent(".permission-grandparent").find(".permission-child-box").attr("checked", true);
-                }
-                else {
-                    $(this).parent(".permission-grandparent").find(".permission-parent-box").attr("checked", false);
-                    $(this).parent(".permission-grandparent").find(".permission-child-box").attr("checked", false);
-                }
-            }); 
+            var roleId = 0;
+
+            //角色名点击事件
+            $(".role-item").click(function () {
+                //隐藏保存按钮
+                $(".save-btn").attr("disabled", "disabled");
+                //获取角色拥有权限
+                roleId = $(this).attr("data-id");
+                //设置选中状态
+                $(".list-unstyled li").removeClass("active");
+                $(this).parent("li").addClass("active");
+                show_loading_bar(70);
+                $.post("/Identity/Permission/GetRolePermissions", { roleId: roleId }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            $(".gallery-right").html(resp);
+                            //显示保存按钮
+                            $(".save-btn").removeAttr("disabled");
+                        }
+                    });
+                });
+            });
+
+            //保存按钮点击事件
+            $(".save-btn").unbind().click(function () {
+                var keys = [];
+                $(".permission-child-box:checked").each(function () {
+                    keys.push($(this).attr("value"));
+                });
+
+                show_loading_bar(70);
+                $.post("/Identity/Permission/UpdateRolePermissions", { roleId: roleId, permissionKeys: keys }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                toastr.success("保存成功", "操作提示");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
         })
     </script>
 }
@@ -51,7 +85,7 @@
                             @foreach (var item in Model)
                             {
                                 <li>
-                                    <a href="javascript:void(0)">
+                                    <a href="javascript:void(0)" class="role-item" data-id="@item.Id">
                                         <i class="fa-users"></i>
                                         <span>@item.Name</span>
                                     </a>
@@ -62,36 +96,7 @@
                 </div>
                 
                 <div class="col-sm-10 gallery-right">
-                    @{
-                        var lines = PermissionKeysMvcSetting.Nodes.Count / 5;
-                        var trueLines = PermissionKeysMvcSetting.Nodes.Count % 5 == 0 ? lines : lines + 1;
-                        for (int i = 0; i < trueLines; i++)
-                        {
-                            <div class="row" style="margin-top:20px;">
-                                @foreach (var item in PermissionKeysMvcSetting.Nodes.GetRange(i * 5, (i + 1) * 5 > PermissionKeysMvcSetting.Nodes.Count ? PermissionKeysMvcSetting.Nodes.Count - i * 5 : 5))
-                                {
-                                    <div class="col-sm-2">
-                                        <div class="permission-grandparent">
-                                            <input class="permission-grandparent-box" type="checkbox"/>@item.Title
-                                            @foreach (var node in item.ChildNodes)
-                                            {
-                                                <div class="permission-parent">
-                                                    <input class="permission-parent-box" type="checkbox" />@node.Title
-                                                    @foreach (var key in node.PerMissionKeys)
-                                                    {
-                                                        
-                                                        <div class="permission-child">
-                                                            <input class="permission-child-box" type="checkbox" value="@key"/>@PermissionKeys.GetKeyDescription(key)
-                                                        </div>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                    }
+                    
                 </div>
             </div>
         </section>

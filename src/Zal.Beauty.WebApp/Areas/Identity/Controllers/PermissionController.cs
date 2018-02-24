@@ -40,7 +40,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
         public async Task<IActionResult> GetRolePermissions(long roleId)
         {
             var rolePermissions = await permissionManger.GetPermissionsByRoleIdAsync(roleId);
-            return Json(rolePermissions);
+            return PartialView("_Permission", rolePermissions);
         }
 
         /// <summary>

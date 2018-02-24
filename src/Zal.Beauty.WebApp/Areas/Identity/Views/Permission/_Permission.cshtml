@@ -1,0 +1,90 @@
+﻿@model List<RolePermissionResult>
+@using Zal.Beauty.WebApp.Configs
+@{
+    var lines = PermissionKeysMvcSetting.Nodes.Count / 5;
+    var trueLines = PermissionKeysMvcSetting.Nodes.Count % 5 == 0 ? lines : lines + 1;
+    for (int i = 0; i < trueLines; i++)
+    {
+        <div class="row" style="margin-top:20px;">
+            @foreach (var item in PermissionKeysMvcSetting.Nodes.GetRange(i * 5, (i + 1) * 5 > PermissionKeysMvcSetting.Nodes.Count ? PermissionKeysMvcSetting.Nodes.Count - i * 5 : 5))
+            {
+                <div class="col-sm-2">
+                    <div class="permission-grandparent">
+                        @{ 
+                            //验证是否拥有整个模块的权限
+                            var hasAllPermission = true;
+                            foreach (var node in item.ChildNodes)
+                            {
+                                if (!hasAllPermission)
+                                {
+                                    break;
+                                }
+                                foreach (var key in node.PerMissionKeys)
+                                {
+                                    if(Model.Find(c => c.PermissionKey == key) == null)
+                                    {
+                                        hasAllPermission = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        <input class="permission-grandparent-box" type="checkbox" @(hasAllPermission ? "checked" : "") />@item.Title
+                        @foreach (var node in item.ChildNodes)
+                        {
+                            <div class="permission-parent">
+
+                                @{ 
+                                    //验证是否拥有功能块权限
+                                    var hasPermission = true;
+                                    foreach (var key in node.PerMissionKeys)
+                                    {
+                                        if (Model.Find(c => c.PermissionKey == key) == null)
+                                        {
+                                            hasPermission = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                <input class="permission-parent-box" type="checkbox" @(hasPermission ? "checked" : "")/>@node.Title
+                                @foreach (var key in node.PerMissionKeys)
+                                {
+                                    <div class="permission-child">
+                                        <input class="permission-child-box" type="checkbox" value="@key" @(Model.Find(c=>c.PermissionKey == key) != null ? "checked" : "") />@PermissionKeys.GetKeyDescription(key)
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+<script type="text/javascript">
+    //选中祖父节点则选中所有节点，反之则取消所有节点
+    $(".permission-grandparent-box").change(function () {
+        var isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(this).parent(".permission-grandparent").find(".permission-parent-box").prop("checked", "checked");
+            $(this).parent(".permission-grandparent").find(".permission-child-box").prop("checked", "checked");
+        }
+        else {
+            $(this).parent(".permission-grandparent").find(".permission-parent-box").removeAttr("checked");;
+            $(this).parent(".permission-grandparent").find(".permission-child-box").removeAttr("checked");;
+        }
+    });
+
+    //选中父节点则选中所有子节点，反之则取消所有子节点
+    $(".permission-parent-box").change(function () {
+        var isChecked = $(this).prop('checked');
+        if (isChecked) {
+            $(this).parent(".permission-parent").find(".permission-child-box").prop("checked", "checked");
+        }
+        else {
+            $(this).parent(".permission-parent").find(".permission-child-box").removeAttr("checked");;
+        }
+    }); 
+</script>
