@@ -80,7 +80,7 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
             user.Type = EUserType.Customer;
             user.Status = EUserStatus.Enabled;
             var result = await userManager.RegisterAsync(user);
-            await AddClaim(result.Id, user.Name, user.Type);
+            //await AddClaim(result.Id, user.Name, user.Type);
             return Json(result);
         }
 
@@ -100,8 +100,16 @@ namespace Zal.Beauty.WebApp.Areas.Identity.Controllers
                 return Json(result);
             }
 
+            //非管理员无法登录
+            if (customer.Type != EUserType.Admin)
+            {
+                result.IsSuccess = false;
+                result.Message = "您不是管理员！";
+                return Json(result);
+            }
+
             //禁用管理员无法登录
-            if(user.Status == EUserStatus.Disabled)
+            if (customer.Status == EUserStatus.Disabled)
             {
                 result.IsSuccess = false;
                 result.Message = "您管理员身份已被禁用！";

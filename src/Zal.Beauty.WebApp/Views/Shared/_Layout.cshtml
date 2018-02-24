@@ -4,10 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Beauty</title>
+    <title>@Html.PageTitle()</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/xenon/assets/js/dropzone/css/dropzone.css">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -17,7 +16,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
     <link rel="stylesheet" href="~/lib/xenon/assets/css/fonts/linecons/css/linecons.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/fonts/fontawesome/css/font-awesome.min.css" />
@@ -26,6 +25,9 @@
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-components.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/xenon-skins.css" />
     <link rel="stylesheet" href="~/lib/xenon/assets/css/custom.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-table/dist/css/bootstrap-table.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/lib/xenon/assets/js/dropzone/css/dropzone.css">
     @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("Styles", required: false)
 </head>
@@ -84,6 +86,16 @@
     <script src="~/lib/xenon/assets/js/xenon-toggles.js"></script>
     <script src="~/lib/xenon/assets/js/xenon-custom.js"></script>
     <script src="~/lib/xenon/assets/js/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib/xenon/assets/js/toastr/toastr.min.js"></script>
+
+    <!-- table -->
+    <script src="~/lib/bootstrap-table/dist/js/bootstrap-table.js"></script>
+    <script src="~/lib/bootstrap-table/dist/locales/bootstrap-table-zh-CN.js"></script>
+
+    <!-- datepicker -->
+    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
     @RenderSection("Scripts", required: false)
     @*@Html.Partial("~/Views/Shared/_Modal.cshtml")*@
 </body>

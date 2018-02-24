@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Zal.Beauty.WebApp.Configs
@@ -58,5 +60,23 @@ namespace Zal.Beauty.WebApp.Configs
         /// </summary>
         public const string MallCommontKeys = "mall.commont.manager";
         #endregion
+
+        public static string GetKeyDescription(string key)
+        {
+            switch (key)
+            {
+                case IdentityUserKeys: return "用户管理";
+                case IdentityRoleKeys: return "角色管理";
+                case IdentityPermissionKeys: return "权限管理";
+                case MallCategoryKeys: return "分类管理";
+                case MallProductKeys: return "商品管理";
+                case MallShelfKeys: return "货架管理";
+                case MallPromotionKeys: return "促销管理";
+                case MallOrderKeys: return "订单管理";
+                case MallCommontKeys: return "评论管理";
+                default:
+                    return "";
+            }
+        }
     }
 }

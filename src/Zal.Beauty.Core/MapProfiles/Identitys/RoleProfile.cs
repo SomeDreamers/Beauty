@@ -6,17 +6,18 @@ using Zal.Beauty.Core.ORM.Identitys;
 using Zal.Beauty.Interface.Models.Parameters.Identitys;
 using Zal.Beauty.Interface.Models.Results.Identitys;
 
-namespace Zal.Beauty.Core.MapProfiles
+namespace Zal.Beauty.Core.MapProfiles.Identitys
 {
     /// <summary>
-    /// 认证授权profile
+    /// 角色profile
     /// </summary>
-    public class AccountProfile : Profile
+    public class RoleProfile : Profile
     {
-        public AccountProfile()
+        public RoleProfile()
         {
-            CreateMap<UserParameter, User>();
-            CreateMap<User, UserResult>();
+            CreateMap<RoleParameter, Role>();
+            CreateMap<Role, RoleResult>();
+            CreateMap<Role, RoleInfoResult>();
         }
     }
 }

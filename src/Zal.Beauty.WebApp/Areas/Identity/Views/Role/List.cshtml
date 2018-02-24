@@ -1,0 +1,393 @@
+﻿@model List<RoleInfoResult>
+
+@section Styles{
+    <link rel="stylesheet" href="~/lib/xenon/assets/js/uikit/uikit.css">
+    <style type="text/css">
+        .uk-nestable-item {
+            padding: 5px 8px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script src="~/lib/xenon/assets/js/uikit/js/uikit.min.js"></script>
+    <script src="~/lib/xenon/assets/js/uikit/js/addons/nestable.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var id = 0;
+
+            //编辑角色按钮点击事件
+            $(".role-edit").click(function () {
+                id = $(this).attr("data-id");
+                $('#edit-role-modal').modal('show', { backdrop: 'static' });
+                $.ajax({
+                    url: "/Identity/Role/Edit",
+                    data: { id: id },
+                    success: function (response) {
+                        $('#edit-role-modal .modal-body').html(response);
+                    }
+                });
+            });
+
+            //编辑角色保存
+            $("#edit-role-modal .save-btn").click(function () {
+                var role = {};
+                role.Id = id;
+                role.Name = $("#edit-role-modal #Name").val();
+                role.Memo = $("#edit-role-modal #Memo").val();
+                show_loading_bar(70);
+                $.post("/Identity/Role/Save", { role: role }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-role-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+
+            //新增角色按钮点击事件
+            $(".create-role-btn").click(function () {
+                $("#create-role-modal #Name").val("");
+                $("#create-role-modal #Memo").val("");
+                $('#create-role-modal').modal('show', { backdrop: 'static' });
+            });
+
+            //新建角色保存
+            $("#create-role-modal .save-btn").click(function () {
+                var role = {};
+                role.Name = $("#create-role-modal #Name").val();
+                role.Memo = $("#create-role-modal #Memo").val();
+                show_loading_bar(70);
+                $.post("/Identity/Role/Save", { role: role }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-role-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
+            //删除角色点击事件
+            $(".role-del").click(function () {
+                id = $(this).attr("data-id");
+                $Zaolazi.confirmModal("确定删除角色？", function () {
+                    show_loading_bar(70);
+                    $.post("/Identity/Role/Delete", { id: id }, function (resp) {
+                        show_loading_bar({
+                            pct: 100,
+                            finish: function () {
+                                if (resp.isSuccess) {
+                                    window.location.reload();
+                                }
+                                else {
+                                    toastr.error(resp.message, "操作错误!");
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+
+            //新增角色按钮点击事件
+            $(".create-role-btn").click(function () {
+                $("#create-role-modal #Name").val("");
+                $("#create-role-modal #Memo").val("");
+                $('#create-role-modal').modal('show', { backdrop: 'static' });
+            });
+
+            //新建角色保存
+            $("#create-role-modal .save-btn").click(function () {
+                var role = {};
+                role.Name = $("#create-role-modal #Name").val();
+                role.Memo = $("#create-role-modal #Memo").val();
+                show_loading_bar(70);
+                $.post("/Identity/Role/Save", { role: role }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-role-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
+            //新增用户点击事件
+            $(".user-add").click(function () {
+                id = $(this).attr("data-id");
+                $('#table').bootstrapTable({
+                    //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    cache: false,
+                    url: "/Identity/User/UserSetAjax?Type=2&Status=1",
+                    sidePagination: 'server',
+                    pagination: true,
+                    pageList: [2, 10, 20, 50, 100],
+                    search: false,
+                    searchOnEnterKey: true,
+                    trimOnSearch: true,
+                    uniqueId: 'id',           // 绑定ID
+                    //得到查询的参数
+                    queryParams: function (params) {
+                        //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        var temp = {
+                            Size: params.limit,                         //页面大小
+                            Start: params.offset,   //页码
+                            Column: params.sort,      //排序列名
+                            Sort: params.order //排位命令（desc，asc）
+                        };
+                        $(".search-control").each(function () {
+                            var $this = $(this);
+                            var name = $this.attr("name");
+                            var value = $this.val();
+                            if (value)
+                                temp[name] = value;
+                        })
+                        return temp;
+                    },
+                    columns: [
+                        { checkbox: true, visible: true },
+                        { field: 'name', title: '用户名' },
+                        { field: 'trueName', title: '真实姓名' },
+                        { field: 'phone', title: '电话' },
+                        { field: 'mail', title: '邮箱' },
+                        { field: 'address', title: '地址' },
+                        { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter }
+                    ],
+                    responseHandler: function (result) {
+                        var data = {};
+                        data.total = result.total;
+                        data.rows = result.entities;
+                        return data;
+                    }
+                });
+                $('#select-user-modal').modal('show', { backdrop: 'static' });
+            });
+
+            //点击搜索按钮
+            $(".search-control-btn").off().click(function () {
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //点击清空按钮
+            $(".clear-control-btn").click(function () {
+                $(".search-control").val("");
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //新增用户确定
+            $("#select-user-modal .save-btn").click(function () {
+                var ids = [];
+                //获取选中ID
+                $("#table tbody input[type='checkbox']:checked").each(function () {
+                    ids.push($(this).parent("td").parent("tr").attr("data-uniqueid"));
+                });
+                if (ids.length === 0) {
+                    toastr.error("未选中任何用户", "操作错误!");
+                    return;
+                }
+                show_loading_bar(70);
+                $.post("/Identity/Role/AddUsers", { roleId: id, userIds: ids }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#select-user-modal').modal("hide");
+                                window.location.reload();
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
+            //移除用户点击事件
+            $(".user-remove").click(function () {
+                id = $(this).attr("data-id");
+                var userId = $(this).attr("data-user-id");
+                $Zaolazi.confirmModal("确定从该角色移除用户？", function () {
+                    show_loading_bar(70);
+                    $.post("/Identity/Role/RemoveUser", { roleId: id, userId: userId }, function (resp) {
+                        show_loading_bar({
+                            pct: 100,
+                            finish: function () {
+                                if (resp.isSuccess) {
+                                    window.location.reload();
+                                }
+                                else {
+                                    toastr.error(resp.message, "操作错误!");
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+}
+
+@Html.BlockQuote()
+<div class="panel panel-default">
+    @*<div class="panel-heading">角色管理</div>*@
+    <div class="btn-group">
+        <button type="button" class="btn btn-success create-role-btn">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>新增角色
+        </button>
+    </div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                @foreach (var item in Model)
+                {
+                    <ul id="nestable-list-1" class="uk-nestable" data-uk-nestable>
+                        <li data-item="@item.Name" data-item-id="@item.Id" class="uk-nestable-list-item uk-parent uk-collapsed">
+                            <div class="uk-nestable-item">
+                                <div data-nestable-action="toggle"></div>
+                                <div class="list-label">@item.Name <span>(@item.Users.Count)</span></div>
+                                <div style="float:right;">
+                                    @if (item.Users.Count == 0)
+                                    {
+                                        <a href="javascript:void(0)" title="删除角色" class="role-del" data-id="@item.Id"><i class="linecons-trash"></i></a>
+                                    }
+                                    <a href="javascript:void(0)" title="添加用户" class="user-add" data-id="@item.Id"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                                    <a href="javascript:void(0)" title="编辑角色" class="role-edit" data-id="@item.Id"><i class="linecons-pencil"></i></a>
+
+                                </div>
+                            </div>
+
+                            <ul id="role-user-@item.Id">
+                                @foreach (var user in item.Users)
+                                {
+                                    <li data-item="@user.Name" data-item-id="@user.Id">
+                                        <div class="uk-nestable-item">
+                                            <div class="list-label">@user.Name</div>
+                                            <div style="float:right;">
+                                                <a href="javascript:void(0)" title="移除用户" class="user-remove" data-id="@item.Id" data-user-id="@user.Id"><i class="glyphicon glyphicon-remove-sign"></i></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 编辑角色模态框 *@
+<div class="modal fade" id="edit-role-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">编辑角色</h4>
+            </div>
+
+            <div class="modal-body">
+
+                加载中...
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 新建角色模态框 *@
+<div class="modal fade in" id="create-role-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新建角色</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="Name">角色名</label>
+                            <input class="form-control" id="Name" name="Name" type="text" value="">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="Memo">备注</label>
+                            <input class="form-control" id="Memo" name="Memo" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 选择用户模态框 *@
+<div class="modal fade custom-width" id="select-user-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog" style="width: 60%;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择用户</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+                    <input class="form-control search-control" type="text" name="Name" title="姓名" placeholder="姓名">
+                    <input class="form-control search-control" type="text" name="TrueName" title="真实姓名" placeholder="真实姓名">
+                    <input class="form-control search-control" type="text" name="Phone" title="电话" placeholder="电话">
+                    <div class="btn-group" style="float:right;">
+                        <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                        </button>
+                        <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
+                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                        </button>
+                    </div>
+                </div>
+                <table id="table"></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

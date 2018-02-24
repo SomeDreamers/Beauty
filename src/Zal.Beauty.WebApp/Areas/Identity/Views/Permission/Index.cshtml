@@ -1,0 +1,104 @@
+﻿@model List<RoleResult>
+@using Zal.Beauty.WebApp.Configs
+@section Styles{
+    <style type="text/css">
+        .permission-grandparent {
+            margin-top: 10px;
+        }
+
+        .permission-parent {
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+
+        .permission-child  {
+            margin-top: 3px;
+            margin-left: 15px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            var roleId = 0;
+
+            //角色名点击事件
+            $(".role-item").click(function () {
+                //隐藏保存按钮
+                $(".save-btn").attr("disabled", "disabled");
+                //获取角色拥有权限
+                roleId = $(this).attr("data-id");
+                //设置选中状态
+                $(".list-unstyled li").removeClass("active");
+                $(this).parent("li").addClass("active");
+                show_loading_bar(70);
+                $.post("/Identity/Permission/GetRolePermissions", { roleId: roleId }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            $(".gallery-right").html(resp);
+                            //显示保存按钮
+                            $(".save-btn").removeAttr("disabled");
+                        }
+                    });
+                });
+            });
+
+            //保存按钮点击事件
+            $(".save-btn").unbind().click(function () {
+                var keys = [];
+                $(".permission-child-box:checked").each(function () {
+                    keys.push($(this).attr("value"));
+                });
+
+                show_loading_bar(70);
+                $.post("/Identity/Permission/UpdateRolePermissions", { roleId: roleId, permissionKeys: keys }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                toastr.success("保存成功", "操作提示");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+}
+
+@Html.BlockQuote()
+<div class="panel panel-default">
+    <div class="panel-body">
+        <button type="button" class="btn btn-warning save-btn" disabled>
+            保存
+        </button>
+        <section class="gallery-env">
+            <div class="row">
+                <div class="col-sm-2 gallery-left">
+                    <div class="gallery-sidebar">
+                        <ul class="list-unstyled">
+                            @foreach (var item in Model)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" class="role-item" data-id="@item.Id">
+                                        <i class="fa-users"></i>
+                                        <span>@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-sm-10 gallery-right">
+                    
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

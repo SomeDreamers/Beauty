@@ -54,7 +54,7 @@ namespace Zal.Beauty.WebApp.Configs
                             new Node
                             {
                                 Title = "权限信息",
-                                Route = "/Identity/Permission/List"
+                                Route = "/Identity/Permission/Index"
                             }
                         }
                     }

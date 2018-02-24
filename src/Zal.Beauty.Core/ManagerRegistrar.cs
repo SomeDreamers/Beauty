@@ -19,6 +19,8 @@ namespace Zal.Beauty.Core
         public static void RegistManager(this IServiceCollection services)
         {
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IRoleManager, RoleManager>();
+            services.AddTransient<IPermissionManager, PermissionManager>();
             services.AddTransient<ICustomerManager, CustomerManager>();
             services.AddTransient<IMessageManager, MessageManager>();
             services.AddTransient<IFileManager,FileManager>();

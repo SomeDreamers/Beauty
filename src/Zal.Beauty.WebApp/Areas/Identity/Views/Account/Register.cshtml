@@ -1,7 +1,9 @@
 ﻿@{
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
-
+@{
+    ViewData["Title"] = "注册";
+}
 @section Scripts{
     <script type="text/javascript">
         $(function () {
@@ -64,7 +66,7 @@
                                 finish: function () {
                                     // Redirect after successful login page (when progress bar reaches 100%)
                                     if (resp.isSuccess) {
-                                        window.location.href = '/Identity/Account/Forbidden';
+                                        window.location.href = '/Home/Index';
                                     }
                                     else {
                                         toastr.error(resp.message, "Invalid SignIn!");

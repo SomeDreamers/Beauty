@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Zal.Beauty.Interface.Enums.Identitys
@@ -12,10 +13,12 @@ namespace Zal.Beauty.Interface.Enums.Identitys
         /// <summary>
         /// 客户
         /// </summary>
+        [Display(Name = "客户")]
         Customer = 1,
         /// <summary>
         /// 管理员
         /// </summary>
+        [Display(Name = "管理员")]
         Admin = 2
     }
 

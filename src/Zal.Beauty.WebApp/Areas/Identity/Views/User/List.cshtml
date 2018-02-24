@@ -1,0 +1,290 @@
+﻿
+@section Scripts{
+    <script type="text/javascript">
+        //更新用户类型
+        var UpdateUserType = function (id, type) {
+            show_loading_bar(70);
+            $.post("/Identity/User/UpdateUserType", { id: id, type: type }, function (resp) {
+                show_loading_bar({
+                    pct: 100,
+                    finish: function () {
+                        if (resp.isSuccess) {
+                            $('#table').bootstrapTable('refresh');
+                        }
+                        else {
+                            toastr.error(resp.message, "操作错误!");
+                        }
+                    }
+                });
+            });
+        }
+
+        //更新用户状态
+        var UpdateUserStatus = function (id, status) {
+            show_loading_bar(70);
+            $.post("/Identity/User/UpdateUserStatus", { id: id, status: status }, function (resp) {
+                show_loading_bar({
+                    pct: 100,
+                    finish: function () {
+                        if (resp.isSuccess) {
+                            $('#table').bootstrapTable('refresh');
+                        }
+                        else {
+                            toastr.error(resp.message, "操作错误!");
+                        }
+                    }
+                });
+            });
+        }
+
+        $(function () {
+            $('#table').bootstrapTable({
+                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cache: false,
+                url: "/Identity/User/UserSetAjax",
+                sidePagination: 'server',
+                pagination: true,
+                pageList: [2, 10, 20, 50, 100],
+                showColumns: true,
+                showRefresh: true,
+                search: false,
+                searchOnEnterKey: true,
+                trimOnSearch: true,
+                uniqueId: 'id',           // 绑定ID
+                //showPaginationSwitch: true,
+                toolbar: "#toolbar",                   //工具按钮用哪个容器
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        Size: params.limit,                         //页面大小
+                        Start: params.offset,   //页码
+                        Column: params.sort,      //排序列名
+                        Sort: params.order //排位命令（desc，asc）
+                    };
+                    $(".search-control").each(function () {
+                        var $this = $(this);
+                        var name = $this.attr("name");
+                        var value = $this.val();
+                        if (value)
+                            temp[name] = value;
+                    })
+                    return temp;
+                },
+                columns: [
+                    { checkbox: true, visible: true },
+                    { field: 'name', title: '用户名' },
+                    { field: 'trueName', title: '真实姓名' },
+                    { field: 'phone', title: '电话' },
+                    { field: 'mail', title: '邮箱' },
+                    { field: 'address', title: '地址' },
+                    { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
+                    { field: 'type', title: '用户类型', formatter: typeFormmatter },
+                    { field: 'status', title: '用户状态', formatter: statusFormmatter },
+                    { field: 'id', title: '操作', formatter: actionFormmatter },
+                ],
+                responseHandler: function (result) {
+                    var data = {};
+                    data.total = result.total;
+                    data.rows = result.entities;
+                    return data;
+                }
+            });
+
+            //表格用户状态转换
+            function statusFormmatter(value, row, index) {
+                if (value == 1)
+                    return "启用";
+                else
+                    return "禁用";
+            }
+
+            //表格用户类型转换
+            function typeFormmatter(value, row, index) {
+                if (value == 1)
+                    return "客户";
+                else
+                    return "管理员";
+            }
+
+            //表格操作列
+            function actionFormmatter(value, row, index) {
+                var id = value;
+                var typeAdmin = row.type === 2;
+                var statusDisabled = row.status === 2;
+                var result = "";
+                result += "<button class='btn btn-primary btn-sm btn-icon edit-user-btn' data='" + id +"'>编辑</button>";
+                result += "<button class='btn btn-warning btn-sm btn-icon' onclick=\"UpdateUserType(" + id + ", " + (typeAdmin ? 1 : 2) + ")\">" + (typeAdmin ? "设为客户" : "设为管理员") + "</button>";
+                result += "<button class='btn btn-danger btn-sm btn-icon' onclick=\"UpdateUserStatus(" + id + ", " + (statusDisabled ? 1 : 2) + ")\">" + (statusDisabled ? "启用" : "禁用") + "</button>";
+
+                return result;
+            }
+
+            //时间插件
+            $('.form_datetime').datetimepicker({
+                language: "zh-CN",
+                todayBtn: true,
+                autoclose: true
+            });
+
+            //点击搜索按钮
+            $(".search-control-btn").off().click(function () {
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //点击清空按钮
+            $(".clear-control-btn").click(function () {
+                $(".search-control").val("");
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //编辑用户按钮点击事件
+            $(document).on("click", ".edit-user-btn", function () {
+                var id = $(this).attr("data");
+                $('#edit-user-modal .modal-body').html("加载中...");
+                $('#edit-user-modal').modal('show', { backdrop: 'static' });
+                $.ajax({
+                    url: "/Identity/User/Edit",
+                    data: {id: id},
+                    success: function (response) {
+                        $('#edit-user-modal .modal-body').html(response);
+                    }
+                });
+            });
+
+            //编辑用户保存
+            $("#edit-user-modal .save-btn").click(function () { 
+                var user = {};
+                user.Id = $("#edit-user-modal #Id").val();
+                user.Name = $("#edit-user-modal #Name").val();
+                user.TrueName = $("#edit-user-modal #TrueName").val();
+                user.Phone = $("#edit-user-modal #Phone").val();
+                user.Mail = $("#edit-user-modal #Mail").val();
+                user.Address = $("#edit-user-modal #Address").val();
+                show_loading_bar(70);
+                $.post("/Identity/User/Update", { user: user }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-user-modal').modal("hide");
+                                $('#table').bootstrapTable('refresh');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
+
+            //批量更新用户状态
+            $(".batch-update-status-btn").click(function () {
+                show_loading_bar(70);
+                var ids = [];
+                //获取选中ID
+                $("#table tbody input[type='checkbox']:checked").each(function () {
+                    ids.push($(this).parent("td").parent("tr").attr("data-uniqueid"));
+                });
+                $.post("/Identity/User/BatchUpdateUserStatus", { ids: ids, status: $(this).attr("data") }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#table').bootstrapTable('refresh');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+}
+
+
+@Html.BlockQuote()
+
+<!-- Custom column filtering -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"></h3>
+
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+            <input class="form-control search-control" type="text" name="Name" title="姓名" placeholder="姓名">
+            <input class="form-control search-control" type="text" name="TrueName" title="真实姓名" placeholder="真实姓名">
+            <input class="form-control search-control" type="text" name="Phone" title="电话" placeholder="电话">
+            <input class="form-control search-control" type="text" name="Mail" title="邮箱" placeholder="邮箱">
+            <span class="range-control">
+                <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                -
+                <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+            </span>
+            <select class="form-control search-control" name="Type" title="用户类型" asp-items="@Html.GetEnumSelectList(typeof(EUserType))">
+                <option value="">用户类型</option>
+            </select>
+            <select class="form-control search-control" name="Status" title="用户状态" asp-items="@Html.GetEnumSelectList(typeof(EUserStatus))">
+                <option value="">用户状态</option>
+            </select>
+            <div class="btn-group" style="float:right;">
+                <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                </button>
+                <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                </button>
+            </div>
+        </div>
+
+        <div id="toolbar" class="btn-group">
+            @*<button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+            </button>*@
+            <button data="1" type="button" class="btn btn-default batch-update-status-btn">
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>批量启用客户
+            </button>
+            <button data="2" type="button" class="btn btn-default batch-update-status-btn">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>批量禁用客户
+            </button>
+        </div>
+
+        <table id="table"></table>
+    </div>
+</div>
+
+@* 编辑用户模态框 *@
+<div class="modal fade" id="edit-user-modal" data-backdrop="static" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">编辑用户</h4>
+            </div>
+
+            <div class="modal-body">
+
+                加载中...
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

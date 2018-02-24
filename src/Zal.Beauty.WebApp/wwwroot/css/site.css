@@ -29,3 +29,12 @@
         display: none;
     }
 }
+
+.search-control {
+    display: inline-block;
+    width: auto;
+}
+
+.range-control .search-control {
+    width:136px;
+}
