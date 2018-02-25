@@ -1372,7 +1372,6 @@
     <Folder Include="Areas\Common\Helpers\" />
     <Folder Include="Areas\Mall\Controllers\" />
     <Folder Include="Areas\Mall\Views\" />
-    <Folder Include="Areas\Wechat\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />

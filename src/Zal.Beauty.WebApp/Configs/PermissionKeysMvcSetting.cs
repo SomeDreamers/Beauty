@@ -146,7 +146,29 @@ namespace Zal.Beauty.WebApp.Configs
                         }
                     }
                 }
-            }
+            },
+            //微信管理
+            new Node
+            {
+                Title = "微信管理",
+                IconClass = "linecons-cog",
+                ChildNodes = new List<Node>
+                {
+                    new Node
+                    {
+                        Title = "客户管理",
+                        PerMissionKeys = new List<string> { PermissionKeys.WechatCustomerKeys },
+                        ChildNodes = new List<Node>
+                        {
+                            new Node
+                            {
+                                Title = "客户信息",
+                                Route = "/Wechat/Customer/List"
+                            }
+                        }
+                    }
+                }
+            },
         };
     }
 
