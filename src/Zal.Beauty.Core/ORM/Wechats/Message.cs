@@ -65,5 +65,23 @@ namespace Zal.Beauty.Core.ORM.Wechats
         /// </summary>
         [Column("to_user_name")]
         public string ToUserName { get; set; }
+
+        /// <summary>
+        /// 发送昵称
+        /// </summary>
+        [Column("from_user_nick")]
+        public string FromUserNick { get; set; }
+
+        /// <summary>
+        /// 接收昵称
+        /// </summary>
+        [Column("to_user_nick")]
+        public string ToUserNick { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [Column("create_time")]
+        public DateTime CreateTime { get; set; }
     }
 }

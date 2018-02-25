@@ -166,6 +166,19 @@ namespace Zal.Beauty.WebApp.Configs
                                 Route = "/Wechat/Customer/List"
                             }
                         }
+                    },
+                    new Node
+                    {
+                        Title = "消息管理",
+                        PerMissionKeys = new List<string> { PermissionKeys.WechatCustomerKeys },
+                        ChildNodes = new List<Node>
+                        {
+                            new Node
+                            {
+                                Title = "消息管理",
+                                Route = "/Wechat/Message/List"
+                            }
+                        }
                     }
                 }
             },

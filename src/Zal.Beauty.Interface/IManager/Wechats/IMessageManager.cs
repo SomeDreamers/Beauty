@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;
+using Zal.Beauty.Interface.Models.Results.Wechats;
 
 namespace Zal.Beauty.Interface.IManager.Wechats
 {
@@ -23,5 +25,12 @@ namespace Zal.Beauty.Interface.IManager.Wechats
         /// </summary>
         /// <param name="parameter"></param>
         void Save(MessageParameter parameter);
+
+        /// <summary>
+        /// 获取消息集合
+        /// </summary>
+        /// <param name="queryParameter"></param>
+        /// <returns></returns>
+        Task<EntitySet<MessageResult>> GetMessageSetAsync(MessageQuery queryParameter);
     }
 }
