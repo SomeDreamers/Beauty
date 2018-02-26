@@ -1,4 +1,25 @@
-﻿
+﻿@section Styles{
+    <style type="text/css">
+        .nav-tabs-change {
+            font-size: 14px;
+            margin-bottom:-2px;
+        }
+
+        .nav.nav-tabs.nav-tabs-change > li > a {
+            background-color: none;
+            margin-right: 0px;
+            color: #979898;
+        }
+
+        .nav-tabs-change .change-active {
+            border-bottom: 2px solid orange;
+        }
+
+        .nav-tabs-change > .change-active > a {
+            color: black;
+        }
+    </style>
+}
 @section Scripts{
     <script type="text/javascript">
 
@@ -96,8 +117,23 @@
 @Html.Hidden("MegSource", ViewData["MegSource"])
 <!-- Custom column filtering -->
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title"></h3>
+    <div class="panel-heading" style="padding-bottom: 0px;">
+        <div class="panel-title">
+            <ul class="nav nav-tabs nav-tabs-change">
+                <li class="@((int)ViewData["MegSource"] == 1 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MegSource=1" data-toggle="tab">
+
+                        <span class="hidden-xs">接收消息</span>
+                    </a>
+                </li>
+                <li class="@((int)ViewData["MegSource"] == 2 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MegSource=2" data-toggle="tab">
+
+                        <span>发送消息</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
         <div class="panel-options">
             <a href="#" data-toggle="panel">
@@ -111,22 +147,7 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-6">
-                <ul class="nav nav-tabs">
-                    <li class="@((int)ViewData["MegSource"] == 1 ? "active" : "")">
-                        <a href="/Wechat/Message/List?MegSource=1" data-toggle="tab">
-                            <span class="visible-xs"><i class="fa-home"></i></span>
-                            <span class="hidden-xs">接收消息</span>
-                        </a>
-                    </li>
-                    <li class="@((int)ViewData["MegSource"] == 2 ? "active" : "")">
-                        <a href="/Wechat/Message/List?MegSource=2" data-toggle="tab">
-                            <span class="visible-xs"><i class="fa-user"></i></span>
-                            <span class="hidden-xs">发送消息</span>
-                        </a>
-                    </li>
-                </ul>
-
+            <div class="col-md-12">
                 <div class="tab-content">
                     <div class="tab-pane @((int)ViewData["MegSource"] == 1 ? "active" : "")">
                         @if ((int)ViewData["MegSource"] == 1)
@@ -142,7 +163,7 @@
                                     <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
                                 </span>
 
-                                
+
                                 <div class="btn-group" style="float:right;">
                                     <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
