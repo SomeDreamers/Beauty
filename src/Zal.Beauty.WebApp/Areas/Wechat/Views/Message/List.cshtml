@@ -1,23 +1,6 @@
 ﻿@section Styles{
     <style type="text/css">
-        .nav-tabs-change {
-            font-size: 14px;
-            margin-bottom:-2px;
-        }
-
-        .nav.nav-tabs.nav-tabs-change > li > a {
-            background-color: none;
-            margin-right: 0px;
-            color: #979898;
-        }
-
-        .nav-tabs-change .change-active {
-            border-bottom: 2px solid orange;
-        }
-
-        .nav-tabs-change > .change-active > a {
-            color: black;
-        }
+        
     </style>
 }
 @section Scripts{
@@ -121,13 +104,13 @@
         <div class="panel-title">
             <ul class="nav nav-tabs nav-tabs-change">
                 <li class="@((int)ViewData["MegSource"] == 1 ? "change-active" : "")">
-                    <a href="/Wechat/Message/List?MegSource=1" data-toggle="tab">
+                    <a href="/Wechat/Message/List?MegSource=1">
 
                         <span class="hidden-xs">接收消息</span>
                     </a>
                 </li>
                 <li class="@((int)ViewData["MegSource"] == 2 ? "change-active" : "")">
-                    <a href="/Wechat/Message/List?MegSource=2" data-toggle="tab">
+                    <a href="/Wechat/Message/List?MegSource=2">
 
                         <span>发送消息</span>
                     </a>
@@ -149,65 +132,29 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tab-content">
-                    <div class="tab-pane @((int)ViewData["MegSource"] == 1 ? "active" : "")">
-                        @if ((int)ViewData["MegSource"] == 1)
-                        {
-                            <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
-                                <input class="form-control search-control" type="text" name="FromUserNick" title="昵称" placeholder="昵称">
-                                <select class="form-control search-control" name="Type" title="消息类型" asp-items="@Html.GetEnumSelectList(typeof(EMsgType))">
-                                    <option value="">消息类型</option>
-                                </select>
-                                <span class="range-control">
-                                    <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
-                                    -
-                                    <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
-                                </span>
+                    <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+                        <input class="form-control search-control" type="text" name="@((int)ViewData["MegSource"] == 1?"FromUserNick" : "ToUserNick")" title="昵称" placeholder="昵称">
+                        <select class="form-control search-control" name="Type" title="消息类型" asp-items="@Html.GetEnumSelectList(typeof(EMsgType))">
+                            <option value="">消息类型</option>
+                        </select>
+                        <span class="range-control">
+                            <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                            -
+                            <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+                        </span>
 
 
-                                <div class="btn-group" style="float:right;">
-                                    <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
-                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
-                                    </button>
-                                    <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
-                                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
-                                    </button>
-                                </div>
-                            </div>
-
-                            <table id="table"></table>
-                        }
-
+                        <div class="btn-group" style="float:right;">
+                            <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                            </button>
+                            <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
+                                <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                            </button>
+                        </div>
                     </div>
-                    <div class="tab-pane" @((int)ViewData["MegSource"] == 2 ? "active" : "")>
-                        @if ((int)ViewData["MegSource"] == 1)
-                        {
-                            <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
-                                <input class="form-control search-control" type="text" name="ToUserNick" title="昵称" placeholder="昵称">
-                                <select class="form-control search-control" name="Type" title="消息类型" asp-items="@Html.GetEnumSelectList(typeof(EMsgType))">
-                                    <option value="">消息类型</option>
-                                </select>
-                                <span class="range-control">
-                                    <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
-                                    -
-                                    <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
-                                </span>
 
-
-                                <div class="btn-group" style="float:right;">
-                                    <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
-                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
-                                    </button>
-                                    <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
-                                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
-                                    </button>
-                                </div>
-                            </div>
-
-                            <table id="table"></table>
-
-                        }
-
-                    </div>
+                    <table id="table"></table>
                 </div>
             </div>
 
