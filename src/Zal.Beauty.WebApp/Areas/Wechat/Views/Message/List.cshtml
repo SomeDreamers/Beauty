@@ -5,7 +5,7 @@
 }
 @section Scripts{
     <script type="text/javascript">
-
+        var EditId = 0;
         $(function () {
             $('#table').bootstrapTable({
                 //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -43,14 +43,13 @@
                 },
                 columns: [
                     { checkbox: true, visible: true },
-                    { field: 'icon', title: '头像', formatter: iconFormmatter },
-                    { field: 'nick', title: '昵称' },
-                    { field: 'sex', title: '性别', formatter: sexFormmatter },
-                    { field: 'country', title: '国家' },
-                    { field: 'province', title: '省' },
-                    { field: 'city', title: '市' },
+                    { field: 'fromUserNick', title: '发送人' },
+                    { field: 'toUserNick', title: '接收人' },
+                    { field: 'type', title: '消息类型', formatter: typeFormmatter },
+                    { field: 'content', title: '文本' },
+                    { field: 'picUrl', title: '图片', formatter: picFormmatter },
                     { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
-
+                    { field: 'id', title: '操作', formatter: actionFormmatter },
                 ],
                 responseHandler: function (result) {
                     var data = {};
@@ -60,17 +59,28 @@
                 }
             });
 
-            //表格头像转换
-            function iconFormmatter(value, row, index) {
-                return "<img src=" + value + " width=\"50\" height=\"50\" />";
+            //表格图片转换
+            function picFormmatter(value, row, index) {
+                if (value)
+                    return "<img src=" + value + " width=\"50\" height=\"50\" />";
+                else
+                    return "";
             }
 
-            //表格性别转换
-            function sexFormmatter(value, row, index) {
+            //表格类型转换
+            function typeFormmatter(value, row, index) {
                 if (value == 1)
-                    return "男";
+                    return "文本";
+                else if (value == 2)
+                    return "图片";
                 else
-                    return "女";
+                    return "";
+            }
+
+            //表格操作列
+            function actionFormmatter(value, row, index) {
+                var result = "<button class='btn btn-success btn-sm btn-icon send-message-btn' data='" + value + "'>回复消息</button>";
+                return result;
             }
 
             //时间插件
@@ -91,6 +101,28 @@
                 $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
             });
 
+            //发送消息按钮点击事件
+            $(document).on("click", ".send-message-btn", function () { 
+                EditId = $(this).attr("data");
+                $("#message-content").val("");
+                $('#send-message-modal').modal('show', { backdrop: 'static' });
+            })
+            $("#send-message-modal .save-btn").click(function () { 
+                show_loading_bar(70);
+                $.post("/Wechat/ReplayMessage/ReplayMessage", { messageId: EditId, content: $("#message-content").val() }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#edit-user-modal').modal("hide");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            }
         })
     </script>
 }
@@ -158,6 +190,29 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+@* 回复消息模态框 *@
+<div class="modal fade" id="send-message-modal" data-backdrop="static" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">回复消息</h4>
+            </div>
+
+            <div class="modal-body">
+                <textarea rows="4" class="form-control" id="message-content"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
         </div>
     </div>
 </div>

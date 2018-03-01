@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
+using Zal.Beauty.Core.ORM.Wechats;
+using Zal.Beauty.Interface.Enums.Wechats;
 using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;
 
@@ -40,6 +43,30 @@ namespace Zal.Beauty.WebApp.Areas.Wechat.Controllers
         {
             var msgSet = await messageManager.GetMessageSetAsync(query);
             return Json(msgSet);
+        }
+
+        /// <summary>
+        /// 回复消息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> ReplayMessage(long messageId, string content)
+        {
+            var message = await messageManager.GetMessageByIdAsync(messageId);
+            //发送消息
+
+            //保存发送消息
+            MessageParameter sendMessage = new MessageParameter
+            {
+                ToUserId = message.FromUserId,
+                Type = EMsgType.Text,
+                Content = content,
+                FromUserName = message.ToUserName,
+                ToUserName = message.FromUserName,
+                ToUserNick = message.FromUserNick,
+                CreateTime = DateTime.Now
+            };
+            await messageManager.SaveAsync(sendMessage);
+            return Json(new ReturnResult());
         }
     }
 }
