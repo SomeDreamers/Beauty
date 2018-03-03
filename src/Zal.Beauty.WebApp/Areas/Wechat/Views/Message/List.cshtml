@@ -102,19 +102,20 @@
             });
 
             //发送消息按钮点击事件
-            $(document).on("click", ".send-message-btn", function () { 
+            $(document).on("click", ".send-message-btn", function () {
                 EditId = $(this).attr("data");
                 $("#message-content").val("");
                 $('#send-message-modal').modal('show', { backdrop: 'static' });
-            })
-            $("#send-message-modal .save-btn").click(function () { 
+            });
+            $("#send-message-modal .save-btn").click(function () {
                 show_loading_bar(70);
-                $.post("/Wechat/ReplayMessage/ReplayMessage", { messageId: EditId, content: $("#message-content").val() }, function (resp) {
+                $.post("/Wechat/Message/ReplayMessage", { messageId: EditId, content: $("#message-content").val() }, function (resp) {
                     show_loading_bar({
                         pct: 100,
                         finish: function () {
                             if (resp.isSuccess) {
-                                $('#edit-user-modal').modal("hide");
+                                $('#send-message-modal').modal("hide");
+                                toastr.success("发送成功", "操作成功!");
                             }
                             else {
                                 toastr.error(resp.message, "操作错误!");
@@ -122,27 +123,27 @@
                         }
                     });
                 });
-            }
+            });
         })
     </script>
 }
 
 
 @Html.BlockQuote()
-@Html.Hidden("MegSource", ViewData["MegSource"])
+@Html.Hidden("MsgSource", ViewData["MsgSource"])
 <!-- Custom column filtering -->
 <div class="panel panel-default">
     <div class="panel-heading" style="padding-bottom: 0px;">
         <div class="panel-title">
             <ul class="nav nav-tabs nav-tabs-change">
-                <li class="@((int)ViewData["MegSource"] == 1 ? "change-active" : "")">
-                    <a href="/Wechat/Message/List?MegSource=1">
+                <li class="@((int)ViewData["MsgSource"] == 1 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MsgSource=1">
 
                         <span class="hidden-xs">接收消息</span>
                     </a>
                 </li>
-                <li class="@((int)ViewData["MegSource"] == 2 ? "change-active" : "")">
-                    <a href="/Wechat/Message/List?MegSource=2">
+                <li class="@((int)ViewData["MsgSource"] == 2 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MsgSource=2">
 
                         <span>发送消息</span>
                     </a>
@@ -165,7 +166,7 @@
             <div class="col-md-12">
                 <div class="tab-content">
                     <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
-                        <input class="form-control search-control" type="text" name="@((int)ViewData["MegSource"] == 1?"FromUserNick" : "ToUserNick")" title="昵称" placeholder="昵称">
+                        <input class="form-control search-control" type="text" name="@((int)ViewData["MsgSource"] == 1?"FromUserNick" : "ToUserNick")" title="昵称" placeholder="昵称">
                         <select class="form-control search-control" name="Type" title="消息类型" asp-items="@Html.GetEnumSelectList(typeof(EMsgType))">
                             <option value="">消息类型</option>
                         </select>
@@ -211,7 +212,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary save-btn">保存</button>
+                <button type="button" class="btn btn-primary save-btn">发送</button>
             </div>
         </div>
     </div>
