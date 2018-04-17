@@ -11,10 +11,16 @@ namespace Zal.Beauty.Interface.Models.Parameters.Wechats
     /// </summary>
     public class MessageQuery : Pagination
     {
+
+        public MessageQuery()
+        {
+            MsgSource = 1;
+        }
+
         /// <summary>
         /// 消息源（1：接收消息；2：发送消息）
         /// </summary>
-        public int MsgSource { get; set; } = 1;
+        public int MsgSource { get; set; }
 
         /// <summary>
         /// 消息类型

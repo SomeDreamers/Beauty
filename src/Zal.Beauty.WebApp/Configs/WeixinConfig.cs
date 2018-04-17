@@ -19,6 +19,8 @@ namespace Zal.Beauty.WebApp.Configs
         public static readonly string WeixinOAuthCallbackUrl = "/Oauth2/UserInfoCallbackAsync";
         public static readonly string WeixinHomeUrl = "/Shelf/Index";
 
+        public const string URL_FORMAT = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={0}";
+
         public static void RegistWeixinAppMsg()
         {
             AccessTokenContainer.Register(AppId, AppSecret);

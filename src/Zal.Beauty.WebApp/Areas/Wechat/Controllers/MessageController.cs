@@ -1,11 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Weixin;
+using Senparc.Weixin.CommonAPIs;
+using Senparc.Weixin.MP.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Models;
+using Zal.Beauty.Core.ORM.Wechats;
+using Zal.Beauty.Interface.Enums.Wechats;
 using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;
+using Zal.Beauty.WebApp.Configs;
 
 namespace Zal.Beauty.WebApp.Areas.Wechat.Controllers
 {
@@ -25,9 +32,9 @@ namespace Zal.Beauty.WebApp.Areas.Wechat.Controllers
         /// 消息列表界面
         /// </summary>
         /// <returns></returns>
-        public IActionResult List(int MegSource = 1)
+        public IActionResult List(int MsgSource = 1)
         {
-            ViewData["MegSource"] = MegSource;
+            ViewData["MsgSource"] = MsgSource;
             return View();
         }
 
@@ -40,6 +47,46 @@ namespace Zal.Beauty.WebApp.Areas.Wechat.Controllers
         {
             var msgSet = await messageManager.GetMessageSetAsync(query);
             return Json(msgSet);
+        }
+
+        /// <summary>
+        /// 回复消息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> ReplayMessage(long messageId, string content)
+        {
+            var message = await messageManager.GetMessageByIdAsync(messageId);
+            //构建发送消息
+            MessageParameter sendMessage = new MessageParameter
+            {
+                ToUserId = message.FromUserId,
+                Type = EMsgType.Text,
+                Content = content,
+                FromUserName = message.ToUserName,
+                ToUserName = message.FromUserName,
+                ToUserNick = message.FromUserNick,
+                CreateTime = DateTime.Now
+            };
+            //获取accessToken
+            var accessToken = AccessTokenContainer.TryGetAccessToken(WeixinConfig.AppId, WeixinConfig.AppSecret);
+            //发送消息
+            var data = new
+            {
+                touser = sendMessage.ToUserName,
+                msgtype = "text",
+                text = new
+                {
+                    content = content
+                }
+            };
+            var result = await CommonJsonSend.SendAsync(accessToken, WeixinConfig.URL_FORMAT, data);
+            if(result.errcode != ReturnCode.请求成功)
+            {
+                return Json(new ReturnResult { IsSuccess = false, Message = result.errmsg });
+            }
+            //保存发送消息
+            await messageManager.SaveAsync(sendMessage);
+            return Json(new ReturnResult());
         }
     }
 }

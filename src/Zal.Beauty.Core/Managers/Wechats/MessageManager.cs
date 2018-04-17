@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,17 @@ namespace Zal.Beauty.Core.Managers.Wechats
             query.OrderByDescending(c=>c.CreateTime);
             var cusSet = await query.ToEntitySetAsync(queryParameter);
             return Mapper.Map<EntitySet<MessageResult>>(cusSet);
+        }
+        
+        /// <summary>
+        /// 根据ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<MessageResult> GetMessageByIdAsync(long id)
+        {
+            var message = await context.Messages.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return Mapper.Map<MessageResult>(message);
         }
     }
 }

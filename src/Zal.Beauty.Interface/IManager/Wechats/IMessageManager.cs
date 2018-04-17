@@ -32,5 +32,12 @@ namespace Zal.Beauty.Interface.IManager.Wechats
         /// <param name="queryParameter"></param>
         /// <returns></returns>
         Task<EntitySet<MessageResult>> GetMessageSetAsync(MessageQuery queryParameter);
+
+        /// <summary>
+        /// 根据ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<MessageResult> GetMessageByIdAsync(long id);
     }
 }
