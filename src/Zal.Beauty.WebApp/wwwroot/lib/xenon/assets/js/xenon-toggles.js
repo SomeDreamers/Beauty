@@ -118,12 +118,23 @@
 				if(public_vars.$sidebarMenu.hasClass('collapsed'))
 				{
 					public_vars.$sidebarMenu.removeClass('collapsed');
-					ps_init();
+                    ps_init();
+                    //设置ul的display属性
+                    $("#main-menu li").each(function () {
+                        var $this = $(this);
+                        if ($this.hasClass("active")) {
+                            $this.find("ul").css("display", "block");
+                        } else {
+                            $this.find("ul").css("display", "");
+                        }
+                    })
 				}
 				else
 				{
 					public_vars.$sidebarMenu.addClass('collapsed');
-					ps_destroy();
+                    ps_destroy();
+                    //设置ul的display属性
+                    $("#main-menu li ul").css("display", "");
 				}
 				
 				$(window).trigger('xenon.resize');
