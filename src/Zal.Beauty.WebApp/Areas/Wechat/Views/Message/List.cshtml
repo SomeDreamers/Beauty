@@ -79,8 +79,10 @@
 
             //表格操作列
             function actionFormmatter(value, row, index) {
-                var result = "<button class='btn btn-success btn-sm btn-icon send-message-btn' data='" + value + "'>回复消息</button>";
-                return result;
+                if (Number($("#MsgSource").val()) == 2)
+                    return "--";
+                else
+                    return "<button class='btn btn-success btn-sm btn-icon send-message-btn' data='" + value + "'>回复消息</button>";
             }
 
             //时间插件
@@ -199,6 +201,8 @@
 @* 回复消息模态框 *@
 <div class="modal fade" id="send-message-modal" data-backdrop="static" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
+
+
         <div class="modal-content">
 
             <div class="modal-header">
