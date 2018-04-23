@@ -31,6 +31,7 @@ namespace Zal.Beauty.Core
 
             #region Mall
             cfg.AddProfile<BrandProfile>();
+            cfg.AddProfile<ProTagProfile>();
             #endregion
 
             cfg.AddProfile<TagProfile>();

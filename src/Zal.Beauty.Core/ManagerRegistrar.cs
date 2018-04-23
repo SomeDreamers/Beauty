@@ -28,6 +28,7 @@ namespace Zal.Beauty.Core
             services.AddTransient<IFileManager,FileManager>();
             #region Mall
             services.AddTransient<IBrandManager, BrandManager>();
+            services.AddTransient<ITagManager, TagManager>();
             #endregion
 
         }
