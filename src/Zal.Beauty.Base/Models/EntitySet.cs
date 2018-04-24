@@ -23,5 +23,10 @@ namespace Zal.Beauty.Base.Models
         /// 总页数
         /// </summary>
         public int TotalPages { get; set; }
+        
+        /// <summary>
+        /// 当前页码
+        /// </summary>
+        public int CucurrentPage { get; set; }
     }
 }

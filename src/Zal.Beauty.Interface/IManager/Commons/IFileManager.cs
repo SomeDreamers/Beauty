@@ -34,7 +34,7 @@ namespace Zal.Beauty.Interface.IManager.Commons
         /// 根据素材分类ID获取全部素材
         /// </summary>
         /// <returns></returns>
-        Task<List<FileResult>> GetAllFileAsync(long tagId);
+        Task<EntitySet<FileResult>> GetAllFileAsync(long tagId,int page);
         /// <summary>
         /// 根据OSSkey判断文件是否存在
         /// </summary>

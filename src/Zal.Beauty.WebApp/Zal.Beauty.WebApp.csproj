@@ -70,6 +70,7 @@
     <Content Include="wwwroot\lib\bootstrap-table\dist\js\bootstrap-table.min.js" />
     <Content Include="wwwroot\lib\bootstrap-table\dist\locales\bootstrap-table-zh-CN.js" />
     <Content Include="wwwroot\lib\bootstrap-table\dist\locales\bootstrap-table-zh-CN.min.js" />
+    <Content Include="wwwroot\lib\bootstrap\dist\js\jqPaginator.js" />
     <Content Include="wwwroot\lib\xenon\assets\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\bootstrap.css" />

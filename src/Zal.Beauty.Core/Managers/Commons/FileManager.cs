@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Enums;
 using Zal.Beauty.Base.Models;
+using Zal.Beauty.Core.Common;
 using Zal.Beauty.Core.ORM.Commons;
 using Zal.Beauty.Interface.IManager.Commons;
 using Zal.Beauty.Interface.Models.Parameters.Commons;
@@ -64,15 +66,21 @@ namespace Zal.Beauty.Core.Managers.Commons
         }
 
         /// <summary>
-        ///根据素材分类ID获取全部素材
+        ///根据素材分类ID获取全部素材(分页)
         /// </summary>
         /// <param name="tagId"></param>
         /// <returns></returns>
-        public async Task<List<FileResult>> GetAllFileAsync(long tagId)
+        public async Task<EntitySet<FileResult>> GetAllFileAsync(long tagId,int page)
         {
-            var files = await context.Files.Where(c => c.TagId == tagId&&c.IsDel==false).OrderByDescending(c => c.CreateTime).ToListAsync();
-            List<FileResult> list = Mapper.Map<List<FileResult>>(files);
-            return list;
+            Pagination pagination = new Pagination();
+            pagination.Size = 8;
+            pagination.Start = (page - 1) * 8;
+            pagination.Sort = ESortOrder.DESC;
+            pagination.Column = "CreateTime";
+            //var files = await context.Files.Where(c => c.TagId == tagId&&c.IsDel==false).OrderByDescending(c => c.CreateTime).ToListAsync();
+            var files = await context.Files.Where(c => c.TagId == tagId && c.IsDel == false).ToEntitySetAsync(pagination);
+            files.CucurrentPage = page;
+            return Mapper.Map<EntitySet<FileResult>>(files);
         }
 
         /// <summary>
@@ -95,6 +103,7 @@ namespace Zal.Beauty.Core.Managers.Commons
             var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var file=await context.Files.FirstAsync(c => c.OssKey == osskey);
             file.CreateTime = time;
+            file.IsDel = false;
             await context.SaveChangesAsync();
         }
 
