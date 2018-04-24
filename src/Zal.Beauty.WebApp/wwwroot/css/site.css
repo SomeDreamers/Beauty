@@ -38,3 +38,23 @@
 .range-control .search-control {
     width:136px;
 }
+
+
+.nav-tabs-change {
+    font-size: 14px;
+    margin-bottom: -2px;
+}
+
+.nav.nav-tabs.nav-tabs-change > li > a {
+    background-color: none;
+    margin-right: 0px;
+    color: #979898;
+}
+
+.nav-tabs-change .change-active {
+    border-bottom: 2px solid orange;
+}
+
+.nav.nav-tabs.nav-tabs-change > .change-active > a {
+    color: black;
+}

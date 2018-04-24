@@ -6,6 +6,7 @@ using Zal.Beauty.Core.MapProfiles;
 using Zal.Beauty.Core.MapProfiles.Identitys;
 using Zal.Beauty.Core.MapProfiles.Commons;
 using Zal.Beauty.Core.MapProfiles.Wechats;
+using Zal.Beauty.Core.MapProfiles.Malls;
 
 namespace Zal.Beauty.Core
 {
@@ -27,6 +28,12 @@ namespace Zal.Beauty.Core
             cfg.AddProfile<CustomerProfile>();
             cfg.AddProfile<MessageProfile>();
             #endregion
+
+            #region Mall
+            cfg.AddProfile<BrandProfile>();
+            cfg.AddProfile<ProTagProfile>();
+            #endregion
+
             cfg.AddProfile<TagProfile>();
             cfg.AddProfile<FileProfile>();
 

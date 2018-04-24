@@ -1,0 +1,134 @@
+﻿
+@section Scripts{
+    <script type="text/javascript">
+        
+        $(function () {
+            $('#table').bootstrapTable({
+                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cache: false,
+                url: "/Wechat/Customer/CusSetAjax",
+                sidePagination: 'server',
+                pagination: true,
+                pageList: [2, 10, 20, 50, 100],
+                showColumns: true,
+                showRefresh: true,
+                search: false,
+                searchOnEnterKey: true,
+                trimOnSearch: true,
+                uniqueId: 'id',           // 绑定ID
+                //showPaginationSwitch: true,
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        Size: params.limit,                         //页面大小
+                        Start: params.offset,   //页码
+                        Column: params.sort,      //排序列名
+                        Sort: params.order //排位命令（desc，asc）
+                    };
+                    $(".search-control").each(function () {
+                        var $this = $(this);
+                        var name = $this.attr("name");
+                        var value = $this.val();
+                        if (value)
+                            temp[name] = value;
+                    })
+                    return temp;
+                },
+                columns: [
+                    { checkbox: true, visible: true },
+                    { field: 'icon', title: '头像', formatter: iconFormmatter },
+                    { field: 'nick', title: '昵称' },
+                    { field: 'sex', title: '性别', formatter: sexFormmatter },
+                    { field: 'country', title: '国家' },
+                    { field: 'province', title: '省' },
+                    { field: 'city', title: '市' },
+                    { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
+                    
+                ],
+                responseHandler: function (result) {
+                    var data = {};
+                    data.total = result.total;
+                    data.rows = result.entities;
+                    return data;
+                }
+            });
+
+            //表格头像转换
+            function iconFormmatter(value, row, index) {
+                return "<img src=" + value + " width=\"50\" height=\"50\" />";
+            }
+
+            //表格性别转换
+            function sexFormmatter(value, row, index) {
+                if (value == 1)
+                    return "男";
+                else
+                    return "女";
+            }
+
+            //时间插件
+            $('.form_datetime').datetimepicker({
+                language: "zh-CN",
+                todayBtn: true,
+                autoclose: true
+            });
+
+            //点击搜索按钮
+            $(".search-control-btn").off().click(function () {
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //点击清空按钮
+            $(".clear-control-btn").click(function () {
+                $(".search-control").val("");
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+            
+        })
+    </script>
+}
+
+
+@Html.BlockQuote()
+
+<!-- Custom column filtering -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"></h3>
+
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+            <input class="form-control search-control" type="text" name="Nick" title="昵称" placeholder="昵称">
+            <span class="range-control">
+                <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                -
+                <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+            </span>
+            
+            <select class="form-control search-control" name="Sex" title="性别" asp-items="@Html.GetEnumSelectList(typeof(ESexType))">
+                <option value="">性别</option>
+            </select>
+            <div class="btn-group" style="float:right;">
+                <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                </button>
+                <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                </button>
+            </div>
+        </div>
+
+        <table id="table"></table>
+    </div>
+</div>

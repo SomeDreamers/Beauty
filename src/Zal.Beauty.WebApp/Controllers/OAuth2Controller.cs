@@ -105,7 +105,8 @@ namespace Zal.Beauty.WebApp.Controllers
                     Country = wxUserInfo.country,
                     Province = wxUserInfo.province,
                     City = wxUserInfo.city,
-                    Icon = wxUserInfo.headimgurl
+                    Icon = wxUserInfo.headimgurl,
+                    CreateTime = DateTime.Now
                 };
                 var returnResult = await customerManager.AddCustomerAsync(customer);
 

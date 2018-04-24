@@ -1,0 +1,223 @@
+﻿@section Styles{
+    <style type="text/css">
+        
+    </style>
+}
+@section Scripts{
+    <script type="text/javascript">
+        var EditId = 0;
+        $(function () {
+            $('#table').bootstrapTable({
+                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cache: false,
+                url: "/Wechat/Message/MsgSetAjax",
+                sidePagination: 'server',
+                pagination: true,
+                pageList: [2, 10, 20, 50, 100],
+                showColumns: true,
+                showRefresh: true,
+                search: false,
+                searchOnEnterKey: true,
+                trimOnSearch: true,
+                uniqueId: 'id',           // 绑定ID
+                //showPaginationSwitch: true,
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        Size: params.limit,                         //页面大小
+                        Start: params.offset,   //页码
+                        Column: params.sort,      //排序列名
+                        Sort: params.order //排位命令（desc，asc）
+                    };
+                    $(".search-control").each(function () {
+                        var $this = $(this);
+                        var name = $this.attr("name");
+                        var value = $this.val();
+                        if (value)
+                            temp[name] = value;
+                    })
+                    //添加tab搜索条件
+                    temp.MsgSource = $("#MsgSource").val();
+                    return temp;
+                },
+                columns: [
+                    { checkbox: true, visible: true },
+                    { field: 'fromUserNick', title: '发送人' },
+                    { field: 'toUserNick', title: '接收人' },
+                    { field: 'type', title: '消息类型', formatter: typeFormmatter },
+                    { field: 'content', title: '文本' },
+                    { field: 'picUrl', title: '图片', formatter: picFormmatter },
+                    { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
+                    { field: 'id', title: '操作', formatter: actionFormmatter },
+                ],
+                responseHandler: function (result) {
+                    var data = {};
+                    data.total = result.total;
+                    data.rows = result.entities;
+                    return data;
+                }
+            });
+
+            //表格图片转换
+            function picFormmatter(value, row, index) {
+                if (value)
+                    return "<img src=" + value + " width=\"50\" height=\"50\" />";
+                else
+                    return "";
+            }
+
+            //表格类型转换
+            function typeFormmatter(value, row, index) {
+                if (value == 1)
+                    return "文本";
+                else if (value == 2)
+                    return "图片";
+                else
+                    return "";
+            }
+
+            //表格操作列
+            function actionFormmatter(value, row, index) {
+                if (Number($("#MsgSource").val()) == 2)
+                    return "--";
+                else
+                    return "<button class='btn btn-success btn-sm btn-icon send-message-btn' data='" + value + "'>回复消息</button>";
+            }
+
+            //时间插件
+            $('.form_datetime').datetimepicker({
+                language: "zh-CN",
+                todayBtn: true,
+                autoclose: true
+            });
+
+            //点击搜索按钮
+            $(".search-control-btn").off().click(function () {
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //点击清空按钮
+            $(".clear-control-btn").click(function () {
+                $(".search-control").val("");
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //发送消息按钮点击事件
+            $(document).on("click", ".send-message-btn", function () {
+                EditId = $(this).attr("data");
+                $("#message-content").val("");
+                $('#send-message-modal').modal('show', { backdrop: 'static' });
+            });
+            $("#send-message-modal .save-btn").click(function () {
+                show_loading_bar(70);
+                $.post("/Wechat/Message/ReplayMessage", { messageId: EditId, content: $("#message-content").val() }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#send-message-modal').modal("hide");
+                                toastr.success("发送成功", "操作成功!");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+        })
+    </script>
+}
+
+
+@Html.BlockQuote()
+@Html.Hidden("MsgSource", ViewData["MsgSource"])
+<!-- Custom column filtering -->
+<div class="panel panel-default">
+    <div class="panel-heading" style="padding-bottom: 0px;">
+        <div class="panel-title">
+            <ul class="nav nav-tabs nav-tabs-change">
+                <li class="@((int)ViewData["MsgSource"] == 1 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MsgSource=1">
+
+                        <span class="hidden-xs">接收消息</span>
+                    </a>
+                </li>
+                <li class="@((int)ViewData["MsgSource"] == 2 ? "change-active" : "")">
+                    <a href="/Wechat/Message/List?MsgSource=2">
+
+                        <span>发送消息</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tab-content">
+                    <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+                        <input class="form-control search-control" type="text" name="@((int)ViewData["MsgSource"] == 1?"FromUserNick" : "ToUserNick")" title="昵称" placeholder="昵称">
+                        <select class="form-control search-control" name="Type" title="消息类型" asp-items="@Html.GetEnumSelectList(typeof(EMsgType))">
+                            <option value="">消息类型</option>
+                        </select>
+                        <span class="range-control">
+                            <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                            -
+                            <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+                        </span>
+
+
+                        <div class="btn-group" style="float:right;">
+                            <button id="btn_edit" type="button" class="btn btn-default search-control-btn">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                            </button>
+                            <button id="btn_add" type="button" class="btn btn-default clear-control-btn">
+                                <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                            </button>
+                        </div>
+                    </div>
+
+                    <table id="table"></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@* 回复消息模态框 *@
+<div class="modal fade" id="send-message-modal" data-backdrop="static" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">回复消息</h4>
+            </div>
+
+            <div class="modal-body">
+                <textarea rows="4" class="form-control" id="message-content"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">发送</button>
+            </div>
+        </div>
+    </div>
+</div>

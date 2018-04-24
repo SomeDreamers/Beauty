@@ -32,5 +32,12 @@ namespace Zal.Beauty.Interface.IManager.Wechats
         /// <param name="openId"></param>
         /// <returns></returns>
         CustomerResult GetCustomerByOpenId(string openId);
+
+        /// <summary>
+        /// 获取客户集合
+        /// </summary>
+        /// <param name="queryParameter"></param>
+        /// <returns></returns>
+        Task<EntitySet<CustomerResult>> GetCusSetAsync(CustomerQuery queryParameter);
     }
 }

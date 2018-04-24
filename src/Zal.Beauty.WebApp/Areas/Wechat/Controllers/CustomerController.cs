@@ -24,16 +24,28 @@ namespace Zal.Beauty.WebApp.Areas.Wechat.Controllers
         }
 
         /// <summary>
-        /// 客户列表
-        /// </summary>
+        /// 客户列表界面
+        /// </summary> 
+        /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<IActionResult> List(CustomerQuery query)
+        public IActionResult List()
         {
             return View();
         }
 
         /// <summary>
-        /// 客户列表
+        /// 客户集合ajax
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> CusSetAjax(CustomerQuery query)
+        {
+            var cusSet = await customerManager.GetCusSetAsync(query);
+            return Json(cusSet);
+        }
+
+        /// <summary>
+        /// 客户详情
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Detail(CustomerQuery query)

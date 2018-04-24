@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zal.Beauty.Base.Enums;
 using Zal.Beauty.Base.Models;
+using Zal.Beauty.Core.Common;
 using Zal.Beauty.Core.ORM.Wechats;
 using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;
@@ -70,6 +72,26 @@ namespace Zal.Beauty.Core.Managers.Wechats
             var customer = context.Customers.Where(c => c.Openid == openId).FirstOrDefault();
             if (customer == null) return null;
             return Mapper.Map<CustomerResult>(customer);
+        }
+
+        /// <summary>
+        /// 获取客户集合
+        /// </summary>
+        /// <param name="queryParameter"></param>
+        /// <returns></returns>
+        public async Task<EntitySet<CustomerResult>> GetCusSetAsync(CustomerQuery queryParameter)
+        {
+            var query = context.Customers.AsQueryable();
+            if (!string.IsNullOrEmpty(queryParameter.Nick))
+                query = query.Where(c => c.Nick.Contains(queryParameter.Nick));
+            if (Enum.IsDefined(typeof(ESexType), queryParameter.Sex))
+                query = query.Where(c => c.Sex == queryParameter.Sex);
+            if (queryParameter.CreateBegin != DateTime.MinValue)
+                query = query.Where(c => c.CreateTime >= queryParameter.CreateBegin);
+            if (queryParameter.CreateEnd != DateTime.MinValue)
+                query = query.Where(c => c.CreateTime <= queryParameter.CreateEnd);
+            var cusSet = await query.ToEntitySetAsync(queryParameter);
+            return Mapper.Map<EntitySet<CustomerResult>>(cusSet);
         }
 
         #region 内部方法

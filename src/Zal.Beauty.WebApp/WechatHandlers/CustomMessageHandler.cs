@@ -54,7 +54,8 @@ namespace Zal.Beauty.WebApp.WechatHandlers
                 ToUserName = requestMessage.ToUserName,
                 MediaId = requestMessage.MediaId,
                 PicUrl = requestMessage.PicUrl,
-
+                FromUserNick = customer.Nick,
+                CreateTime = DateTime.Now
             };
             messageManager.Save(parameter);
             return responseMessage;
@@ -78,7 +79,9 @@ namespace Zal.Beauty.WebApp.WechatHandlers
                 Content = requestMessage.Content,
                 FromUserId = customer == null ? 0 : customer.Id,
                 FromUserName = requestMessage.FromUserName,
-                ToUserName = requestMessage.ToUserName
+                ToUserName = requestMessage.ToUserName,
+                FromUserNick = customer.Nick,
+                CreateTime = DateTime.Now
             };
             messageManager.Save(parameter);
             return responseMessage;

@@ -61,6 +61,13 @@ namespace Zal.Beauty.WebApp.Configs
         public const string MallCommontKeys = "mall.commont.manager";
         #endregion
 
+        #region 微信管理
+        /// <summary>
+        /// 客户管理权限key值
+        /// </summary>
+        public const string WechatCustomerKeys = "whchat.customer.manager";
+        #endregion
+
         public static string GetKeyDescription(string key)
         {
             switch (key)
@@ -74,6 +81,7 @@ namespace Zal.Beauty.WebApp.Configs
                 case MallPromotionKeys: return "促销管理";
                 case MallOrderKeys: return "订单管理";
                 case MallCommontKeys: return "评论管理";
+                case WechatCustomerKeys: return "客户管理";
                 default:
                     return "";
             }

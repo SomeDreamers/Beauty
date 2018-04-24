@@ -70,7 +70,6 @@
     <Content Include="wwwroot\lib\bootstrap-table\dist\js\bootstrap-table.min.js" />
     <Content Include="wwwroot\lib\bootstrap-table\dist\locales\bootstrap-table-zh-CN.js" />
     <Content Include="wwwroot\lib\bootstrap-table\dist\locales\bootstrap-table-zh-CN.min.js" />
-    <Content Include="wwwroot\lib\bootstrap\dist\js\jqPaginator.js" />
     <Content Include="wwwroot\lib\xenon\assets\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\.DS_Store" />
     <Content Include="wwwroot\lib\xenon\assets\css\bootstrap.css" />
@@ -1364,7 +1363,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="14.8.12" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="14.8.10" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
@@ -1373,7 +1372,6 @@
     <Folder Include="Areas\Common\Helpers\" />
     <Folder Include="Areas\Mall\Controllers\" />
     <Folder Include="Areas\Mall\Views\" />
-    <Folder Include="Areas\Wechat\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />
