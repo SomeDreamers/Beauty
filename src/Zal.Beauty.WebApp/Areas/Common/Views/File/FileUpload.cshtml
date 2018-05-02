@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Dictionary<string,object>
+@{
 }
 @section Scripts{
 <script src="~/lib/xenon/assets/js/dropzone/dropzone.min.js"></script>
@@ -87,8 +88,8 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3 class="panel-title" id="TagId" data="2">
-               <small>素材分类：</small>@Model
+            <h3 class="panel-title" id="TagId" data="@Model["tagId"]">
+               <small>素材分类：</small>@Model["tagName"]
             </h3>
         </div>
 

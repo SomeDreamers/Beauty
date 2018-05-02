@@ -47,8 +47,6 @@
                     $('#gallery-flies-create-modal').modal('show');
                 });
 
-
-
 				// Sortable
 
 				$('.gallery-env a[data-action="sort"]').on('click', function(ev)
@@ -70,8 +68,29 @@
 						$(".album-images").sortable('destroy');
 						$(".album-sorting-info").stop().slideUp(300);
 					}
-				});
+                });
         });
+
+        //分页设置
+        function CutPage(current_page, total_page) {
+            $.jqPaginator(
+                '#pagination',
+                {
+                    totalPages: parseInt(total_page),//$("#pageCount").val(),//parseInt($("#PageCount").val()),
+                    visiblePages: 5, //设置最多显示的页码数
+                    currentPage: parseInt(current_page),//$("#page").val(),//parseInt($("#Page").val()) + 1,
+                    first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                    prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                    next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                    last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                    page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                    onPageChange: function (page, type) {
+                        if (current_page != page) {
+                            loadImage(page);
+                        }
+                    }
+                });
+        };
 
         /*选中的素材分类名作为标题*/
         function changTagName() {
@@ -79,28 +98,34 @@
         }   
 
         /*加载素材分类下的图片*/
-        function loadImage() {
+        function loadImage(page) {
             var tagId = $("#TagList").children(".active").find("span").attr("data");
             $.post(
                 "/Common/File/GetAllFile",
-                { tagId: tagId },
+                { tagId: tagId, page: page },
                 function (result) {
+                    var current_page = result.cucurrentPage;
+                    var total_page = result.totalPages;
+                    if (result.entities.length > 0) {
+                        CutPage(current_page, total_page);
+                    }
+                    $("#now_page").val(current_page);
                     $("#fileList").children().remove();
-                    for (var i=0; i < result.length; i++) {
+                    for (var i = 0; i < result.entities.length; i++) {
                         var item = '';
                         item += '<div class="col-md-3 col-sm-4 col-xs-6">';
                         item += '<div class="album-image">';
-                        item += '<img src="' + result[i].url + '" class="img-responsive" />';
+                        item += '<div style="height:113px;width:130px;"><img style="max-height:113px;max-width:130px;" src="' + result.entities[i].url + '" class="img-responsive" /></div>';
                         item += '<a href="#" class="name">';
-                        item += '<span class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result[i].name + '">' + result[i].name + '</span>';
-                        item += '<em class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result[i].createTime + '">' + result[i].createTime + '</em>';
+                        item += '<span class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result.entities[i].name + '">' + result.entities[i].name + '</span>';
+                        item += '<em class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result.entities[i].createTime + '">' + result.entities[i].createTime + '</em>';
                         item += '</a>';
-                        item += '<div class="image-options" data-fileId=' + result[i].id + '>';
+                        item += '<div class="image-options" data-fileId=' + result.entities[i].id + '>';
                         item += '<a style="margin-right:5px;" href="#" data-action="edit"><i class="fa-pencil"></i></a>';
                         item += '<a href="#" data-action="trash"><i class="fa-trash"></i></a>';
                         item += '</div>';
                         item += '<div class="image-checkbox">';
-                        item += '<input value=' + result[i].id + ' type="checkbox" class="cbr" />';
+                        item += '<input value=' + result.entities[i].id + ' type="checkbox" class="cbr" />';
                         item += '</div>';
                         item += '</div>';
                         item += '</div>';
@@ -115,7 +140,7 @@
 
         $(function () {
             //提示工具的初始化
-            $("[data-toggle='tooltip']").tooltip(); 
+            $("[data-toggle='tooltip']").tooltip();
             changTagName();//选中的素材分类名作为标题
             loadImage();//加载素材分类下的图片
             /*添加素材分类*/
@@ -130,6 +155,8 @@
                     $.post(
                         "/Common/File/AddTag", { name: name, weight: weight }, function (result) { 
                             if (result.isSuccess) {
+                                //var now_page = $("#now_page").val();
+                                //loadImage(now_page);
                                 window.location.reload();
 
                             }
@@ -141,7 +168,8 @@
             /*打开素材上传界面*/
             $("#upload").click(function () {
                 var tagName = $("#TagList").children(".active").find("span").text();
-                window.location.href = "/Common/File/FileUpload?tagName=" + tagName;
+                var tagId = $("#TagList").children(".active").find("span").attr("data");
+                window.location.href = "/Common/File/FileUpload?tagName=" + tagName+"&tagId="+tagId;
             });
 
             /*点击素材分类*/
@@ -159,7 +187,10 @@
                     "/Common/File/ModifyFileName",
                     { id : id , name: name },
                     function (result) { 
-                        window.location.reload();
+                        $("#gallery-image-modal").modal('hide');
+                        var now_page = $("#now_page").val();
+                        loadImage(now_page);
+                        //window.location.reload();
                     }
                 );
             });
@@ -170,23 +201,33 @@
                     "/Common/File/DeleteFile",
                     { id: id },
                     function (result) {
-                        window.location.reload();
+                        $("#gallery-image-delete-modal").modal('hide');
+                        var now_page = $("#now_page").val();
+                        loadImage(now_page);
+                        //window.location.reload();
                     }
                 );
             });
 
             /*批量删除素材*/
             $("#lotDelete").on("click", function () { 
+                $("#gallery-image-lot-delete-modal").modal('show');
+            });
+
+            $("#lotDeleteFile").click(function () { 
                 var files = $("#fileList").find(":checkbox:checked");
                 var fileId = new Array();
-                for (var i = 0; i < files.length;i++) {
+                for (var i = 0; i < files.length; i++) {
                     fileId.push(files[i].value);
                 }
                 $.post(
                     "/Common/File/LotDeleteFile",
                     { fileId: fileId },
                     function (result) {
-                        window.location.reload();
+                        $("#gallery-image-lot-delete-modal").modal('hide');
+                        var now_page = $("#now_page").val();
+                        loadImage(now_page);
+                        //window.location.reload();
                     }
                 );
             });
@@ -256,10 +297,13 @@
             </div>
 
 
-            <button class="btn btn-white btn-block">
-                <i class="fa-bars"></i>
-                加载更多
-            </button>
+            <form action="" method="post">
+                <div class="page">
+                    <ul class="pagination" id="pagination"></ul>
+                </div>
+                <input style="display: none" type="text" id="page" name="page"
+                       value="" />
+            </form>
 
         </div>
 
@@ -308,6 +352,7 @@
     </div>
 
 </section>
+<input type="text" id="now_page" style="display:none;" />
 
 <!--素材修改模态框-->
 <div class="modal fade" id="gallery-image-modal">
@@ -354,6 +399,31 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-danger" id="deleteFile">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--批量删除素材模态框-->
+<div class="modal fade" id="gallery-image-lot-delete-modal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">删除图片</h4>
+            </div>
+
+            <div class="modal-body">
+
+                你确定要删除吗？
+
+            </div>
+            <div style="display:none">
+                <p class="fileId"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="lotDeleteFile">删除</button>
             </div>
         </div>
     </div>

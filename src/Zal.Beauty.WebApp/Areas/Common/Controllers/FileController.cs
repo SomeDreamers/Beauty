@@ -52,9 +52,12 @@ namespace Zal.Beauty.WebApp.Areas.Common.Controllers
         /// 返回素材上传界面
         /// </summary>
         /// <returns></returns>
-        public IActionResult FileUpload(String tagName)
+        public IActionResult FileUpload(String tagName,int tagId)
         {
-            return View("FileUpload", tagName);
+            Dictionary<string, object> map = new Dictionary<string, object>();
+            map.Add("tagId",tagId);
+            map.Add("tagName", tagName);
+            return View("FileUpload", map);
         }
         /// <summary>
         /// 素材上传OSS
@@ -99,14 +102,18 @@ namespace Zal.Beauty.WebApp.Areas.Common.Controllers
         /// 获取素材分类下所有的素材
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> GetAllFile(long tagId)
+        public async Task<IActionResult> GetAllFile(long tagId,int page)
         {
-            List<Interface.Models.Results.Commons.FileResult> list = await manager.GetAllFileAsync(tagId);
-            foreach (var item in list)
+            if (page == 0)
+            {
+                page = 1;
+            }
+            EntitySet<Interface.Models.Results.Commons.FileResult> files = await manager.GetAllFileAsync(tagId,page);
+            foreach (var item in files.Entities)
             {
                 item.Url = OssOptionUtil.GetOSSUrl(item.OssKey);
             }
-            return Json(list);
+            return Json(files);
         }
 
         /// <summary>
