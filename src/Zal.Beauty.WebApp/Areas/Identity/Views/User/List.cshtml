@@ -180,12 +180,16 @@
 
             //批量更新用户状态
             $(".batch-update-status-btn").click(function () {
-                show_loading_bar(70);
                 var ids = [];
                 //获取选中ID
                 $("#table tbody input[type='checkbox']:checked").each(function () {
                     ids.push($(this).parent("td").parent("tr").attr("data-uniqueid"));
                 });
+                if (ids.length === 0) {
+                    toastr.error("未选中任何行", "操作错误!");
+                    return false;
+                }
+                show_loading_bar(70);
                 $.post("/Identity/User/BatchUpdateUserStatus", { ids: ids, status: $(this).attr("data") }, function (resp) {
                     show_loading_bar({
                         pct: 100,
@@ -250,9 +254,6 @@
         </div>
 
         <div id="toolbar" class="btn-group">
-            @*<button id="btn_add" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
-            </button>*@
             <button data="1" type="button" class="btn btn-default batch-update-status-btn">
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>批量启用客户
             </button>

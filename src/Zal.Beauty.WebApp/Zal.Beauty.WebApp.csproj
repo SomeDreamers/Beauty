@@ -27,11 +27,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Common\Helpers\" />
-    <Folder Include="Areas\Mall\Controllers\" />
-    <Folder Include="Areas\Mall\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Areas\Mall\Views\Product\List.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="by" /></VisualStudio></ProjectExtensions>
 

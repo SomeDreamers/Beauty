@@ -1,0 +1,142 @@
+﻿
+@section Scripts{
+    <script type="text/javascript">
+
+        $(function () {
+            $('#table').bootstrapTable({
+                //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                cache: false,
+                url: "/Mall/Product/ProSetAjax",
+                sidePagination: 'server',
+                pagination: true,
+                pageList: [2, 10, 20, 50, 100],
+                showColumns: true,
+                showRefresh: true,
+                search: false,
+                searchOnEnterKey: true,
+                trimOnSearch: true,
+                uniqueId: 'id',           // 绑定ID
+                //showPaginationSwitch: true,
+                toolbar: "#toolbar",                   //工具按钮用哪个容器
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        Size: params.limit,                         //页面大小
+                        Start: params.offset,   //页码
+                        Column: params.sort,      //排序列名
+                        Sort: params.order //排位命令（desc，asc）
+                    };
+                    $(".search-control").each(function () {
+                        var $this = $(this);
+                        var name = $this.attr("name");
+                        var value = $this.val();
+                        if (value)
+                            temp[name] = value;
+                    })
+                    return temp;
+                },
+                columns: [
+                    { checkbox: true, visible: true },
+                    { field: 'name', title: '商品名' },
+                    { field: 'subTitle', title: '副标题' },
+                    { field: 'quantity', title: '库存数量' },
+                    { field: 'brandName', title: '品牌' },
+                    { field: 'orderQuantity', title: '订单数量' },
+                    { field: 'saleQuantity', title: '销售数量' },
+                    { field: 'createTime', title: '创建时间', sortable: true, formatter: dateFormmatter },
+
+                ],
+                responseHandler: function (result) {
+                    var data = {};
+                    data.total = result.total;
+                    data.rows = result.entities;
+                    return data;
+                }
+            });
+
+            //时间插件
+            $('.form_datetime').datetimepicker({
+                language: "zh-CN",
+                todayBtn: true,
+                autoclose: true
+            });
+
+            //点击搜索按钮
+            $(".search-control-btn").off().click(function () {
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+            //点击清空按钮
+            $(".clear-control-btn").click(function () {
+                $(".search-control").val("");
+                $('#table').bootstrapTable('refreshOptions', { pageNumber: 1 });
+            });
+
+        })
+    </script>
+}
+
+
+@Html.BlockQuote()
+@Html.Hidden("Status", ViewData["Status"])
+<!-- Custom column filtering -->
+<div class="panel panel-default">
+    <div class="panel-heading" style="padding-bottom: 0px;">
+        <div class="panel-title">
+            <ul class="nav nav-tabs nav-tabs-change">
+                <li class="@((EProductStatus)ViewData["Status"] == EProductStatus.New ? "change-active" : "")">
+                    <a href="/Mall/Product/List?Status=@EProductStatus.New">
+                        <span class="hidden-xs">新建</span>
+                    </a>
+                </li>
+                <li class="@((EProductStatus)ViewData["Status"] == EProductStatus.OnSale ? "change-active" : "")">
+                    <a href="/Mall/Product/List?Status=@EProductStatus.OnSale">
+                        <span class="hidden-xs">上架</span>
+                    </a>
+                </li>
+                <li class="@((EProductStatus)ViewData["Status"] == EProductStatus.UpSale ? "change-active" : "")">
+                    <a href="/Mall/Product/List?Status=@EProductStatus.UpSale">
+                        <span class="hidden-xs">下架</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+            <input class="form-control search-control" type="text" name="Name" title="商品名" placeholder="商品名">
+            <input class="form-control search-control" type="text" name="SubTitle" title="副标题" placeholder="副标题">
+            <span class="range-control">
+                <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                -
+                <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+            </span>
+            <div class="btn-group" style="float:right;">
+                <button type="button" class="btn btn-default search-control-btn">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                </button>
+                <button type="button" class="btn btn-default clear-control-btn">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                </button>
+            </div>
+        </div>
+
+        <div id="toolbar" class="btn-group">
+            <button onclick="window.location.href='/Mall/Product/Create'" type="button" class="btn btn-default batch-update-status-btn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新建商品
+            </button>
+        </div>
+
+        <table id="table"></table>
+    </div>
+</div>

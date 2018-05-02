@@ -1,0 +1,44 @@
+﻿@model CreateProductModel
+@Html.BlockQuote(true, "/Mall/Product/List")
+
+<div class="panel panel-default">
+    <div class="panel-heading" style="padding-bottom: 0px;">
+     
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="search-bar" style="padding-bottom: 10px;border-bottom: 1px solid #eeeeee;">
+            <input class="form-control search-control" type="text" name="Name" title="商品名" placeholder="商品名">
+            <input class="form-control search-control" type="text" name="SubTitle" title="副标题" placeholder="副标题">
+            <span class="range-control">
+                <input class="form-control search-control form_datetime" type="text" name="CreateBegin" title="创建时间" readonly placeholder="创建时间">
+                -
+                <input class="form-control search-control form_datetime" type="text" name="CreateEnd" title="创建时间" readonly placeholder="创建时间">
+            </span>
+            <div class="btn-group" style="float:right;">
+                <button type="button" class="btn btn-default search-control-btn">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+                </button>
+                <button type="button" class="btn btn-default clear-control-btn">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>清空
+                </button>
+            </div>
+        </div>
+
+        <div id="toolbar" class="btn-group">
+            <button onclick="window.location.href='/Mall/Product/Create'" type="button" class="btn btn-default batch-update-status-btn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新建商品
+            </button>
+        </div>
+
+        <table id="table"></table>
+    </div>
+</div>
