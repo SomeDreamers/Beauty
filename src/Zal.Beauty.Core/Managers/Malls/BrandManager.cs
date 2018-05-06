@@ -56,6 +56,7 @@ namespace Zal.Beauty.Core.Managers.Malls
                     brand.CreateTime = DateTime.Now;
                 //创建品牌
                 await context.Brands.AddAsync(brand);
+                await context.SaveChangesAsync();
                 result.Id = brand.Id;
             }
             //编辑品牌
@@ -80,8 +81,8 @@ namespace Zal.Beauty.Core.Managers.Malls
                 //更新品牌
                 oldBrand.Name = brand.Name;
                 context.Brands.Update(oldBrand);
+                await context.SaveChangesAsync();
             }
-            await context.SaveChangesAsync();
             return result;
         }
 
@@ -91,8 +92,36 @@ namespace Zal.Beauty.Core.Managers.Malls
         /// <returns></returns>
         public async Task<List<BrandResult>> GetAllBrandsAsync()
         {
-            var brands = await context.Brands.ToListAsync();
+            var brands = await context.Brands.Where(c=>c.IsDel == false).ToListAsync();
             return Mapper.Map<List<BrandResult>>(brands);
+        }
+
+        /// <summary>
+        /// 通过ID删除品牌
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> DeleteBrandByIdAsync(long id)
+        {
+            ReturnResult result = new ReturnResult();
+            var brand = await context.Brands.FirstOrDefaultAsync(c => c.Id == id);
+            if(brand == null || brand.IsDel)
+            {
+                result.IsSuccess = false;
+                result.Message = "该品牌已被删除！";
+                return result;
+            }
+            var count = await context.Products.Where(c => c.BrandId == id).CountAsync();
+            if(count > 0)
+            {
+                result.IsSuccess = false;
+                result.Message = "其它商品在使用该品牌，无法删除！";
+                return result;
+            }
+            //更新品牌删除状态
+            brand.IsDel = true;
+            await context.SaveChangesAsync();
+            return result;
         }
     }
 }
