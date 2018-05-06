@@ -1,0 +1,12 @@
+﻿<div>
+    <input type="text" id="test" value="22" />
+</div>
+
+<script type="text/javascript">
+    $(function () { 
+        alert($("#test").val());
+        $("#test").attr("value", "111");
+        alert($("#test").val());
+    });
+   
+</script>

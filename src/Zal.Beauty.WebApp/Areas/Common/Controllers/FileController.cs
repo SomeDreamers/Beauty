@@ -154,5 +154,15 @@ namespace Zal.Beauty.WebApp.Areas.Common.Controllers
             }
             return Json("success");
         }
+        /// <summary>
+        /// 返回图片modal
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> FileModal()
+        {
+            List<TagResult> tagList = await manager.GetTagAllAsync();
+            return PartialView("FileModal", tagList);
+        }
+
     }
 }

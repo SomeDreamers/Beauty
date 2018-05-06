@@ -1,19 +1,23 @@
 ﻿@model List<TagResult>
+@section Styles{
+<style>
+    #TagName, #TagWeight, #FileName {
+        border: 1px solid #C8C8C8;
+        border-radius: 3px;
+        padding: 5px
+    }
+
+    #TagAlarm {
+        font-size: 14px;
+        color: red;
+        font-weight: bold;
+        padding-left: 50px;
+        display: none;
+    }
+</style>
+}
 @section Scripts{
-    <style>
-        #TagName, #TagWeight, #FileName {
-            border: 1px solid #C8C8C8;
-            border-radius: 3px;
-            padding: 5px
-        }
-        #TagAlarm{
-            font-size:14px;
-            color:red;
-            font-weight:bold;
-            padding-left:50px;
-            display:none;
-        }
-    </style>
+    
     <script type="text/javascript">
 			// Sample Javascript code for this page
 			jQuery(document).ready(function($)
@@ -45,6 +49,16 @@
                 $('#createFiles').on('click', function (ev) {
                     ev.preventDefault();
                     $('#gallery-flies-create-modal').modal('show');
+                    //$("#flies-modal").modal("show");
+                    //$('.modal-body-file').html("加载中...");
+                    ////$('#flies-modal').addClass('file-modal');
+                    ////$('#file-modal').modal('show', { backdrop: 'static' });
+                    //$.ajax({
+                    //    url: "/Common/File/FileModal",
+                    //    success: function (response) {
+                    //        $('.modal-body-file').html(response);
+                    //    }
+                    //});
                 });
 
 				// Sortable
@@ -454,3 +468,25 @@
         </div>
     </div>
 </div>
+@* 编辑图片模态框 *@
+<div class="modal fade" id="flies-modal" data-backdrop="static">
+    <div class="modal-dialog" id="files-modal-test" style="width:800px;">
+        <div class="modal-content" style="padding:25px;">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    选择素材
+                </h4>
+            </div>
+            <div class="modal-body-file">
+
+            </div>
+            <div class="modal-footer">
+                <button  type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button  type="button" class="btn btn-primary" id="modifyName">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
