@@ -45,8 +45,8 @@ namespace Zal.Beauty.Core.Managers.Malls
             if (tag.Id <= 0)
             {
                 //验证标签名称是否重复
-                var tmpTag = await context.ProTags.FirstOrDefaultAsync(c => c.Name == tag.Name);
-                if(tmpTag != null)
+                var tmpTag = await context.ProTags.FirstOrDefaultAsync(c => c.Name == tag.Name && c.IsDel == false);
+                if (tmpTag != null)
                 {
                     result.IsSuccess = false;
                     result.Message = "标签名称重复";
@@ -57,20 +57,21 @@ namespace Zal.Beauty.Core.Managers.Malls
                     tag.CreateTime = DateTime.Now;
                 //创建标签
                 await context.ProTags.AddAsync(tag);
+                await context.SaveChangesAsync();
                 result.Id = tag.Id;
             }
             //编辑保存标签
             else
             {
                 var oldTag = await context.ProTags.FirstOrDefaultAsync(c => c.Id == tag.Id);
-                if(oldTag == null || oldTag.IsDel)
+                if (oldTag == null || oldTag.IsDel)
                 {
                     result.IsSuccess = false;
                     result.Message = "标签已被删除";
                     return result;
                 }
                 //验证标签名称是否重复
-                var tmpTag = await context.ProTags.FirstOrDefaultAsync(c => c.Name == tag.Name);
+                var tmpTag = await context.ProTags.FirstOrDefaultAsync(c => c.Name == tag.Name && c.IsDel == false);
                 if (tmpTag != null && tmpTag.Id != oldTag.Id)
                 {
                     result.IsSuccess = false;
@@ -80,9 +81,8 @@ namespace Zal.Beauty.Core.Managers.Malls
                 //更新标签
                 oldTag.Name = tag.Name;
                 oldTag.Style = tag.Style;
-                context.ProTags.Update(oldTag);
+                await context.SaveChangesAsync();
             }
-            await context.SaveChangesAsync();
             return result;
         }
 
@@ -92,7 +92,7 @@ namespace Zal.Beauty.Core.Managers.Malls
         /// <returns></returns>
         public async Task<List<TagResult>> GetAllTagsAsync()
         {
-            var tags = await context.ProTags.ToListAsync();
+            var tags = await context.ProTags.Where(c => c.IsDel == false).ToListAsync();
             return Mapper.Map<List<TagResult>>(tags);
         }
     }

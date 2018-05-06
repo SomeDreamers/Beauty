@@ -44,7 +44,7 @@ namespace Zal.Beauty.Core.Managers.Malls
             if (brand.Id <= 0)
             {
                 //验证品牌名是否重复
-                var tmpBrand = await context.Brands.FirstOrDefaultAsync(c => c.Name == brand.Name);
+                var tmpBrand = await context.Brands.FirstOrDefaultAsync(c => c.Name == brand.Name && c.IsDel == false);
                 if(tmpBrand != null)
                 {
                     result.IsSuccess = false;
@@ -80,7 +80,6 @@ namespace Zal.Beauty.Core.Managers.Malls
                 }
                 //更新品牌
                 oldBrand.Name = brand.Name;
-                context.Brands.Update(oldBrand);
                 await context.SaveChangesAsync();
             }
             return result;
