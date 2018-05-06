@@ -24,5 +24,12 @@ namespace Zal.Beauty.Interface.IManager.Malls
         /// </summary>
         /// <returns></returns>
         Task<List<BrandResult>> GetAllBrandsAsync();
+
+        /// <summary>
+        /// 通过ID删除品牌
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ReturnResult> DeleteBrandByIdAsync(long id);
     }
 }

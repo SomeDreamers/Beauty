@@ -1,0 +1,211 @@
+﻿@model CreateProductModel
+@Html.BlockQuote(true, "/Mall/Product/List")
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            //新增品牌按钮点击事件
+            $("#add-brand-btn").click(function () {
+                var brand = $("#BrandName").val();
+                if (!brand) {
+                    toastr.warning("请输入品牌", "操作提示!");
+                    return false;
+                }
+                show_loading_bar(70);
+                $.post("/Mall/Brand/Save", { Name: brand }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $("#BrandName").val("");
+                                var $block = $("#brand-group .form-block").first();
+                                var maxCount = $block.find("input[type='radio']").length;
+                                $("#brand-group .form-block").each(function () {
+                                    if ($(this).find("input[type='radio']").length < maxCount) {
+                                        $block = $(this);
+                                        return false;  //跳出循环
+                                    }
+                                })
+                                //新增品牌页面元素
+                                $block.append('<lable><div class="cbr-replaced cbr-radio">' +
+                                    '<div class="cbr-input"><input type="radio" value="' + resp.id + '" class="cbr cbr-done"></div>' +
+                                    '<div class="cbr-state"><span></span></div>' +
+                                    '</div>' + brand + '</lable><br>');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+            //删除品牌按钮点击事件
+            $("#del-brand-btn").click(function () {
+                var delIds = [];
+                var $checked = $("#brand-group .cbr-checked");
+                if ($checked.length === 0) {
+                    toastr.warning("请选择需要删除的品牌", "操作提示!");
+                    return false;
+                }
+                show_loading_bar(70);
+                $.post("/Mall/Brand/Delete", { id: $checked.find("input[type='radio']").attr("value") }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $checked.removeClass("cbr-checked");
+                                $checked.addClass("cbr-disabled");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                })
+            });
+        })
+    </script>
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading" style="padding-bottom: 0px;">
+
+        <div class="panel-options">
+            <a href="#" data-toggle="panel">
+                <span class="collapse-icon">&ndash;</span>
+                <span class="expand-icon">+</span>
+            </a>
+            <a href="#" data-toggle="remove">
+                &times;
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="Name">商品名称</label>
+
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="Name" name="Name">
+                </div>
+
+                <label class="col-sm-2 control-label" for="SubTitle">副标题</label>
+
+                <div class="col-sm-4">
+                    <textarea class="form-control" id="SubTitle" name="SubTitle"></textarea>
+                </div>
+            </div>
+            <div class="form-group-separator"></div>
+
+            <div class="form-group" id="brand-group">
+                <label class="col-sm-2 control-label">品牌</label>
+                @{
+                    var index = 0;
+                    var line = Model.Brands.Count / 5;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        <div class="col-sm-2">
+                            <div class="form-block">
+                                @{
+
+                                    var count = Model.Brands.Count % 5 > i ? line + 1 : line;
+                                    for (int j = index; j < index + count; j++)
+                                    {
+                                        <lable>
+                                            <div class="cbr-replaced cbr-radio">
+                                                <div class="cbr-input"><input type="radio" class="cbr cbr-done" value="@Model.Brands[j].Id"></div>
+                                                <div class="cbr-state"><span></span></div>
+                                            </div>
+                                            @Model.Brands[j].Name
+                                        </lable>
+                                        <br>
+                                    }
+                                    index += count;
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="BrandName" name="BrandName" style="width:20%;float: left;height: 24px;margin-right:10px;">
+                    <button id="add-brand-btn" type="button" class="btn btn-success btn-sm btn-icon">新增品牌</button>
+                    <button id="del-brand-btn" type="button" class="btn btn-danger btn-sm btn-icon">删除品牌</button>
+                </div>
+            </div>
+
+
+            <div class="form-group-separator"></div>
+
+            <div class="form-group" id="tag-group">
+                <label class="col-sm-2 control-label">标签</label>
+                @{
+                    var tagIndex = 0;
+                    var tagLine = Model.Tags.Count / 5;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        <div class="col-sm-2">
+                            <div class="form-block">
+                                @{
+
+                                    var count = Model.Tags.Count % 5 > i ? tagLine + 1 : tagLine;
+                                    for (int j = tagIndex; j < tagIndex + count; j++)
+                                    {
+                                        <lable>
+                                            <div class="cbr-replaced">
+                                                <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" value="@Model.Tags[j].Id"></div>
+                                                <div class="cbr-state"><span></span></div>
+                                            </div>
+
+                                            <div class="label  @Model.Tags[j].Style"> @Model.Tags[j].Name</div>
+                                        </lable>
+                                        <br>
+                                    }
+                                    tagIndex += count;
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+
+            <div class="form-group-separator"></div>
+
+            <div class="form-group" id="specification-group">
+                <label class="col-sm-2 control-label">规格</label>
+                @{
+                    @*var index = 0;
+                    var line = Model.Brands.Count / 5;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        <div class="col-sm-2">
+                            <div class="form-block">
+                                @{
+
+                                    var count = Model.Brands.Count % 5 > i ? line + 1 : line;
+                                    for (int j = index; j < index + count; j++)
+                                    {
+                                        <lable>
+                                            <div class="cbr-replaced cbr-radio">
+                                                <div class="cbr-input"><input type="radio" class="cbr cbr-done" value="@Model.Brands[j].Id"></div>
+                                                <div class="cbr-state"><span></span></div>
+                                            </div>
+                                            @Model.Brands[j].Name
+                                        </lable>
+                                        <br>
+                                    }
+                                    index += count;
+                                }
+                            </div>
+                        </div>
+                    }*@
+                }
+
+            </div>
+        </form>
+    </div>
+</div>

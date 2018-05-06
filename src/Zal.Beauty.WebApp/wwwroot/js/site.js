@@ -85,3 +85,28 @@ var $Zaolazi = {
         $('#zlz-confirm-modal').modal('show', { backdrop: 'static' });
     }
 }
+
+//radio、checkbox点击事件
+$(document).on("click", ".cbr-replaced", function () {
+    var $this = $(this);
+    //处理radio
+    if ($this.hasClass("cbr-radio")) {
+        if (!$this.hasClass("cbr-disabled")) {
+            if (!$this.hasClass("cbr-checked")) {
+                $this.parent().parent("div.form-block").parent("div").parent(".form-group").find(".cbr-radio").removeClass("cbr-checked");
+                $this.addClass("cbr-checked");
+            }
+            
+        }
+    }
+    //处理checkbox
+    else {
+        if (!$this.hasClass("cbr-disabled")) {
+            if ($this.hasClass("cbr-checked")) {
+                $this.removeClass("cbr-checked");
+            } else {
+                $this.addClass("cbr-checked");
+            }
+        }
+    }
+});

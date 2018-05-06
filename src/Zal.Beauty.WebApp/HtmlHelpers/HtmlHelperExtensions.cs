@@ -46,7 +46,7 @@ namespace Zal.Beauty.WebApp.HtmlHelpers
         /// </summary>
         /// <param name="helper"></param>
         /// <returns></returns>
-        public static HtmlString BlockQuote(this IHtmlHelper helper)
+        public static HtmlString BlockQuote(this IHtmlHelper helper, bool isNeedBackBtn = false, string href = "/Home/Index")
         {
             Node homeQuote = new Node { Title = "首页", Route = "/Home/Index" };
             Node quote1st = null;
@@ -62,11 +62,13 @@ namespace Zal.Beauty.WebApp.HtmlHelpers
                         if (Node3rd.Route == helper.ViewContext.HttpContext.Request.Path)
                         {
                             return new HtmlString($"<div class=\"breadcrumb-env\">" +
-                                $"<ol class=\"breadcrumb bc-1\">" +
+                                $"<ol class=\"breadcrumb bc-1\" style=\"margin-bottom: 5px;\">" +
                                 $"<li><a href=\"{homeQuote.Route}\"><i class=\"fa-home\"></i>{homeQuote.Title}</a></li>" +
                                 $"<li><a href=\"{quote1st.Route}\">{quote1st.Title}</a></li>" +
                                 $"<li><a href=\"{quote2nd.Route}\">{quote2nd.Title}</a></li>" +
-                                $"<li class=\"active\"><strong>{Node3rd.Title}</strong></li></ol></div>");
+                                $"<li class=\"active\"><strong>{Node3rd.Title}</strong></li>" + 
+                                (isNeedBackBtn ? $"<button onclick=\"window.location.href='{href}'\" class=\"btn btn-primary btn-sm btn-icon\" style=\"float: right;\">返回</button>" : "") + 
+                                "</ol></div>");
                         }
                     }
                 }

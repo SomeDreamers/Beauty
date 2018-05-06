@@ -7,6 +7,7 @@ using Zal.Beauty.Core.MapProfiles.Identitys;
 using Zal.Beauty.Core.MapProfiles.Commons;
 using Zal.Beauty.Core.MapProfiles.Wechats;
 using Zal.Beauty.Core.MapProfiles.Malls;
+using Zal.Beauty.Base.Models;
 
 namespace Zal.Beauty.Core
 {
@@ -17,7 +18,7 @@ namespace Zal.Beauty.Core
     {
         public static void Configure(IMapperConfigurationExpression cfg)
         {
-            //cfg.CreateMap<Pagination, PageSort>();
+            cfg.CreateMap<Pagination, PageSort>();
 
             #region Identity
             cfg.AddProfile<UserProfile>();
@@ -32,6 +33,7 @@ namespace Zal.Beauty.Core
             #region Mall
             cfg.AddProfile<BrandProfile>();
             cfg.AddProfile<ProTagProfile>();
+            cfg.AddProfile<ProductProfile>();
             #endregion
 
             cfg.AddProfile<TagProfile>();

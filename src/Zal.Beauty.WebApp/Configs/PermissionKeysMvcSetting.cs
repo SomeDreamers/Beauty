@@ -89,7 +89,12 @@ namespace Zal.Beauty.WebApp.Configs
                             new Node
                             {
                                 Title = "商品信息",
-                                Route = "/Identity/Role/List"
+                                Route = "/Mall/Product/List"
+                            },
+                            new Node
+                            {
+                                Title = "新增商品",
+                                Route = "/Mall/Product/Create"
                             }
                         }
                     },
