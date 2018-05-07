@@ -1,0 +1,161 @@
+﻿@model List<TagResult>
+ <!--图片管理去-->
+<section class="gallery-env" style="margin:0px;">
+    <div class="row">
+
+        <!-- Gallery Album Optipns and Images -->
+        <div class="col-sm-9 gallery-right">
+
+            <!-- Sorting Information -->   
+            <div class="album-sorting-info">
+                <div class="album-sorting-info-inner clearfix">
+                    <a href="#" class="btn btn-secondary btn-xs btn-single btn-icon btn-icon-standalone pull-right" data-action="sort">
+                        <i class="fa-save"></i>
+                        <span>保存排序</span>
+                    </a>
+
+                    <i class="fa-arrows-alt"></i>
+                    拖动素材进行排序
+                </div>
+            </div>
+
+            <!-- Album Images -->
+            <div class="album-images row" id="file-modal-List">
+            </div>
+
+
+            <form action="" method="post">
+                <div class="page">
+                    <ul class="pagination" id="pagination-modal"></ul>
+                </div>
+                <input style="display: none" type="text" id="page-modal" name="page"
+                       value="" />
+            </form>
+
+        </div>
+
+        <!-- Gallery Sidebar -->
+        <div class="col-sm-3 gallery-left">
+
+            <div class="gallery-sidebar">
+
+                <ul class="list-unstyled" id="TagList-modal">
+                    @{
+                        for (var i = 0; i < Model.Count; i++)
+                        {
+                            var item = Model[i];
+                            if (i == 0)
+                            {
+                                <li class="active">
+                                    <a href="#">
+                                        <i class="fa-folder-open-o"></i>
+                                        <span data="@item.Id">@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="#">
+                                        <i class="fa-folder-open-o"></i>
+                                        <span data="@item.Id">@item.Name</span>
+                                    </a>
+                                </li>
+                            }
+
+                        }
+                    }
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<input type="text" id="now_page_modal" style="display:none" />
+
+<script type="text/javascript">
+    //分页设置
+    function CutPage_modal(current_page, total_page) {
+        $.jqPaginator(
+            '#pagination-modal',
+            {
+                totalPages: parseInt(total_page),//$("#pageCount").val(),//parseInt($("#PageCount").val()),
+                visiblePages: 5, //设置最多显示的页码数
+                currentPage: parseInt(current_page),//$("#page").val(),//parseInt($("#Page").val()) + 1,
+                first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (current_page != page) {
+                        loadImage_modal(page);
+                    }
+                }
+            });
+    };
+    
+    /*选中的素材分类名作为标题*/
+    function changTagName_modal() {
+        $("#tagName-modal").text($("#TagList-modal").children(".active").find("span").text());
+
+    }
+
+    /*加载素材分类下的图片*/
+    function loadImage_modal(page) {
+        var tagId = $("#TagList-modal").children(".active").find("span").attr("data");
+        $.post(
+            "/Common/File/GetAllFile",
+            { tagId: tagId, page: page },
+            function (result) {
+                var current_page = result.cucurrentPage;
+                var total_page = result.totalPages;
+                if (result.entities.length > 0) {
+                    CutPage_modal(current_page, total_page);
+                }
+                $("#now_page_modal").val(current_page);
+                $("#file-modal-List").children().remove();
+                for (var i = 0; i < result.entities.length; i++) {
+                    var item = '';
+                    item += '<div class="col-md-3 col-sm-4 col-xs-6">';
+                    item += '<div class="album-image">';
+                    item += '<div style="height:90px;width:90px;"><img style="max-height:90px;max-width:90px;" src="' + result.entities[i].url + '" class="img-responsive" /></div>';
+                    item += '<a href="#" class="name">';
+                    item += '<span class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result.entities[i].name + '">' + result.entities[i].name + '</span>';
+                    item += '<em class="tooltip-test" data-toggle="tooltip" data-placement="left" title="' + result.entities[i].createTime + '">' + result.entities[i].createTime + '</em>';
+                    item += '</a>';
+                    item += '<div class="image-options" data-fileId=' + result.entities[i].id + '>';
+                    item += '</div>';
+                    item += '<div class="image-checkbox">';
+                    item += '<input value=' + result.entities[i].id + ' type="checkbox" class="cbr" />';
+                    item += '</div>';
+                    item += '</div>';
+                    item += '</div>';
+                    $("#file-modal-List").append(item);
+
+                }
+
+            }
+        );
+
+    }
+    $(function () {
+         changTagName_modal();//选中的素材分类名作为标题
+         loadImage_modal();//加载素材分类下的图片
+        /*点击素材分类*/
+        $(document).on("click", "#TagList-modal a", function () {
+            $("#TagList-modal").children().removeClass("active");
+            $(this).parent().addClass("active");
+            changTagName_modal();
+            loadImage_modal();
+         });
+        /*单选*/
+        $(document).on("click", "#file-modal-List input[type='checkbox']", function () { 
+            $("#file-modal-List input[type='checkbox']").prop('checked', false);
+            $(this).prop('checked', true);
+        });
+    });
+</script>
