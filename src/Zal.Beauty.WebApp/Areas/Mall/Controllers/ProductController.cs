@@ -22,11 +22,13 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         private readonly IProductManager productManager;
         private readonly ITagManager tagManager;
         private readonly IBrandManager brandManager;
-        public ProductController(IProductManager productManager, ITagManager tagManager, IBrandManager brandManager)
+        private readonly ISpecificationManager specificationManager;
+        public ProductController(IProductManager productManager, ITagManager tagManager, IBrandManager brandManager, ISpecificationManager specificationManager)
         {
             this.productManager = productManager;
             this.tagManager = tagManager;
             this.brandManager = brandManager;
+            this.specificationManager = specificationManager;
         }
 
         /// <summary>
@@ -59,10 +61,12 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         {
             var brands = await brandManager.GetAllBrandsAsync();
             var tags = await tagManager.GetAllTagsAsync();
+            var specifications = await specificationManager.GetAllSpecificationsAsync();
             CreateProductModel model = new CreateProductModel
             {
                 Brands = brands,
-                Tags = tags
+                Tags = tags,
+                Specifications = specifications
             };
             return View(model);
         }

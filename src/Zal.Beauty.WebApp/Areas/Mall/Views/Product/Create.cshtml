@@ -63,6 +63,111 @@
                     });
                 })
             });
+
+            //新增规格按钮点击事件
+            $("#add-specification-btn").click(function () {
+                var specification = $("#SpecificationName").val();
+                if (!specification) {
+                    toastr.warning("请输入规格", "操作提示!");
+                    return false;
+                }
+                show_loading_bar(70);
+                $.post("/Mall/Specification/Save", { Name: specification }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $("#SpecificationName").val("");
+                                var $group = $(".specification-group").last();
+
+                                //新增品牌页面元素
+                                $group.after('<div class="form-group specification-group" specification-id="' + resp.id + '">' +
+                                    '<strong style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;display:block;margin-left: 16.7%;">' +
+                                    specification +
+                                    '<a href="javascript:void(0);" title="新增规格值"><span class="glyphicon glyphicon-plus-sign"></span></a></strong>' +
+                                    '<div class="col-sm-2"></div><div class="col-sm-2"><div class="form-block"></div></div>' +
+                                    '<div class="col-sm-2"></div><div class="col-sm-2"><div class="form-block"></div></div>' +
+                                    '<div class="col-sm-2"></div><div class="col-sm-2"><div class="form-block"></div></div>' +
+                                    '<div class="col-sm-2"></div><div class="col-sm-2"><div class="form-block"></div></div>' +
+                                    '<div class="col-sm-2"></div><div class="col-sm-2"><div class="form-block"></div></div>' + '</div>');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            });
+            //删除品牌按钮点击事件
+            $("#del-brand-btn").click(function () {
+                var delIds = [];
+                var $checked = $("#brand-group .cbr-checked");
+                if ($checked.length === 0) {
+                    toastr.warning("请选择需要删除的品牌", "操作提示!");
+                    return false;
+                }
+                show_loading_bar(70);
+                $.post("/Mall/Brand/Delete", { id: $checked.find("input[type='radio']").attr("value") }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $checked.removeClass("cbr-checked");
+                                $checked.addClass("cbr-disabled");
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                })
+            });
+
+            //新增规格值点击按钮事件
+            var specificationId = 0, $specification;
+            $(document).on("click", ".specification-group .glyphicon-plus-sign", function () {
+                $specification = $(this).parent().parent().parent("div.specification-group");
+                specificationId = $specification.attr("specification-id");
+                $("#add-value-modal #SpecificationValue").val("");
+                $('#add-value-modal').modal('show', { backdrop: 'static' });
+            });
+
+            //新增规格值保存
+            $("#add-value-modal .save-btn").click(function () {
+                var data = {};
+                data.SpecificationId = specificationId;
+                data.Name = $("#add-value-modal #SpecificationValue").val();
+                if (!data.Name) {
+                    toastr.warning("请输入规格值", "操作提示!");
+                    return false;
+                }
+                show_loading_bar(70);
+                $.post("/Mall/Specification/SaveValue", { parameter: data }, function (resp) {
+                    show_loading_bar({
+                        pct: 100,
+                        finish: function () {
+                            if (resp.isSuccess) {
+                                $('#add-value-modal').modal("hide");
+                                var $block = $specification.find(".form-block").first();
+                                var maxCount = $block.find("input[type='checkbox']").length;
+                                $specification.find(".form-block").each(function () {
+                                    if ($(this).find("input[type='checkbox']").length < maxCount) {
+                                        $block = $(this);
+                                        return false;  //跳出循环
+                                    }
+                                })
+                                $block.append('<lable><div class="cbr-replaced">' +
+                                    '<div class="cbr-input"><input type="checkbox" value="' + resp.id + '" class="cbr cbr-done"></div>' +
+                                    '<div class="cbr-state"><span></span></div>' +
+                                    '</div>' + data.Name + '</lable><br>');
+                            }
+                            else {
+                                toastr.error(resp.message, "操作错误!");
+                            }
+                        }
+                    });
+                });
+            })
         })
     </script>
 }
@@ -175,37 +280,89 @@
 
             <div class="form-group-separator"></div>
 
-            <div class="form-group" id="specification-group">
+            <div class="form-group" id="specification-group" style="margin-bottom: -20px;">
                 <label class="col-sm-2 control-label">规格</label>
-                @{
-                    @*var index = 0;
-                    var line = Model.Brands.Count / 5;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        <div class="col-sm-2">
-                            <div class="form-block">
-                                @{
+            </div>
 
-                                    var count = Model.Brands.Count % 5 > i ? line + 1 : line;
-                                    for (int j = index; j < index + count; j++)
-                                    {
-                                        <lable>
-                                            <div class="cbr-replaced cbr-radio">
-                                                <div class="cbr-input"><input type="radio" class="cbr cbr-done" value="@Model.Brands[j].Id"></div>
-                                                <div class="cbr-state"><span></span></div>
-                                            </div>
-                                            @Model.Brands[j].Name
-                                        </lable>
-                                        <br>
+            @foreach (var item in Model.Specifications)
+            {
+                <div class="form-group specification-group" specification-id="@item.Id">
+                    <strong style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;display:block;margin-left: 16.7%;">
+                        @item.Name
+                        <a href="javascript:void(0);" title="新增规格值"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                    </strong>
+                    <div class="col-sm-2"></div>
+                    @{
+                        var valueIndex = 0;
+                        var valueLine = item.Values.Count / 5;
+                        for (int i = 0; i < 5; i++)
+                        {
+                            <div class="col-sm-2">
+                                <div class="form-block">
+                                    @{
+                                        var count = item.Values.Count % 5 > i ? valueLine + 1 : valueLine;
+                                        for (int j = valueIndex; j < valueIndex + count; j++)
+                                        {
+                                            <lable>
+                                                <div class="cbr-replaced">
+                                                    <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" value="@item.Values[j].Id"></div>
+                                                    <div class="cbr-state"><span></span></div>
+                                                </div>
+
+                                                @item.Values[j].Name
+                                            </lable>
+                                            <br>
+                                        }
+                                        valueIndex += count;
                                     }
-                                    index += count;
-                                }
+                                </div>
                             </div>
-                        </div>
-                    }*@
-                }
+                        }
 
+                    }
+                </div>
+            }
+
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="SpecificationName" name="SpecificationName" style="width:20%;float: left;height: 24px;margin-right:10px;">
+                    <button id="add-specification-btn" type="button" class="btn btn-success btn-sm btn-icon">新增规格</button>
+                    @*<button id="del-brand-btn" type="button" class="btn btn-danger btn-sm btn-icon">删除规格</button>*@
+                </div>
             </div>
         </form>
+    </div>
+</div>
+
+@* 新增规格值模态框 *@
+<div class="modal fade" id="add-value-modal" data-backdrop="static" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新增规格值</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label" for="SpecificationValue">规格值</label>
+                            <input class="form-control" id="SpecificationValue" name="SpecificationValue" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
     </div>
 </div>

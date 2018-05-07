@@ -20,5 +20,10 @@ namespace Zal.Beauty.WebApp.Areas.Mall.ViewModels
         /// 标签集合
         /// </summary>
         public List<TagResult> Tags { get; set; }
+
+        /// <summary>
+        /// 规格集合
+        /// </summary>
+        public List<SpecificationResult> Specifications { get; set; }
     }
 }
