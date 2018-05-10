@@ -37,9 +37,9 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public async Task<IActionResult> SaveValue(SpecificationValueParameter parameter)
-        {
+        //public async Task<IActionResult> SaveValue(SpecificationValueParameter parameter)
+        //{
 
-        }
+        //}
     }
 }
