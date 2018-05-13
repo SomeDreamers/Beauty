@@ -231,7 +231,7 @@
                     tdHtml += "<td><input type='number' class='form-control purchase-price'></td>";
                     tdHtml += "<td><input type='number' class='form-control market-price'></td>";
                     tdHtml += "<td><input type='number' class='form-control sale-price'></td>";
-                    tdHtml += "<td title='点击设置sku图片' style='text-align: center;vertical-align: middle;padding:0px;'><a href='javascript:void(0);' class='select-sku-img'><img src='' class='sku-picture'></a></td>";
+                    tdHtml += "<td title='点击设置sku图片' style='text-align: center;vertical-align: middle;padding:0px;'><a href='javascript:void(0);' data-imgId='' class='select-sku-img'><img src='../../images/add.png' height='30' width='30'  class='sku-picture'/></a></td>";
                     html += "<tr class='sku-tr' sku-name='" + skuName + "' value-ids='" + specificationIdsStr + "'>" + tdHtml + "</tr>";
                 }
                 html += "</tbody>";
@@ -242,8 +242,25 @@
             var $selectSkuImg;
             $(document).on("click", ".select-sku-img", function () {
                 $selectSkuImg = $(this);
-                alert("选择图片");
+                $("#flies-modal").modal("show");
+                $.ajax({
+                      url: "/Common/File/FileModal",
+                      success: function (response) {
+                          $('#flies-modal .modal-body-files').html(response);
+                      }
+                });
+                //选择模态框图片图片
+                $("#files-save").click(function () {
+                    var imgId = $("#file-modal-List").find(":checkbox:checked").val();
+                    var imgUrl = $("#file-modal-List").find(":checkbox:checked").attr("data-url");
+                    $selectSkuImg.attr("data-imgId", imgId);
+                    $selectSkuImg.find("img").attr("src", imgUrl);
+                    $selectSkuImg.find("img").attr("height", "50");
+                    $selectSkuImg.find("img").attr("width", "50");
+                    $("#flies-modal").modal("hide");
+                });
             });
+            
         })
     </script>
 }
@@ -454,6 +471,27 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 编辑图片模态框 *@
+<div class="modal fade" id="flies-modal" data-backdrop="static">
+    <div class="modal-dialog" id="files-modal-test" style="width:800px;">
+        <div class="modal-content" style="padding:25px;">
+
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    选择素材
+                </h4>
+            </div>
+            <div class="modal-body-files">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="files-save">保存</button>
             </div>
         </div>
     </div>
