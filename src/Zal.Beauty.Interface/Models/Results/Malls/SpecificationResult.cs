@@ -10,5 +10,9 @@ namespace Zal.Beauty.Interface.Models.Results.Malls
     /// </summary>
     public class SpecificationResult : SpecificationTemplate
     {
+        /// <summary>
+        /// 规格值
+        /// </summary>
+        public List<SpecificationValueResult> Values { get; set; }
     }
 }

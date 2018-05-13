@@ -91,7 +91,12 @@ namespace Zal.Beauty.Core.Managers.Malls
         public async Task<List<SpecificationResult>> GetAllSpecificationsAsync()
         {
             var specifications = await context.Specifications.Where(c => c.IsDel == false).ToListAsync();
-            return Mapper.Map<List<SpecificationResult>>(specifications);
+            var results = Mapper.Map<List<SpecificationResult>>(specifications);
+            foreach (var item in results)
+            {
+                item.Values = await GetValuesBySpecificationIdAsync(item.Id);
+            }
+            return results;
         }
         #endregion
 
@@ -127,7 +132,15 @@ namespace Zal.Beauty.Core.Managers.Malls
             //新增规格值
             if (value.Id <= 0)
             {
-                var tmpValue = await context.SpecificationValues.FirstOrDefaultAsync(c => c.Name == value.Name && c.IsDel == false);
+                //验证规格ID
+                if(value.SpecificationId <= 0)
+                {
+                    result.IsSuccess = false;
+                    result.Message = "规格不存在";
+                    return result;
+                }
+                //验证规格值名称
+                var tmpValue = await context.SpecificationValues.FirstOrDefaultAsync(c => c.SpecificationId == value.SpecificationId && c.Name == value.Name && c.IsDel == false);
                 if (tmpValue != null)
                 {
                     result.IsSuccess = false;
@@ -149,7 +162,7 @@ namespace Zal.Beauty.Core.Managers.Malls
                     result.Message = "规格值已被删除";
                     return result;
                 }
-                var tmpSpecification = await context.SpecificationValues.FirstOrDefaultAsync(c => c.Name == value.Name && c.IsDel == false);
+                var tmpSpecification = await context.SpecificationValues.FirstOrDefaultAsync(c => c.SpecificationId == value.SpecificationId && c.Name == value.Name && c.IsDel == false);
                 if (tmpSpecification != null && tmpSpecification.Id != oldSpecification.Id)
                 {
                     result.IsSuccess = false;

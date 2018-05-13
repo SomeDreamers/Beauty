@@ -20,7 +20,7 @@ namespace Zal.Beauty.Core.ORM.Malls
         /// <summary>
         /// 规格ID
         /// </summary>
-        [Column("ispecification_idd")]
+        [Column("specification_id")]
         public long SpecificationId { get; set; }
 
         /// <summary>
