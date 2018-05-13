@@ -81,7 +81,7 @@
                                 var $group = $(".specification-group").last();
 
                                 //新增品牌页面元素
-                                $group.after('<div class="form-group specification-group" specification-id="' + resp.id + '">' +
+                                $group.after('<div class="form-group specification-group" specification-id="' + resp.id + '" specification-name="' + specification + '">' +
                                     '<strong style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;display:block;margin-left: 16.7%;">' +
                                     specification +
                                     '<a href="javascript:void(0);" title="新增规格值"><span class="glyphicon glyphicon-plus-sign"></span></a></strong>' +
@@ -157,9 +157,9 @@
                                     }
                                 })
                                 $block.append('<lable><div class="cbr-replaced">' +
-                                    '<div class="cbr-input"><input type="checkbox" value="' + resp.id + '" class="cbr cbr-done"></div>' +
+                                    '<div class="cbr-input"><input type="checkbox" name="' + data.Name + '" value="' + resp.id + '" class="cbr cbr-done"></div>' +
                                     '<div class="cbr-state"><span></span></div>' +
-                                    '</div>' + data.Name + '</lable><br>');
+                                    '</div> ' + data.Name + '</lable><br>');
                             }
                             else {
                                 toastr.error(resp.message, "操作错误!");
@@ -167,7 +167,83 @@
                         }
                     });
                 });
-            })
+            });
+
+            //规格值点击事件
+            $(document).on("click", ".cbr-replaced", function () {
+                var specs = [];
+                var totalRow = 1;
+                //选中规格和值
+                $(".specification-group").each(function () {
+                    var $this = $(this);
+                    var $values = $this.find(".cbr-checked");
+                    if ($values.length > 0) {
+                        var values = [];
+                        $values.each(function () {
+                            values.push({
+                                name: $(this).find("input[type='checkbox']").attr("name"),
+                                id: $(this).find("input[type='checkbox']").attr("value")
+                            });
+                        });
+                        specs.push({
+                            id: $this.attr("specification-id"),
+                            name: $this.attr("specification-name"),
+                            values: values
+                        });
+                        totalRow *= values.length;
+                    }
+                });
+                //组装表格Html
+                var html = "<thead><tr>";
+                for (var i = 0; i < specs.length; i++) {
+                    html += "<th>" + specs[i].name + "</th>";
+                }
+                html += "<th>条码</th><th>采购价</th><th>市场价</th><th>销售价</th><th>图片</th></tr></thead><tbody>"
+                for (var i = 1; i <= totalRow; i++) {
+                    var specificationIdsStr = "";
+                    var skuName = "";
+                    var tdHtml = "";
+                    var tmpTotalRow = totalRow;
+                    for (var j = 0; j < specs.length; j++) {
+                        if (specs[j].values.length === 1) {
+                            if (i === 1) {
+                                tdHtml += "<td rowspan='" + totalRow + "'>" + specs[j].values[0].name + "</td>";
+                                specs[j].usedValueId = specs[j].values[0].id;
+                                specs[j].usedValueName = specs[j].values[0].name;
+                            }
+                        } else {
+                            var rowCount = tmpTotalRow / specs[j].values.length;
+                            if ((i - 1) % rowCount === 0) {
+                                var index = (i - 1) / rowCount % specs[j].values.length;
+                                tdHtml += "<td rowspan='" + rowCount + "'>" + specs[j].values[index].name + "</td>";
+                                specs[j].usedValueId = specs[j].values[index].id;
+                                specs[j].usedValueName = specs[j].values[index].name;
+                            }
+
+                        }
+                        tmpTotalRow = tmpTotalRow / specs[j].values.length;
+                        //记录规格和规格值ID字符串（“规格1ID，规格1值ID|规格2ID，规格2值ID”）
+                        specificationIdsStr += (specificationIdsStr ? "|" : "") + specs[j].id + "," + specs[j].usedValueId;
+                        //记录SkuName（“规格值1，规格值2”）
+                        skuName += skuName ? " " + specs[j].usedValueName : specs[j].usedValueName;
+                    }
+                    tdHtml += "<td><input type='text' class='form-control barcode'></td>";
+                    tdHtml += "<td><input type='number' class='form-control purchase-price'></td>";
+                    tdHtml += "<td><input type='number' class='form-control market-price'></td>";
+                    tdHtml += "<td><input type='number' class='form-control sale-price'></td>";
+                    tdHtml += "<td title='点击设置sku图片' style='text-align: center;vertical-align: middle;padding:0px;'><a href='javascript:void(0);' class='select-sku-img'><img src='' class='sku-picture'></a></td>";
+                    html += "<tr class='sku-tr' sku-name='" + skuName + "' value-ids='" + specificationIdsStr + "'>" + tdHtml + "</tr>";
+                }
+                html += "</tbody>";
+                $("#specification-table").html(html);
+            });
+
+            //TODO:处理商品图片和sku图片
+            var $selectSkuImg;
+            $(document).on("click", ".select-sku-img", function () {
+                $selectSkuImg = $(this);
+                alert("选择图片");
+            });
         })
     </script>
 }
@@ -205,31 +281,31 @@
             <div class="form-group" id="brand-group">
                 <label class="col-sm-2 control-label">品牌</label>
                 @{
-                    var index = 0;
-                    var line = Model.Brands.Count / 5;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        <div class="col-sm-2">
-                            <div class="form-block">
-                                @{
+            var index = 0;
+            var line = Model.Brands.Count / 5;
+            for (int i = 0; i < 5; i++)
+            {
+                <div class="col-sm-2">
+                    <div class="form-block">
+                        @{
 
-                                    var count = Model.Brands.Count % 5 > i ? line + 1 : line;
-                                    for (int j = index; j < index + count; j++)
-                                    {
-                                        <lable>
-                                            <div class="cbr-replaced cbr-radio">
-                                                <div class="cbr-input"><input type="radio" class="cbr cbr-done" value="@Model.Brands[j].Id"></div>
-                                                <div class="cbr-state"><span></span></div>
-                                            </div>
-                                            @Model.Brands[j].Name
-                                        </lable>
-                                        <br>
-                                    }
-                                    index += count;
-                                }
+                    var count = Model.Brands.Count % 5 > i ? line + 1 : line;
+                    for (int j = index; j < index + count; j++)
+                    {
+                        <lable>
+                            <div class="cbr-replaced cbr-radio">
+                                <div class="cbr-input"><input type="radio" class="cbr cbr-done" value="@Model.Brands[j].Id"></div>
+                                <div class="cbr-state"><span></span></div>
                             </div>
-                        </div>
-                    }
+                            @Model.Brands[j].Name
+                        </lable>
+                        <br>
+            }
+            index += count;
+                        }
+                    </div>
+                </div>
+    }
                 }
 
             </div>
@@ -248,32 +324,32 @@
             <div class="form-group" id="tag-group">
                 <label class="col-sm-2 control-label">标签</label>
                 @{
-                    var tagIndex = 0;
-                    var tagLine = Model.Tags.Count / 5;
-                    for (int i = 0; i < 5; i++)
+            var tagIndex = 0;
+            var tagLine = Model.Tags.Count / 5;
+            for (int i = 0; i < 5; i++)
+            {
+                <div class="col-sm-2">
+                    <div class="form-block">
+                        @{
+
+                    var count = Model.Tags.Count % 5 > i ? tagLine + 1 : tagLine;
+                    for (int j = tagIndex; j < tagIndex + count; j++)
                     {
-                        <div class="col-sm-2">
-                            <div class="form-block">
-                                @{
-
-                                    var count = Model.Tags.Count % 5 > i ? tagLine + 1 : tagLine;
-                                    for (int j = tagIndex; j < tagIndex + count; j++)
-                                    {
-                                        <lable>
-                                            <div class="cbr-replaced">
-                                                <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" value="@Model.Tags[j].Id"></div>
-                                                <div class="cbr-state"><span></span></div>
-                                            </div>
-
-                                            <div class="label  @Model.Tags[j].Style"> @Model.Tags[j].Name</div>
-                                        </lable>
-                                        <br>
-                                    }
-                                    tagIndex += count;
-                                }
+                        <lable>
+                            <div class="cbr-replaced">
+                                <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" value="@Model.Tags[j].Id"></div>
+                                <div class="cbr-state"><span></span></div>
                             </div>
-                        </div>
-                    }
+
+                            <div class="label  @Model.Tags[j].Style"> @Model.Tags[j].Name</div>
+                        </lable>
+                        <br>
+            }
+            tagIndex += count;
+                        }
+                    </div>
+                </div>
+    }
                 }
 
             </div>
@@ -285,43 +361,42 @@
             </div>
 
             @foreach (var item in Model.Specifications)
-            {
-                <div class="form-group specification-group" specification-id="@item.Id">
-                    <strong style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;display:block;margin-left: 16.7%;">
-                        @item.Name
-                        <a href="javascript:void(0);" title="新增规格值"><span class="glyphicon glyphicon-plus-sign"></span></a>
-                    </strong>
-                    <div class="col-sm-2"></div>
+    {
+        <div class="form-group specification-group" specification-id="@item.Id" specification-name="@item.Name">
+            <strong style="position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;display:block;margin-left: 16.7%;">
+                @item.Name
+                <a href="javascript:void(0);" title="新增规格值"><span class="glyphicon glyphicon-plus-sign"></span></a>
+            </strong>
+            <div class="col-sm-2"></div>
+            @{
+        var valueIndex = 0;
+        var valueLine = item.Values.Count / 5;
+        for (int i = 0; i < 5; i++)
+        {
+            <div class="col-sm-2">
+                <div class="form-block">
                     @{
-                        var valueIndex = 0;
-                        var valueLine = item.Values.Count / 5;
-                        for (int i = 0; i < 5; i++)
-                        {
-                            <div class="col-sm-2">
-                                <div class="form-block">
-                                    @{
-                                        var count = item.Values.Count % 5 > i ? valueLine + 1 : valueLine;
-                                        for (int j = valueIndex; j < valueIndex + count; j++)
-                                        {
-                                            <lable>
-                                                <div class="cbr-replaced">
-                                                    <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" value="@item.Values[j].Id"></div>
-                                                    <div class="cbr-state"><span></span></div>
-                                                </div>
-
-                                                @item.Values[j].Name
-                                            </lable>
-                                            <br>
-                                        }
-                                        valueIndex += count;
-                                    }
-                                </div>
-                            </div>
-                        }
-
+                var count = item.Values.Count % 5 > i ? valueLine + 1 : valueLine;
+                for (int j = valueIndex; j < valueIndex + count; j++)
+                {
+                    <lable>
+                        <div class="cbr-replaced">
+                            <div class="cbr-input"><input type="checkbox" class="cbr cbr-done" name="@item.Values[j].Name" value="@item.Values[j].Id"></div>
+                            <div class="cbr-state"><span></span></div>
+                        </div>
+                        @item.Values[j].Name
+                    </lable>
+                    <br>
+        }
+        valueIndex += count;
                     }
                 </div>
+            </div>
+}
+
             }
+        </div>
+}
 
 
             <div class="form-group">
@@ -330,6 +405,23 @@
                     <input type="text" class="form-control" id="SpecificationName" name="SpecificationName" style="width:20%;float: left;height: 24px;margin-right:10px;">
                     <button id="add-specification-btn" type="button" class="btn btn-success btn-sm btn-icon">新增规格</button>
                     @*<button id="del-brand-btn" type="button" class="btn btn-danger btn-sm btn-icon">删除规格</button>*@
+                </div>
+            </div>
+
+            <div class="form-group" id="sku-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <table class="table table-bordered" id="specification-table" style="margin-bottom: 0px;"></table>
+                </div>
+            </div>
+
+            <div class="form-group-separator"></div>
+
+            @* 保存按钮 *@
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <button id="save-btn" type="button" class="btn btn-success">保存商品</button>
                 </div>
             </div>
         </form>
