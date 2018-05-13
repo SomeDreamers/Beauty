@@ -95,6 +95,11 @@ namespace Zal.Beauty.Core
         public DbSet<SpecificationValue> SpecificationValues { get; set; }
 
         /// <summary>
+        /// 商品分类
+        /// </summary>
+        public DbSet<Category> Category { get; set; } 
+
+        /// <summary>
         /// 商品标签表
         /// </summary>
         /// <param name="options"></param>

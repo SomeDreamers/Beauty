@@ -31,6 +31,7 @@ namespace Zal.Beauty.Core
             services.AddTransient<ITagManager, TagManager>();
             services.AddTransient<IProductManager, ProductManager>();
             services.AddTransient<ISpecificationManager, SpecificationManager>();
+            services.AddTransient<ICategoryManager, CategoryManager>();
             #endregion
 
         }
