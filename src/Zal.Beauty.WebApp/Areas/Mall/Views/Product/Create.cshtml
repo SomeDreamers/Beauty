@@ -244,6 +244,9 @@
                 $selectSkuImg = $(this);
                 alert("选择图片");
             });
+
+            //保存商品
+            
         })
     </script>
 }
@@ -276,6 +279,18 @@
                     <textarea class="form-control" id="SubTitle" name="SubTitle"></textarea>
                 </div>
             </div>
+
+            <div class="form-group-separator"></div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品主图</div>
+                <div class="col-sm-10">
+                    <a href="javascript:void(0);" style="display: block; width:100px;height:100px;border: 2px dotted #d9dadc;text-align: center;vertical-align: middle;line-height:100px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            </div>
+
             <div class="form-group-separator"></div>
 
             <div class="form-group" id="brand-group">
@@ -412,6 +427,20 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
                     <table class="table table-bordered" id="specification-table" style="margin-bottom: 0px;"></table>
+                </div>
+            </div>
+
+            <div class="form-group-separator"></div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">商品辅图</div>
+                <div class="col-sm-10">
+                    <a href="javascript:void(0);" style="display: block; width:100px;height:100px;border: 2px dotted #d9dadc;text-align: center;vertical-align: middle;line-height:100px;">
+                        <img style="width: 96px;height: 96px;margin-bottom: 6px;" src="https://res.91ysl.com/7b17a76753b44f9b86e4cc21922c82ab.jpg?x-oss-process=image/resize,m_lfit,h_145,w_80" />
+                        
+                        <span class="glyphicon glyphicon-remove del-sku-img" style="float: right;margin-right: -7px;margin-top: -111px;color: #cc3f44"></span>
+                        @*<span class="glyphicon glyphicon-plus"></span>*@
+                    </a>
                 </div>
             </div>
 
