@@ -7,13 +7,6 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\images\add.png" />
-    <Content Include="wwwroot\images\addition_fill.png" />
-    <Content Include="wwwroot\images\addition_fill.svg" />
-  </ItemGroup>
-
   
   <ItemGroup>
     <PackageReference Include="aliyun.oss.sdk.core" Version="2.5.3" />
