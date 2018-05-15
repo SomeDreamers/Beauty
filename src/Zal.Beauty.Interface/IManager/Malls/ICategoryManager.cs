@@ -14,19 +14,6 @@ namespace Zal.Beauty.Interface.IManager.Malls
     public interface ICategoryManager
     {
         /// <summary>
-        /// 获取商品一级分类
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CategoryResult>> GetFristCategory();
-
-        /// <summary>
-        /// 获取商品二级分类
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <returns></returns>
-        Task<List<CategoryResult>> GetSecondCategory(long parentId);
-
-        /// <summary>
         /// 添加商品分类
         /// </summary>
         /// <param name="category"></param>
@@ -39,6 +26,18 @@ namespace Zal.Beauty.Interface.IManager.Malls
         /// </summary>
         /// <returns></returns>
         Task<ReturnResult> DeleteCategory(long id);
+
+        /// <summary>
+        /// 获取全部商品分类
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CategoryResult>> GetAllCategory();
+
+        /// <summary>
+        /// 根据Id获取商品分类
+        /// </summary>
+        /// <returns></returns>
+        Task<CategoryResult> GetCategoryById(long id);
 
     }
 }

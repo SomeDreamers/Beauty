@@ -1,5 +1,5 @@
-﻿@*@using Pls.Entity.response.store;*@
-@*@model List<CategoryAllInfo>*@
+﻿@using Zal.Beauty.Interface.Models.Results.Malls;
+@model List<CategoryResult>
 @{
     Layout = null;
 }
@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="~/weixin/css/icon.css">
     <link rel="stylesheet" href="~/weixin/css/home.css">
     <link rel="stylesheet" href="~/weixin/css/add.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="iTunesArtwork@2x.png" sizes="114x114" rel="apple-touch-icon-precomposed">
 </head>
 <body>
@@ -27,7 +26,7 @@
         </a>
         <div class="aui-header-center aui-header-center-clear">
             <div class="aui-header-search-box">
-                <input id="search" type="text" placeholder="iphone8 手机钢化膜" class="aui-header-search">
+                <input id="search" type="text" placeholder="手机钢化膜" class="aui-header-search">
                 <i class="aui-icon aui-icon-small-search"></i>
             </div>
         </div>
@@ -41,15 +40,10 @@
                 </a>
                 @for (var i = 0; i < Model.Count; i++)
                 {
-                    var item = Model[i].Category;
-                    if (item.type != 4)
-                    {
-                        continue;
-
-                    }
+                    var item = Model[i];
                     <a href="#" class="aui-scroll-item aui-crt">
                         <div class="aui-scroll-item-icon"></div>
-                        <div class="aui-scroll-item-text">@item.name</div>
+                        <div class="aui-scroll-item-text">@item.Name</div>
                     </a>
 
                 }
@@ -57,9 +51,9 @@
             <div class="aui-scroll-content">
                 <div class="aui-scroll-content-item">
                     <div class="aui-class-img">
-                        <img src="~/weixin/img/pd/cf-4.jpg" alt="">
+                        @*<img src="~/weixin/img/pd/cf-4.jpg" alt="">*@
                     </div>
-                    <h2 class="aui-scroll-contesnt-title category">
+                    <h2 class="aui-scroll-content-title category">
                         热门推荐
                         <span>
                             <a href="#">查看全部>></a>
@@ -67,52 +61,34 @@
                     </h2>
                     <section class="aui-grid-content">
                         <div class="aui-grid-row aui-grid-row-clear">
-                            @for (var i = 0; i < Model.Count; i++)
-                            {
-                                var item = Model[i].Category;
-                                if (item.type == 4)
-                                {
-                                    continue;
-
-                                }
-                                <a href="my-products-class.html" class="aui-grid-row-item">
-                                    <i class="aui-icon-large aui-icon-sign"><img src="~/weixin/img/ad/x-sf-1.jpg" alt=""></i>
-                                    <p class="aui-grid-row-label">@item.name</p>
-                                </a>
-
-                            }
-
+                            <a href="my-products-class.html" class="aui-grid-row-item">
+                                <i class="aui-icon-large aui-icon-sign"><img src="~/weixin/img/ad/x-sf-1.jpg" alt=""></i>
+                                <p class="aui-grid-row-label">热销</p>
+                            </a>
                         </div>
                     </section>
-
-                    }
                 </div>
                 @for (var i = 0; i < Model.Count; i++)
                 {
-                    var item = Model[i].Category;
-                    var childItem = Model[i].Childs;
-                    if (item.type != 4)
-                    {
-                        continue;
-
-                    }
+                    var item = Model[i];
+                    var childItem = Model[i].listCategory;
                     <div class="aui-scroll-content-item">
                         <div class="aui-class-img">
-                            <img src="~/weixin/img/pd/cf-8.jpg" alt="">
+                            @*<img src="~/weixin/img/pd/cf-8.jpg" alt="">*@
                         </div>
                         <h2 class="aui-scroll-content-title category">
-                            item.name
+                            @item.Name
                             <span>
                                 <a href="#">查看全部>></a>
                             </span>
                         </h2>
                         <section class="aui-grid-content">
                             <div class="aui-grid-row aui-grid-row-clear">
-                                for(var j = 0; j < childItem.Count; j++)
+                                @for(var j = 0; j < childItem.Count; j++)
                                 {
                                 <a href="#" class="aui-grid-row-item">
                                     <i class="aui-icon-large aui-icon-sign"><img src="~/weixin/img/ad/x-sf-1.jpg" alt=""></i>
-                                    <p class="aui-grid-row-label">@childItem[i].name</p>
+                                    <p class="aui-grid-row-label">@childItem[j].Name</p>
                                 </a>
                                 }
                             </div>

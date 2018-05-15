@@ -1,88 +1,91 @@
 ﻿@model List<TagResult>
 @section Styles{
-<style>
-    #TagName, #TagWeight, #FileName {
-        border: 1px solid #C8C8C8;
-        border-radius: 3px;
-        padding: 5px
-    }
+    <style>
+        #TagName, #TagWeight, #FileName {
+            border: 1px solid #C8C8C8;
+            border-radius: 3px;
+            padding: 5px
+        }
 
-    #TagAlarm {
-        font-size: 14px;
-        color: red;
-        font-weight: bold;
-        padding-left: 50px;
-        display: none;
-    }
-</style>
+        #TagAlarm {
+            font-size: 14px;
+            color: red;
+            font-weight: bold;
+            padding-left: 50px;
+            display: none;
+        }
+    </style>
 }
 @section Scripts{
-    
+
     <script type="text/javascript">
-			// Sample Javascript code for this page
-			jQuery(document).ready(function($)
-            {
-				// Sample Select all images
-				$("#select-all").on('change', function(ev)
-				{
-					var is_checked = $(this).is(':checked');
-					$(".album-image input[type='checkbox']").prop('checked', is_checked).trigger('change');
-				});
-
-                // Edit Modal
-                $('#fileList').on('click','a[data-action="edit"]', function (ev) {
-                    ev.preventDefault();
-                    $("#gallery-image-modal").modal('show');
-                    $("#gallery-image-modal").find(".fileId").text($(this).parent().attr("data-fileId"));
-                    $("#gallery-image-modal").find("#FileName").val($(this).parent().prev().children("span").text());
+        // Sample Javascript code for this page
+        jQuery(document).ready(function ($) {
+            // Sample Select all images
+            $("#select-all").on('click', function (ev) {
+                var is_checked = $(this).hasClass('cbr-checked');
+                if (is_checked) {
+                    $(".album-image .cbr-replaced").removeClass('cbr-checked');
                     
-                });
+                } else {
+                    $(".album-image .cbr-replaced").addClass('cbr-checked');
+                    
+                   
+                }
+               // $(".album-image input[type='checkbox']").prop('checked', is_checked).trigger('change');
+            });
 
-                // Delete Modal
-                $('#fileList').on('click','a[data-action="trash"]',function (ev) {
-                    ev.preventDefault();
-                    $("#gallery-image-delete-modal").modal('show');
-                    $("#gallery-image-delete-modal").find(".fileId").text($(this).parent().attr("data-fileId"));
-                });
+            // Edit Modal
+            $('#fileList').on('click', 'a[data-action="edit"]', function (ev) {
+                ev.preventDefault();
+                $("#gallery-image-modal").modal('show');
+                $("#gallery-image-modal").find(".fileId").text($(this).parent().attr("data-fileId"));
+                $("#gallery-image-modal").find("#FileName").val($(this).parent().prev().children("span").text());
 
-                //创建分类模态框
-                $('#createFiles').on('click', function (ev) {
-                    ev.preventDefault();
-                    $('#gallery-flies-create-modal').modal('show');
-                    //$("#flies-modal").modal("show");
-                    //$('.modal-body-file').html("加载中...");
-                    ////$('#flies-modal').addClass('file-modal');
-                    ////$('#file-modal').modal('show', { backdrop: 'static' });
-                    //$.ajax({
-                    //    url: "/Common/File/FileModal",
-                    //    success: function (response) {
-                    //        $('.modal-body-file').html(response);
-                    //    }
-                    //});
-                });
+            });
 
-				// Sortable
+            // Delete Modal
+            $('#fileList').on('click', 'a[data-action="trash"]', function (ev) {
+                ev.preventDefault();
+                $("#gallery-image-delete-modal").modal('show');
+                $("#gallery-image-delete-modal").find(".fileId").text($(this).parent().attr("data-fileId"));
+            });
 
-				$('.gallery-env a[data-action="sort"]').on('click', function(ev)
-				{
-					ev.preventDefault();
+            //创建分类模态框
+            $('#createFiles').on('click', function (ev) {
+                ev.preventDefault();
+                $('#gallery-flies-create-modal').modal('show');
+                //$("#flies-modal").modal("show");
+                //$('.modal-body-file').html("加载中...");
+                ////$('#flies-modal').addClass('file-modal');
+                ////$('#file-modal').modal('show', { backdrop: 'static' });
+                //$.ajax({
+                //    url: "/Common/File/FileModal",
+                //    success: function (response) {
+                //        $('.modal-body-file').html(response);
+                //    }
+                //});
+            });
 
-					var is_sortable = $(".album-images").sortable('instance');
+            // Sortable
 
-					if( ! is_sortable)
-					{
-						$(".gallery-env .album-images").sortable({
-							items: '> div'
-						});
+            $('.gallery-env a[data-action="sort"]').on('click', function (ev) {
+                ev.preventDefault();
 
-						$(".album-sorting-info").stop().slideDown(300);
-					}
-					else
-					{
-						$(".album-images").sortable('destroy');
-						$(".album-sorting-info").stop().slideUp(300);
-					}
-                });
+                var is_sortable = $(".album-images").sortable('instance');
+
+                if (!is_sortable) {
+                    $(".gallery-env .album-images").sortable({
+                        items: '> div'
+                    });
+
+                    $(".album-sorting-info").stop().slideDown(300);
+                }
+                else {
+                    $(".album-images").sortable('destroy');
+                    $(".album-sorting-info").stop().slideUp(300);
+                }
+            });
         });
 
         //分页设置
@@ -109,7 +112,7 @@
         /*选中的素材分类名作为标题*/
         function changTagName() {
             $("#tagName").text($("#TagList").children(".active").find("span").text());
-        }   
+        }
 
         /*加载素材分类下的图片*/
         function loadImage(page) {
@@ -139,7 +142,10 @@
                         item += '<a href="#" data-action="trash"><i class="fa-trash"></i></a>';
                         item += '</div>';
                         item += '<div class="image-checkbox">';
-                        item += '<input value=' + result.entities[i].id + 'type="checkbox" class="cbr" />';
+                        item += '<div class="cbr-replaced">';
+                        item += '<div class="cbr-input">';
+                        item += '<input value=' + result.entities[i].id + ' type="checkbox" class="cbr cbr-done" />';
+                        item += '</div><div class="cbr-state"><span></span></div></div>';
                         item += '</div>';
                         item += '</div>';
                         item += '</div>';
@@ -167,7 +173,7 @@
                     var name = $("#TagName").val();
                     var weight = $("#TagWeight").val();
                     $.post(
-                        "/Common/File/AddTag", { name: name, weight: weight }, function (result) { 
+                        "/Common/File/AddTag", { name: name, weight: weight }, function (result) {
                             if (result.isSuccess) {
                                 //var now_page = $("#now_page").val();
                                 //loadImage(now_page);
@@ -183,7 +189,7 @@
             $("#upload").click(function () {
                 var tagName = $("#TagList").children(".active").find("span").text();
                 var tagId = $("#TagList").children(".active").find("span").attr("data");
-                window.location.href = "/Common/File/FileUpload?tagName=" + tagName+"&tagId="+tagId;
+                window.location.href = "/Common/File/FileUpload?tagName=" + tagName + "&tagId=" + tagId;
             });
 
             /*点击素材分类*/
@@ -199,8 +205,8 @@
                 var id = $("#gallery-image-modal").find(".fileId").text();
                 $.post(
                     "/Common/File/ModifyFileName",
-                    { id : id , name: name },
-                    function (result) { 
+                    { id: id, name: name },
+                    function (result) {
                         $("#gallery-image-modal").modal('hide');
                         var now_page = $("#now_page").val();
                         loadImage(now_page);
@@ -224,12 +230,12 @@
             });
 
             /*批量删除素材*/
-            $("#lotDelete").on("click", function () { 
+            $("#lotDelete").on("click", function () {
                 $("#gallery-image-lot-delete-modal").modal('show');
             });
 
-            $("#lotDeleteFile").click(function () { 
-                var files = $("#fileList").find(":checkbox:checked");
+            $("#lotDeleteFile").click(function () {
+                var files = $("#fileList").find(".cbr-checked").find(':checkbox');
                 var fileId = new Array();
                 for (var i = 0; i < files.length; i++) {
                     fileId.push(files[i].value);
@@ -246,7 +252,7 @@
                 );
             });
         });
-</script>
+    </script>
 }
 
 <!--图片管理去-->
@@ -263,7 +269,14 @@
 
                 <ul class="album-options list-unstyled list-inline">
                     <li>
-                        <input type="checkbox" class="cbr" id="select-all" />
+                        <div class="cbr-replaced" id="select-all">
+                            <div class="cbr-input">
+                                <input type="checkbox" class="cbr cbr-done"/>
+                            </div>
+                            <div class="cbr-state">
+                                <span></span>
+                            </div>
+                        </div>
                         <label for="select-all">全选</label>
                     </li>
                     <li>
@@ -273,17 +286,17 @@
                         </a>
                     </li>
                     @*<li>
-                        <a href="#" data-action="sort">
-                            <i class="fa-arrows"></i>
-                            素材排序
-                        </a>
-                    </li>*@
+                            <a href="#" data-action="sort">
+                                <i class="fa-arrows"></i>
+                                素材排序
+                            </a>
+                        </li>*@
                     @*<li>
-                        <a href="#" data-action="edit">
-                            <i class="fa-edit"></i>
-                            Edit
-                        </a>
-                    </li>*@
+                            <a href="#" data-action="edit">
+                                <i class="fa-edit"></i>
+                                Edit
+                            </a>
+                        </li>*@
                     <li>
                         <a id="lotDelete" href="#" data-action="trash">
                             <i class="fa-trash"></i>
@@ -378,7 +391,7 @@
             </div>
 
             <div class="modal-body">
-                <p>图片名称：  <input type="text" id="FileName"/></p>
+                <p>图片名称：  <input type="text" id="FileName" /></p>
             </div>
 
             <div style="display:none">
@@ -482,8 +495,8 @@
 
             </div>
             <div class="modal-footer">
-                <button  type="button" class="btn btn-white" data-dismiss="modal">取消</button>
-                <button  type="button" class="btn btn-primary" id="files-save">保存</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="files-save">保存</button>
             </div>
         </div>
     </div>

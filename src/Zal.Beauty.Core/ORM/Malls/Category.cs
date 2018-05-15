@@ -8,7 +8,7 @@ namespace Zal.Beauty.Core.ORM.Malls
     /// <summary>
     /// 商品分类
     /// </summary>
-    [Table("mall_category")]
+    [Table("mall_categorys")]
     public class Category
     {
         /// <summary>
