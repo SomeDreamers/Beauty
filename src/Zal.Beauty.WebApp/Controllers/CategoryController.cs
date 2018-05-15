@@ -22,11 +22,10 @@ namespace Zal.Beauty.WebApp.Controllers
             /// 微信商品分类主页
             /// </summary>
             /// <returns></returns>
-            public async Task<IActionResult> Index()
+            public async Task<IActionResult> CategoryIndex()
             {
-            //var model = await categoryManager.GetCategoryAllInfosAsync();
-            //return View(model);
-            return null;
+                var model = await categoryManager.GetAllCategory();
+                return View(model);
             }
 
         }

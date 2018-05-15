@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Zal.Beauty.Interface.Models.Templates.Malls;
-
 namespace Zal.Beauty.Interface.Models.Results.Malls
 {
     /// <summary>
@@ -10,5 +9,7 @@ namespace Zal.Beauty.Interface.Models.Results.Malls
     /// </summary>
     public class CategoryResult:CategoryTemplate
     {
+        //二级分类
+        public List<CategoryResult> listCategory;
     }
 }

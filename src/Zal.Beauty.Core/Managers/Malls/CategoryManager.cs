@@ -33,7 +33,7 @@ namespace Zal.Beauty.Core.Managers.Malls
         {
             var result = new ReturnResult();
             var categoryEntity = Mapper.Map<Category>(category);
-            await context.Category.AddAsync(categoryEntity);
+            await context.Categorys.AddAsync(categoryEntity);
             await context.SaveChangesAsync();
             return result;
         }
@@ -47,34 +47,38 @@ namespace Zal.Beauty.Core.Managers.Malls
         public async Task<ReturnResult> DeleteCategory(long id)
         {
             var result = new ReturnResult();
-            var category = await context.Category.FirstOrDefaultAsync(c=>c.Id==id);
+            var category = await context.Categorys.FirstOrDefaultAsync(c=>c.Id==id);
             category.IsDel = true;
             await context.SaveChangesAsync();
             return result;
         }
 
         /// <summary>
-        /// 获取商品一级分类
+        /// 获取全部商品分类
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CategoryResult>> GetFristCategory()
+        public async Task<List<CategoryResult>> GetAllCategory()
         {
-            var categoryList = await context.Category.Where(c => c.ParentId == 0).ToListAsync();
-            List<CategoryResult> categoryResultList = Mapper.Map<List<CategoryResult>>(categoryList);
-            return categoryResultList;
+            List<Category> list =await context.Categorys.Where(c => c.ParentId == 0).ToListAsync();  //获取一级分类
+            List<CategoryResult> firstList = Mapper.Map<List<CategoryResult>>(list);
+            foreach (CategoryResult category in firstList)
+            {
+                var secondList = await context.Categorys.Where(c => c.ParentId == category.Id).ToArrayAsync();//获取二级分类
+                List<CategoryResult> secondListEntity = Mapper.Map<List<CategoryResult>>(secondList);
+                category.listCategory = secondListEntity;
+            }
+            return firstList;
         }
 
-
         /// <summary>
-        /// 获取商品二级分类
+        /// 根据Id获取二级分类
         /// </summary>
-        /// <param name="parentId"></param>
         /// <returns></returns>
-        public async Task<List<CategoryResult>> GetSecondCategory(long parentId)
+        public async Task<CategoryResult> GetCategoryById(long id)
         {
-            var categoryList = await context.Category.Where(c => c.ParentId == parentId).ToListAsync();
-            List<CategoryResult> categoryResultList = Mapper.Map<List<CategoryResult>>(categoryList);
-            return categoryResultList;
+            var secondList = await context.Categorys.Where(c => c.Id == id).ToArrayAsync();//获取二级分类
+            CategoryResult result = Mapper.Map<CategoryResult>(secondList);
+            return result;
         }
     }
 }

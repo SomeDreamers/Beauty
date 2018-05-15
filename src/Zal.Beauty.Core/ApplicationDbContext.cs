@@ -97,7 +97,7 @@ namespace Zal.Beauty.Core
         /// <summary>
         /// 商品分类
         /// </summary>
-        public DbSet<Category> Category { get; set; } 
+        public DbSet<Category> Categorys { get; set; } 
 
         /// <summary>
         /// 商品标签表
