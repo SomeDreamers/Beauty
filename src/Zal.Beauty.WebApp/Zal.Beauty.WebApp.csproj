@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Common\Helpers\" />
+    <Folder Include="wwwroot\Area\Mall\css\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />
