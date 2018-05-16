@@ -56,6 +56,16 @@ namespace Zal.Beauty.Interface.Models.Templates.Malls
         public DateTime CreateTime { get; set; }
 
         /// <summary>
+        /// 开始销售时间
+        /// </summary>
+        public DateTime BeginSaleTime { get; set; }
+
+        /// <summary>
+        /// 结束销售时间
+        /// </summary>
+        public DateTime EndSaleTime { get; set; }
+
+        /// <summary>
         /// 是否删除
         /// </summary>
         public bool IsDel { get; set; }

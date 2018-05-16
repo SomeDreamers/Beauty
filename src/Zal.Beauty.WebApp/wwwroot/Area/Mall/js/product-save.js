@@ -336,7 +336,7 @@
         }
         //获取商品标签
         var tags = [];
-        var $tagIds = $("#tag-group cbr-checked");
+        var $tagIds = $("#tag-group .cbr-checked");
         $tagIds.each(function () {
             tags.push({ TagId: $(this).find("input").attr("value") });
         });
@@ -361,27 +361,27 @@
             //验证sku信息
             if (!sku.PurchsePrice || Number(sku.PurchsePrice) <= 0) {
                 toastr.warning("请填写正确sku采购价", "操作提示！");
-                isAllPassisAllPass = false;
+                isAllPass = false;
                 return false;
             }
             if (!sku.MarketPrice || Number(sku.MarketPrice) <= 0) {
                 toastr.warning("请填写正确sku市场价", "操作提示！");
-                isAllPassisAllPass = false;
+                isAllPass = false;
                 return false;
             }
             if (!sku.SalePrice || Number(sku.SalePrice) <= 0) {
                 toastr.warning("请填写正确sku销售价", "操作提示！");
-                isAllPassisAllPass = false;
+                isAllPass = false;
                 return false;
             }
             if (!sku.Quantity || Number(sku.Quantity) < 0) {
                 toastr.warning("请填写正确sku库存", "操作提示！");
-                isAllPassisAllPass = false;
+                isAllPass = false;
                 return false;
             }
             if (!sku.ImgId || Number(sku.ImgId) <= 0) {
                 toastr.warning("请选择sku图片", "操作提示！");
-                isAllPassisAllPass = false;
+                isAllPass = false;
                 return false;
             }
             //获取sku规格信息
@@ -395,9 +395,9 @@
             sku.SkuSpecifications = specifications;
             skus.push(sku);
         });
-        if (!isAllPassisAllPass) return false;
+        if (!isAllPass) return false;
         //获取商品辅图
-        var $otherImgIds = $("#other-image-group other-image-item");
+        var $otherImgIds = $("#other-image-group .other-image-item");
         $otherImgIds.each(function () {
             imgs.push({ ImgId: $(this).attr("data-imgid"), Type: 2 });
         });
@@ -411,6 +411,19 @@
             Skus: skus
         };
         //提交商品数据
-        $.post()
+        show_loading_bar(70);
+        $.post("/Mall/Product/Save", { product: product }, function (resp) {
+            show_loading_bar({
+                pct: 100,
+                finish: function () {
+                    if (resp.isSuccess) {
+                        window.location.href = "/Mall/Product/List";
+                    }
+                    else {
+                        toastr.error(resp.message, "操作错误!");
+                    }
+                }
+            });
+        })
     });
 })
