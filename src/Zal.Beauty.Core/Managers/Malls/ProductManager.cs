@@ -42,6 +42,54 @@ namespace Zal.Beauty.Core.Managers.Malls
             return proResultSet;
         }
 
+        /// <summary>
+        /// 保存商品
+        /// </summary>
+        /// <param name="productParameter"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> SaveAsync(ProductParameter productParameter)
+        {
+            ReturnResult result = new ReturnResult();
+            //新建商品
+            if (productParameter.Id <= 0)
+            {
+                //创建商品
+                var product = Mapper.Map<Product>(productParameter);
+                if (product.CreateTime == DateTime.MinValue)
+                    product.CreateTime = DateTime.Now;
+                product.Quantity = productParameter.Skus.Sum(c => c.Quantity);
+                await context.Products.AddAsync(product);
+                await context.SaveChangesAsync();
+                //创建商品图片
+                var imgs = Mapper.Map<List<ProductImg>>(productParameter.Imgs);
+                imgs.ForEach(c => c.ProductId = product.Id);
+                await context.ProductImgs.AddRangeAsync(imgs);
+                await context.SaveChangesAsync();
+                //创建商品标签
+                if (productParameter.Tags != null && productParameter.Tags.Count > 0)
+                {
+                    var tags = Mapper.Map<List<ProductTag>>(productParameter.Tags);
+                    tags.ForEach(c => c.ProductId = product.Id);
+                    await context.ProductTags.AddRangeAsync(tags);
+                    await context.SaveChangesAsync();
+                }
+                //创建商品sku
+                productParameter.Skus.ForEach(c => c.ProductId = product.Id);
+                foreach (var item in productParameter.Skus)
+                {
+                    var sku = Mapper.Map<Sku>(item);
+                    await context.Skus.AddAsync(sku);
+                    await context.SaveChangesAsync();
+                    //创建商品规格
+                    var specifications = Mapper.Map<List<SkuSpecification>>(item.SkuSpecifications);
+                    specifications.ForEach(c => c.SkuId = sku.Id);
+                    await context.SkuSpecifications.AddRangeAsync(specifications);
+                    await context.SaveChangesAsync();
+                }
+            }
+            return result;
+        }
+
         #region 内部方法
         /// <summary>
         /// 获取ProductResult对象附加信息
@@ -51,8 +99,8 @@ namespace Zal.Beauty.Core.Managers.Malls
         public async Task GetProductResultExtensionAsync(ProductResult result)
         {
             //获取品牌信息
-            var brand = await context.Brands.FirstOrDefaultAsync(c => c.Id == result.Id);
-            result.Name = brand?.Name;
+            var brand = await context.Brands.FirstOrDefaultAsync(c => c.Id == result.BrandId);
+            result.BrandName = brand?.Name;
         }
 
         /// <summary>

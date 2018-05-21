@@ -10,5 +10,19 @@ namespace Zal.Beauty.Interface.Models.Parameters.Malls
     /// </summary>
     public class ProductParameter : ProductTemplate
     {
+        /// <summary>
+        /// 商品图片
+        /// </summary>
+        public List<ProductImgParameter> Imgs { get; set; }
+
+        /// <summary>
+        /// 商品标签
+        /// </summary>
+        public List<ProductTagParameter> Tags { get; set; }
+ 
+        /// <summary>
+        /// sku集合
+        /// </summary>
+        public List<SkuParameter> Skus { get; set; }
     }
 }

@@ -67,6 +67,18 @@ namespace Zal.Beauty.Core.ORM.Malls
         public DateTime CreateTime { get; set; }
 
         /// <summary>
+        /// 开始销售时间
+        /// </summary>
+        [Column("begin_sale_time")]
+        public DateTime BeginSaleTime { get; set; }
+
+        /// <summary>
+        /// 结束销售时间
+        /// </summary>
+        [Column("end_sale_time")]
+        public DateTime EndSaleTime { get; set; }
+
+        /// <summary>
         /// 是否删除
         /// </summary>
         [Column("is_del")]

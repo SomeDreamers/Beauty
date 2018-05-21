@@ -19,5 +19,12 @@ namespace Zal.Beauty.Interface.IManager.Malls
         /// <param name="query"></param>
         /// <returns></returns>
         Task<EntitySet<ProductResult>> GetProductSetAsync(ProductQuery queryParameter);
+
+        /// <summary>
+        /// 保存商品
+        /// </summary>
+        /// <param name="productParameter"></param>
+        /// <returns></returns>
+        Task<ReturnResult> SaveAsync(ProductParameter productParameter);
     }
 }

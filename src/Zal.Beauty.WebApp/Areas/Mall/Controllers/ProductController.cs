@@ -54,7 +54,7 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         }
 
         /// <summary>
-        /// 新建商品
+        /// 新建商品界面
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Create()
@@ -69,6 +69,17 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
                 Specifications = specifications
             };
             return View(model);
+        }
+
+        /// <summary>
+        /// 保存商品
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Save(ProductParameter product)
+        {
+            var result = await productManager.SaveAsync(product);
+            return Json(result);
         }
     }
 }

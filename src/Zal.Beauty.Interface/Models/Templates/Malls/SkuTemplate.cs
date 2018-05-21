@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Zal.Beauty.Interface.Enums.Malls;
 
 namespace Zal.Beauty.Interface.Models.Templates.Malls
 {
     /// <summary>
-    /// 商品数据模板
+    /// sku数据模板
     /// </summary>
-    public class ProductTemplate
+    public class SkuTemplate
     {
         // <summary>
         /// 主键
@@ -16,24 +15,44 @@ namespace Zal.Beauty.Interface.Models.Templates.Malls
         public long Id { get; set; }
 
         /// <summary>
-        /// 品牌ID
+        /// 商品ID
         /// </summary>
-        public long BrandId { get; set; }
+        public long ProductId { get; set; }
 
         /// <summary>
-        /// 商品名
+        /// 图片ID
+        /// </summary>
+        public long ImgId { get; set; }
+
+        /// <summary>
+        /// sku名
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// 副标题
-        /// </summary>
-        public string SubTitle { get; set; }
 
         /// <summary>
         /// 库存数量
         /// </summary>
         public int Quantity { get; set; }
+
+        /// <summary>
+        /// 采购价
+        /// </summary>
+        public decimal PurchsePrice { get; set; }
+
+        /// <summary>
+        /// 市场价
+        /// </summary>
+        public decimal MarketPrice { get; set; }
+
+        /// <summary>
+        /// 销售价
+        /// </summary>
+        public decimal SalePrice { get; set; }
+
+        /// <summary>
+        /// 条码
+        /// </summary>
+        public string Barcode { get; set; }
 
         /// <summary>
         /// 订单数量
@@ -46,24 +65,9 @@ namespace Zal.Beauty.Interface.Models.Templates.Malls
         public int SaleQuantity { get; set; }
 
         /// <summary>
-        /// 商品状态
-        /// </summary>
-        public EProductStatus Status { get; set; }
-
-        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
-
-        /// <summary>
-        /// 开始销售时间
-        /// </summary>
-        public DateTime BeginSaleTime { get; set; }
-
-        /// <summary>
-        /// 结束销售时间
-        /// </summary>
-        public DateTime EndSaleTime { get; set; }
 
         /// <summary>
         /// 是否删除
