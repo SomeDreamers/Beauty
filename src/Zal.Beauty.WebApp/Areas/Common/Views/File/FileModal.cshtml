@@ -130,12 +130,14 @@
                     item += '<div class="image-options" data-fileId=' + result.entities[i].id + '>';
                     item += '</div>';
                     item += '<div class="image-checkbox">';
+                    item += '<div class="cbr-replaced">';
+                    item += '<div class="cbr-input">';
                     item += '<input value=' + result.entities[i].id + ' data-url="' + result.entities[i].url +'" type="checkbox" class="cbr" />';
+                    item += '</div><div class="cbr-state"><span></span></div></div>';
                     item += '</div>';
                     item += '</div>';
                     item += '</div>';
                     $("#file-modal-List").append(item);
-
                 }
 
             }
@@ -153,9 +155,11 @@
             loadImage_modal();
          });
         /*单选*/
-        $(document).on("click", "#file-modal-List input[type='checkbox']", function () { 
-            $("#file-modal-List input[type='checkbox']").prop('checked', false);
-            $(this).prop('checked', true);
+        $(document).on("click", "#file-modal-List .cbr-replaced", function () { 
+            $(".album-image .cbr-replaced").removeClass('cbr-checked');
+            $(this).addClass('cbr-checked');
+            //$("#file-modal-List input[type='checkbox']").prop('checked', false);
+            //$(this).prop('checked', true);
         });
     });
 </script>
