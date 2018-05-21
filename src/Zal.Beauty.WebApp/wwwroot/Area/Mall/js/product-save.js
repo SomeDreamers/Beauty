@@ -254,8 +254,10 @@
 
     //选择模态框图片图片
     $("#files-save").click(function () {
-        var imgId = $("#file-modal-List").find(":checkbox:checked").val();
-        var imgUrl = $("#file-modal-List").find(":checkbox:checked").attr("data-url");
+        var imgId = $("#file-modal-List").find(".cbr-checked").find(':checkbox').val();
+        var imgUrl = $("#file-modal-List").find(".cbr-checked").find(':checkbox').attr("data-url");
+        //var imgId = $("#file-modal-List").find(":checkbox:checked").val();
+        //var imgUrl = $("#file-modal-List").find(":checkbox:checked").attr("data-url");
         if (imageType === 1) {
             $("#main-image-group").attr("data-imgId", imgId);
             $("#select-main-image img").attr("src", imgUrl);
