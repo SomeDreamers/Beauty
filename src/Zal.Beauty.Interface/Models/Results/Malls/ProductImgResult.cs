@@ -10,5 +10,9 @@ namespace Zal.Beauty.Interface.Models.Results.Malls
     /// </summary>
     public class ProductImgResult : ProductImgTemplate
     {
+        /// <summary>
+        /// 图片URL
+        /// </summary>
+        public string Url { get; set; }
     }
 }

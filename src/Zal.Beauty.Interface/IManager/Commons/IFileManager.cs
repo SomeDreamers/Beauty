@@ -59,5 +59,12 @@ namespace Zal.Beauty.Interface.IManager.Commons
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteFile(long id);
+
+        /// <summary>
+        /// 根据ID集合获取文件集合
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<List<FileResult>> GetFilesByIdsAsync(List<long> ids);
     }
 }

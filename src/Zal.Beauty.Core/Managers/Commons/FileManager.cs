@@ -119,6 +119,7 @@ namespace Zal.Beauty.Core.Managers.Commons
             file.Name = name;
             await context.SaveChangesAsync();
         }
+
         /// <summary>
         /// 删除素材
         /// </summary>
@@ -129,6 +130,23 @@ namespace Zal.Beauty.Core.Managers.Commons
             var file =await context.Files.FirstAsync(c=>c.Id==id);
             file.IsDel = true;
             await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 根据ID集合获取文件集合
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<FileResult>> GetFilesByIdsAsync(List<long> ids)
+        {
+            List<File> files = new List<File>();
+            foreach (var id in ids)
+            {
+                var file = await context.Files.FirstOrDefaultAsync(c => c.Id == id);
+                if (file != null)
+                    files.Add(file);
+            }
+            return Mapper.Map<List<FileResult>>(files);
         }
     }
 }

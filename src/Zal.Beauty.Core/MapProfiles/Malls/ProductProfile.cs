@@ -19,6 +19,7 @@ namespace Zal.Beauty.Core.MapProfiles.Malls
             CreateMap<Product, ProductResult>();
             CreateMap<ProductParameter, Product>();
             CreateMap<EntitySet<Product>, EntitySet<ProductResult>>();
+            CreateMap<ProductImg, ProductImgResult>();
         }
     }
 }

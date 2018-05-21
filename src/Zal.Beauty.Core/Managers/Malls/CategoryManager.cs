@@ -37,7 +37,6 @@ namespace Zal.Beauty.Core.Managers.Malls
             await context.SaveChangesAsync();
             return result;
         }
-        
 
         /// <summary>
         /// 删除商品分类

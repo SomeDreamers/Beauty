@@ -11,7 +11,6 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
 {
     /// <summary>
     /// 品牌controller
-    /// 品牌controller
     /// </summary>
     [Area("Mall"), Authorize]
     public class BrandController : Controller

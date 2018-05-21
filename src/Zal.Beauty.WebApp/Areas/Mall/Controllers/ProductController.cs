@@ -6,10 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Zal.Beauty.Base.Models;
 using Zal.Beauty.Interface.Enums.Malls;
+using Zal.Beauty.Interface.IManager.Commons;
 using Zal.Beauty.Interface.IManager.Malls;
 using Zal.Beauty.Interface.Models.Parameters.Malls;
 using Zal.Beauty.Interface.Models.Results.Malls;
 using Zal.Beauty.WebApp.Areas.Mall.ViewModels;
+using Zal.Beauty.WebApp.Helpers;
 
 namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
 {
@@ -23,12 +25,14 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         private readonly ITagManager tagManager;
         private readonly IBrandManager brandManager;
         private readonly ISpecificationManager specificationManager;
-        public ProductController(IProductManager productManager, ITagManager tagManager, IBrandManager brandManager, ISpecificationManager specificationManager)
+        private readonly IFileManager fileManager;
+        public ProductController(IProductManager productManager, ITagManager tagManager, IBrandManager brandManager, ISpecificationManager specificationManager, IFileManager fileManager)
         {
             this.productManager = productManager;
             this.tagManager = tagManager;
             this.brandManager = brandManager;
             this.specificationManager = specificationManager;
+            this.fileManager = fileManager;
         }
 
         /// <summary>
@@ -50,6 +54,13 @@ namespace Zal.Beauty.WebApp.Areas.Mall.Controllers
         public async Task<IActionResult> ProSetAjax(ProductQuery query)
         {
             var proSet = await productManager.GetProductSetAsync(query);
+            //获取图片Url
+            foreach (var item in proSet.Entities)
+            {
+                var imgPairs = await ImgHelper.GetImgUrlsAsync(item.Imgs.Select(c => c.ImgId).ToList(), fileManager);
+                item.Imgs.ForEach(c => c.Url = imgPairs.FirstOrDefault(q=>q.Key == c.ImgId).Value);
+                item.MainImgUrl = item.Imgs.FirstOrDefault(c => c.Type == EProductImgType.Main).Url;
+            }
             return Json(proSet);
         }
 

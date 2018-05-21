@@ -38,6 +38,7 @@
                 },
                 columns: [
                     { checkbox: true, visible: true },
+                    { field: 'mainImgUrl', title: '图片', formatter: imgFormmatter },
                     { field: 'name', title: '商品名' },
                     { field: 'subTitle', title: '副标题' },
                     { field: 'quantity', title: '库存数量' },
@@ -54,6 +55,11 @@
                     return data;
                 }
             });
+
+            //表格头像转换
+            function imgFormmatter(value, row, index) {
+                return "<img src=" + value + " width=\"50\" height=\"50\" />";
+            }
 
             //时间插件
             $('.form_datetime').datetimepicker({

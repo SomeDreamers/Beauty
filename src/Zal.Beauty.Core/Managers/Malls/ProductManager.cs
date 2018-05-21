@@ -11,6 +11,7 @@ using Zal.Beauty.Core.ORM.Malls;
 using Zal.Beauty.Interface.Enums.Malls;
 using Zal.Beauty.Interface.IManager.Malls;
 using Zal.Beauty.Interface.Models.Parameters.Malls;
+using Zal.Beauty.Interface.Models.Results.Commons;
 using Zal.Beauty.Interface.Models.Results.Malls;
 
 namespace Zal.Beauty.Core.Managers.Malls
@@ -101,6 +102,9 @@ namespace Zal.Beauty.Core.Managers.Malls
             //获取品牌信息
             var brand = await context.Brands.FirstOrDefaultAsync(c => c.Id == result.BrandId);
             result.BrandName = brand?.Name;
+            //获取商品图片
+            var imgs = await context.ProductImgs.Where(c => c.ProductId == result.Id).ToListAsync();
+            result.Imgs = Mapper.Map<List<ProductImgResult>>(imgs);
         }
 
         /// <summary>
