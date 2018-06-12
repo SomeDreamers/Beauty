@@ -59,6 +59,9 @@ namespace Zal.Beauty.Core.Managers.Malls
                 if (product.CreateTime == DateTime.MinValue)
                     product.CreateTime = DateTime.Now;
                 product.Quantity = productParameter.Skus.Sum(c => c.Quantity);
+                //设置商品状态
+                if (!Enum.IsDefined(typeof(EProductStatus), productParameter.Status))
+                    product.Status = EProductStatus.New;
                 await context.Products.AddAsync(product);
                 await context.SaveChangesAsync();
                 //创建商品图片

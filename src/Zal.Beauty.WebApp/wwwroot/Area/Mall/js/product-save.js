@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿var $selectedSkuImg;
+$(function () {
     //新增品牌按钮点击事件
     $("#add-brand-btn").click(function () {
         var brand = $("#BrandName").val();
@@ -242,7 +243,6 @@
     //处理商品主图
     $(document).on("click", "#select-main-image", function () {
         imageType = 1;
-        $selectSkuImg = $(this);
         $("#flies-modal").modal("show");
         $.ajax({
             url: "/Common/File/FileModal",
@@ -252,34 +252,9 @@
         });
     });
 
-    //选择模态框图片图片
-    $("#files-save").click(function () {
-        var imgId = $("#file-modal-List").find(".cbr-checked").find(':checkbox').val();
-        var imgUrl = $("#file-modal-List").find(".cbr-checked").find(':checkbox').attr("data-url");
-        //var imgId = $("#file-modal-List").find(":checkbox:checked").val();
-        //var imgUrl = $("#file-modal-List").find(":checkbox:checked").attr("data-url");
-        if (imageType === 1) {
-            $("#main-image-group").attr("data-imgId", imgId);
-            $("#select-main-image img").attr("src", imgUrl);
-            $("#select-main-image span").hide();
-            $("#select-main-image img").show();
-        } else if (imageType === 2) {
-            var imgHtml = '<a data-imgId="' + imgId + '" class="other-image-item" href="javascript:void(0);" style="display: inline-block; width:100px;height:100px;border: 2px dotted #d9dadc;text-align: center;vertical-align: middle;line-height:100px;margin-right: 15px"><img style="width: 96px;height: 96px;margin-bottom: 6px;" ' +
-                ' src="' + imgUrl + '" /><span class="glyphicon glyphicon-remove del-other-image" style="float: right;margin-right: -7px;margin-top: -111px;color: #cc3f44"></span></a>';
-            $("#select-other-image").before(imgHtml);
-        } else if (imageType === 3) {
-            $selectSkuImg.attr("data-imgId", imgId);
-            $selectSkuImg.find("img").attr("src", imgUrl);
-            $selectSkuImg.find("img").attr("height", "50");
-            $selectSkuImg.find("img").attr("width", "50");
-        }
-        $("#flies-modal").modal("hide");
-    });
-
     //处理商品辅图
     $(document).on("click", "#select-other-image", function () {
         imageType = 2;
-        $selectSkuImg = $(this);
         $("#flies-modal").modal("show");
         $.ajax({
             url: "/Common/File/FileModal",
@@ -295,10 +270,9 @@
     })
 
     //处理sku图片
-    var $selectSkuImg;
     $(document).on("click", ".select-sku-img", function () {
         imageType = 3;
-        $selectSkuImg = $(this);
+        $selectedSkuImg = $(this);
         $("#flies-modal").modal("show");
         $.ajax({
             url: "/Common/File/FileModal",
@@ -306,6 +280,32 @@
                 $('#flies-modal .modal-body-files').html(response);
             }
         });
+    });
+
+    //选择模态框图片图片
+    $("#files-save").click(function () {
+        var imgId = $("#file-modal-List").find(".cbr-checked").find("input[type='checkbox']").val();
+        var imgUrl = $("#file-modal-List").find(".cbr-checked").find("input[type='checkbox']").attr("data-url");
+        if (!imgId) {
+            toastr.warning("请选择图片", "操作提示！");
+            return false;
+        }
+        if (imageType === 1) {
+            $("#main-image-group").attr("data-imgId", imgId);
+            $("#select-main-image img").attr("src", imgUrl);
+            $("#select-main-image span").hide();
+            $("#select-main-image img").show();
+        } else if (imageType === 2) {
+            var imgHtml = '<a data-imgId="' + imgId + '" class="other-image-item" href="javascript:void(0);" style="display: inline-block; width:100px;height:100px;border: 2px dotted #d9dadc;text-align: center;vertical-align: middle;line-height:100px;margin-right: 15px"><img style="width: 96px;height: 96px;margin-bottom: 6px;" ' +
+                ' src="' + imgUrl + '" /><span class="glyphicon glyphicon-remove del-other-image" style="float: right;margin-right: -7px;margin-top: -111px;color: #cc3f44"></span></a>';
+            $("#select-other-image").before(imgHtml);
+        } else if (imageType === 3) {
+            $selectedSkuImg.attr("data-imgId", imgId);
+            $selectedSkuImg.find("img").attr("src", imgUrl);
+            $selectedSkuImg.find("img").attr("height", "50");
+            $selectedSkuImg.find("img").attr("width", "50");
+        }
+        $("#flies-modal").modal("hide");
     });
 
     //保存商品

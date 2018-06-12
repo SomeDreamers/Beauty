@@ -34,6 +34,8 @@
                         if (value)
                             temp[name] = value;
                     })
+                    //添加tab搜索条件
+                    temp.Status = $("#Status").val();
                     return temp;
                 },
                 columns: [
