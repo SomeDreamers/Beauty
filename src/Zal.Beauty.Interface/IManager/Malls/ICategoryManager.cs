@@ -13,19 +13,26 @@ namespace Zal.Beauty.Interface.IManager.Malls
     /// </summary>
     public interface ICategoryManager
     {
-        /// <summary>
-        /// 添加商品分类
+        //// <summary>
+        /// 保存商品分类
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        Task<ReturnResult> AddCategory(CategoryParameter category);
-
+        Task<ReturnResult> Save(CategoryParameter parameter);
 
         /// <summary>
         /// 删除商品分类
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        Task<ReturnResult> DeleteCategory(long id);
+        Task DeleteByIdAsync(long id);
+
+        /// <summary>
+        /// 删除商品分类
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task DeleteByIdsAsync(List<long> ids);
 
         /// <summary>
         /// 获取全部商品分类
@@ -39,5 +46,11 @@ namespace Zal.Beauty.Interface.IManager.Malls
         /// <returns></returns>
         Task<CategoryResult> GetCategoryById(long id);
 
+        /// <summary>
+        /// 获取商品分类集合
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<EntitySet<CategoryResult>> GetCategorySetAsync(CategoryQuery query);
     }
 }

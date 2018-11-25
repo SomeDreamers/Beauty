@@ -76,7 +76,7 @@ namespace Zal.Beauty.WebApp.Configs
                             new Node
                             {
                                 Title = "分类信息",
-                                Route = "/Identity/User/List"
+                                Route = "/Mall/Category/List"
                             }
                         }
                     },

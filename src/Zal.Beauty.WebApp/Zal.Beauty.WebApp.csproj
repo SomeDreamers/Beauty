@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zal.Beauty.Core\Zal.Beauty.Core.csproj" />
+    <ProjectReference Include="..\Zal.Beauty.Interface\Zal.Beauty.Interface.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Areas\Mall\Views\Product\List.cshtml">

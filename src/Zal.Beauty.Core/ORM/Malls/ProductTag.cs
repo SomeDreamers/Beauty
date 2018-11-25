@@ -11,7 +11,7 @@ namespace Zal.Beauty.Core.ORM.Malls
     [Table("mall_product_tags")]
     public class ProductTag
     {
-        // <summary>
+        /// <summary>
         /// 主键
         /// </summary>
         [Column("id")]

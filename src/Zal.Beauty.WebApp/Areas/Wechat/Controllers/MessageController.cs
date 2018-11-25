@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Zal.Beauty.Base.Models;
-using Zal.Beauty.Core.ORM.Wechats;
 using Zal.Beauty.Interface.Enums.Wechats;
 using Zal.Beauty.Interface.IManager.Wechats;
 using Zal.Beauty.Interface.Models.Parameters.Wechats;

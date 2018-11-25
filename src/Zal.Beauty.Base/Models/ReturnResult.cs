@@ -33,6 +33,13 @@ namespace Zal.Beauty.Base.Models
         {
             IsSuccess = true;
         }
+
+        public ReturnResult(bool isSuccess, string message, string errCode = "")
+        {
+            IsSuccess = isSuccess;
+            Message = message;
+            ErrCode = errCode;
+        }
     }
 
     public class ReturnResult<T>

@@ -95,7 +95,7 @@
             <ul class="nav nav-tabs nav-tabs-change">
                 <li class="@((EProductStatus)ViewData["Status"] == EProductStatus.New ? "change-active" : "")">
                     <a href="/Mall/Product/List?Status=@EProductStatus.New">
-                        <span class="hidden-xs">新建</span>
+                        <span class="hidden-xs">新增</span>
                     </a>
                 </li>
                 <li class="@((EProductStatus)ViewData["Status"] == EProductStatus.OnSale ? "change-active" : "")">
@@ -141,7 +141,7 @@
 
         <div id="toolbar" class="btn-group">
             <button onclick="window.location.href='/Mall/Product/Create'" type="button" class="btn btn-success batch-update-status-btn">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新建商品
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
             </button>
         </div>
 

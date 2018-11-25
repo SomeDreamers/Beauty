@@ -34,7 +34,7 @@ namespace Zal.Beauty.Core.Managers.Malls
         /// <returns></returns>
         public async Task<EntitySet<ProductResult>> GetProductSetAsync(ProductQuery queryParameter)
         {
-            var proSet = await GetProductORMSetAsync(queryParameter);
+            var proSet = await GetProductEntitySetAsync(queryParameter);
             var proResultSet = Mapper.Map<EntitySet<ProductResult>>(proSet);
             foreach (var item in proResultSet.Entities)
             {
@@ -115,7 +115,7 @@ namespace Zal.Beauty.Core.Managers.Malls
         /// </summary>
         /// <param name="queryParameter"></param>
         /// <returns></returns>
-        public async Task<EntitySet<Product>> GetProductORMSetAsync(ProductQuery queryParameter)
+        public async Task<EntitySet<Product>> GetProductEntitySetAsync(ProductQuery queryParameter)
         {
             var query = context.Products.AsQueryable();
             if (queryParameter.BrandId > 0)

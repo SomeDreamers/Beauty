@@ -59,7 +59,7 @@
                 $('#create-role-modal').modal('show', { backdrop: 'static' });
             });
 
-            //新建角色保存
+            //新增角色保存
             $("#create-role-modal .save-btn").click(function () {
                 var role = {};
                 role.Name = $("#create-role-modal #Name").val();
@@ -70,7 +70,7 @@
                         pct: 100,
                         finish: function () {
                             if (resp.isSuccess) {
-                                $('#edit-role-modal').modal("hide");
+                                $('#create-role-modal').modal("hide");
                                 window.location.reload();
                             }
                             else {
@@ -109,7 +109,7 @@
                 $('#create-role-modal').modal('show', { backdrop: 'static' });
             });
 
-            //新建角色保存
+            //新增角色保存
             $("#create-role-modal .save-btn").click(function () {
                 var role = {};
                 role.Name = $("#create-role-modal #Name").val();
@@ -322,14 +322,14 @@
     </div>
 </div>
 
-@* 新建角色模态框 *@
+@* 新增角色模态框 *@
 <div class="modal fade in" id="create-role-modal" data-backdrop="static" aria-hidden="false" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">新建角色</h4>
+                <h4 class="modal-title">新增角色</h4>
             </div>
 
             <div class="modal-body">
